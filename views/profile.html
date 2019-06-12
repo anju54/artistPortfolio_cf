@@ -98,9 +98,9 @@
                                     Upload Image:
                                 </label>
                             </div>
-                            <form enctype="multipart/form-data" id="uploadimage">
+                            <form enctype="multipart/form-data" id="uploadimage" >
                                 <div class="col-md-10">
-                                    <input type="file" name="file" id="file" />
+                                    <input type="file" name="fileUpload" id="file" />
                                     <p class="help-block">
                                         Allowed formats: jpeg, jpg, png
                                     </p>
@@ -116,11 +116,6 @@
                                         Update image
                                     </button>
                                 </div>
-                                <!-- <div class="col-sm-6">
-                                    <button class="btn btn-success" id="deleteImage" style="float: left; display: none;">
-                                        Delete image
-                                    </button>
-                                </div> -->
                             </form>
                             <div class="col-sm-6">
                                 <button class="btn btn-success" id="deleteImage" style="float: left; display: none;">
@@ -157,13 +152,13 @@
                           <br>
                             <label class="col-md-12">First Name*</label>
                             <div class="col-md-12">
-                                <input type="text" id="firstName"  class="form-control form-control-line">
+                                <input type="text" id="firstName" name = "firstName" class="form-control form-control-line">
                                 <p id="fnameError"></p>
                             </div>
 
                             <label class="col-md-12">Last Name</label>
                             <div class="col-md-12">
-                                <input type="text" id="lastName"  class="form-control form-control-line">
+                                <input type="text" id="lastName" name="lastName"  class="form-control form-control-line">
                             </div>
 
                             <label class="col-md-12">Profile Name*</label>
@@ -175,19 +170,19 @@
 
                             <label class="col-md-12">Facebook url</label>
                             <div class="col-md-12">
-                                <input type="text" id="fbUrl" class="form-control form-control-line" onclick="hidefbError()">
+                                <input type="text" id="fbUrl" name="fbUrl" class="form-control form-control-line" onclick="hidefbError()">
                                 <p id="fbError"></p>
                             </div>
                             <br>
                             <label class="col-md-12">Twitter url</label>
                             <div class="col-md-12">
-                                <input type="text" id="twitterUrl" class="form-control form-control-line" onclick="hideTError()">
+                                <input type="text" id="twitterUrl" name="twitterUrl" class="form-control form-control-line" onclick="hideTError()">
                                 <p id="tError"></p>
                             </div>
                             <br>
                             <label class="col-md-12">LinkedIn url</label>
                             <div class="col-md-12">
-                                <input type="text" id="linkedInUrl" class="form-control form-control-line" onclick="hideLError()">
+                                <input type="text" id="linkedInUrl" name="linkedInUrl" class="form-control form-control-line" onclick="hideLError()">
                                 <p id="lError"></p>
                             </div>
 
@@ -244,6 +239,9 @@
         </div>
     </div>
     <script type="text/javascript" src="../js/showCurretUser.js"></script>
+    <script type="text/javascript" src="../js/artistProfile.js"></script>
+    <script type="text/javascript" src="../js/displayColors.js"></script>
+    <script type="text/javascript" src="../js/displayTypeOfPainting.js"></script>
     <script type="text/javascript" src="../js/logout.js"></script>
     <script type="text/javascript" src="../js/loader.js"></script>
 
