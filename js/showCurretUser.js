@@ -28,14 +28,9 @@ function setName(response){
     
     $("#fullName").text(response.fullName) ;
     $("#name").text(response.fullName) ;
+    var fullNameSplit = response.fullName.split(" ");
+    $("#firstName").val(fullNameSplit[0]) ;
+    $("#lastName").val(fullNameSplit[1]) ;
     
-	var fullName = response.fullName;
-    // if(type=='edit'){
-        //var fullNameSplit = fullName.split(" ");
-        //$("#firstName").val(fullNameSplit[0]) ;
-        //$("#lastName").val(fullNameSplit[1]) ;
-        
-        $("#email").text(response.userEmail) ;
-    // }
-
+    $("#email").text(response.userEmail) ;
 }
