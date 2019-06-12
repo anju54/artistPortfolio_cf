@@ -48,9 +48,9 @@
 		<cftry>
 
 			<cfquery name="rsLoginUser" datasource = 'artistPortfolio'>
-			select email_id,password,first_name,last_name ,role.role as role from users inner join role on users.role_id = role.role_id
-			where email_id =  <cfqueryparam value="#arguments.userEmail#" cfsqltype="cf_sql_varchar" /> and
-			password = <cfqueryparam value="#password#" cfsqltype="cf_sql_varchar" />
+				select email_id,password,first_name,last_name ,role.role as role from users inner join role on users.role_id = role.role_id
+				where email_id =  <cfqueryparam value="#arguments.userEmail#" cfsqltype="cf_sql_varchar" /> and
+				password = <cfqueryparam value="#password#" cfsqltype="cf_sql_varchar" />
 
 			</cfquery>
 
@@ -58,6 +58,8 @@
 
 				<cfset fullName = rsLoginUser.first_name &' ' & rsLoginUser.last_name />
 				<cfset session.stLoggedInuser = {'userEmail' = rsLoginUser.email_id, 'role' = rsLoginUser.role, 'fullName' = #fullName#} />
+
+				<cfset userId = getUserId() />
 				<cfset var isUserLoggedIn = true />
 				<cfreturn session.stLoggedInuser />
 			<cfelse>
@@ -77,8 +79,28 @@
 	<cffunction name="doLogout" access="public" output="false" returntype="void">
 
 		<cfset structdelete(session, 'stLoggedInUser') />
+		<cfset structdelete(session, 'user') /> artistProfileId
+		<cfset structdelete(session, 'artistProfileId') />
 		<cflogout />
 
+	</cffunction>
+
+	<!--- This is used to get current userId and then save it to session object --->
+	<cffunction name="getUserId" access="public" output="false" returntype="numeric">
+
+		<!--- Fetch email from session object --->
+		<cfif StructKeyExists(session.stLoggedInuser,"fullName")>
+			<cfset email = '#session.stLoggedInuser.userEmail#' />
+
+			<!--- This is used to get current user id --->
+			<cfquery datasource="artistPortfolio" name="getUserIdQuery">
+					select user_id from users where email_id = <cfqueryparam value="#email#" cfsqltype="cf_sql_varchar" > ;
+			</cfquery>
+
+			<cfset session.user = {'userId' = getUserIdQuery.user_id } />
+		</cfif>
+
+		<cfreturn getUserIdQuery.user_id/>
 	</cffunction>
 
 </cfcomponent>
