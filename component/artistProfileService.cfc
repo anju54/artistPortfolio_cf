@@ -64,6 +64,9 @@
 					<cfset fullPath = "/media/artist/" & form.profileName & "/" />
 					<!--- create folder with the artist profile name inside media/artist/ folder --->
 					<cfdirectory action="create" directory="#expandPath("fullPath")#">
+					<!--- Create folder for storing thumbnail of images --->
+					<cfset thumbPath = fullPath & "thumb" & "/" />
+					<cfdirectory action="create" directory="#expandPath("thumbPath")#">
 				</cfif>
 			</cfif>
 
@@ -152,11 +155,12 @@
 		<cfset userId = "#session.user.userId#">
 
 		<cfquery datasource="artistPortfolio" name="getArtistProfileIdByUserId">
-			select artist_profile_id from artist_profile as ap inner join users as u on u.user_id = ap.user_id
+			select artist_profile_id, profile_name from artist_profile as ap inner join users as u on u.user_id = ap.user_id
 			where u.user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#userId#">
 		</cfquery>
 
-		<cfset session.artistProfileId = {'artistProfileId' = getArtistProfileIdByUserId.artist_profile_id } />
+		<cfset session.artistProfileId = {'artistProfileId' = getArtistProfileIdByUserId.artist_profile_id,
+											'profileName' = getArtistProfileIdByUserId.profile_name } />
 
 	</cffunction>
 
