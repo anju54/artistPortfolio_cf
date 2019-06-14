@@ -56,7 +56,7 @@ console.log("2....");
 function showAllProfilePics(){
 
     $.ajax({
-        url:  `${baseUrl}/api/media/all/artist/profile-pics/${counter}/3` ,
+        url:  `${baseUrl}/controller/artistProfileController.cfm?action=getAllProfilePic` ,
         type: "GET",
         crossDomain: true,
         data: {},
@@ -65,7 +65,8 @@ function showAllProfilePics(){
             "Content-Type": "application/json",
         },
         success: function (response) {
-            
+            response = JSON.parse(response);
+            console.log(response);
             if(response.length){
                 $('#selecArtistHeader').show();
                 setAllProfile(response);
@@ -91,27 +92,18 @@ function showAllProfilePics(){
 function setAllProfile(response){
 
     for(var i=0; i<response.length;i++){
-
-        if(response[i].media){
+        var fullName = response[i].FIRST_NAME +" "+ response[i].LAST_NAME;
+        if(response[i]){
 
             var col =   '<div class="col-md-4 thumbnail img-responsive">'+
-                            '<img style="height:300px" class="work" alt="'+response[i].fullName+'"'+
-                            'src="'+ baseUrl + response[i].media.path + response[i].media.fileName +'" ></img>'+
-                            '<a style="cursor: pointer; text-align:centre" id="'+response[i].artistProfileId+
-                            '" href="./artistPublicProfile.html?id='+response[i].artistProfileId+'">'+response[i].fullName+'</a>';
+                            '<img style="height:300px" class="work" alt="'+fullName+'"'+
+                            'src="'+ baseUrl + response[i].PATH + response[i].FILENAME_ORIGINAL +'" ></img>'+
+                            '<a style="cursor: pointer; text-align:centre" id="'+response[i].ARTIST_PROFILE_ID+
+                            '" href="./artistPublicProfile.html?id='+response[i].ARTIST_PROFILE_ID+'">'+fullName+'</a>';
                         '</div>';
 
             $('#publicImgDiv').append(col);
-        }else{
-
-            var col =   '<div class="col-md-4 thumbnail img-responsive">'+
-                            '<img style="height:300px" class="work" alt="'+response[i].fullName+'"'+
-                            'src="./assets/images/default-profile-pic.png" ></img>'+
-                            '<a style="cursor: pointer; text-align:centre" id="'+response[i].artistProfileId+
-                            '" href="./artistPublicProfile.html?id='+response[i].artistProfileId+'">'+response[i].fullName+'</a>';
-                        '</div>';
-            $('#publicImgDiv').append(col);
-        }            
+        }
     }    
 }
 

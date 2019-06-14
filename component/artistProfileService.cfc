@@ -170,9 +170,16 @@
 		<cfreturn />
 	</cffunction>
 
-	<cffunction name="getProfilePicByArtistProfileId" access="public" output="false" returntype="void">
-		<!--- TODO: Implement Method --->
-		<cfreturn />
+	<!--- This is used to fetch all the profile pic present in the application --->
+	<cffunction name="getAllprofilePicInformation" access="public" output="false" returntype="query">
+
+		<cfquery name="getAllProfilePic" datasource="artistPortfolio">
+			select filename_original, path,ap.artist_profile_id, users.first_name, users.last_name from media
+			 inner join artist_profile ap
+			on media.media_id = ap.profile_pic_id inner join users on users.user_id = ap.user_id
+		</cfquery>
+
+		<cfreturn getAllProfilePic/>
 	</cffunction>
 
 	<!--- This is used to get profile pic information --->
