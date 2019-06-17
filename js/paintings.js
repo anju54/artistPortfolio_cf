@@ -8,10 +8,10 @@ $(document).ready(function() {
         showPaintings();
     });
 
-    // $('input[name=publicOrPrivate]').change( function(){
-    //     var id = $(this).attr('id');
-    //     setPublicOrprivate(token,id);
-    // });
+    $('input[name=publicOrPrivate]').change( function(){
+        var id = $(this).attr('id');
+        setPublicOrprivate(id);
+    });
 
     $("#saveImage").click(function(event) {
 
@@ -78,13 +78,9 @@ function showPaintings(){
             response = JSON.parse(response);
             console.log(response);
             if(response.length){
-               for(var i=0; i<response.length; i++){
-                   if(JSON.stringify(paintingList).indexOf(JSON.stringify(response[i])) === -1){
-                       paintingList.push(response[i]);
-                   }
-               }
+               
                $('#imgDiv').empty();
-                //setAllPaintings(paintingList);
+                setAllPaintings(response);
                 $('#loadMore').show(); 
             } else if(counter == 0){
                 swal("There are No paintings!");
@@ -119,17 +115,17 @@ function setAllPaintings(response){
         var col =  '<div class=col-md-5>'+
         '<div class = "well">'+
             '<img style="height:200px" class="thumbnail img-responsive" alt="opps!! imgae is not loaded"'+
-                'src="'+baseUrl + response[i].media.pathThumb+response[i].media.fileName+'" />'+
-                '<input type="checkbox" name="publicOrPrivate" class="form-check-input" id="'+response[i].media.id+"_isPublic"+'">Public?'+
-                '<button class="btn btn-success deleteBtn" id="'+response[i].media.id+ '"'+
+                'src="'+baseUrl + response[i].PATH_THUMB + response[i].FILENAME +'" />'+
+                '<input type="checkbox" name="publicOrPrivate" class="form-check-input" id="'+response[i].MEDIA_ID+"_isPublic"+'">Public?'+
+                '<button class="btn btn-success deleteBtn" id="'+response[i].MEDIA_ID+ '"'+
                 '">Delete</input>';
                 '</div></div>';
                 
         $('#'+divid).append(col);
-        var isPublic = response[i].publicImage;
+        var isPublic = response[i].IS_PUBLIC;
         if(isPublic=='true'){
-            $('#'+response[i].media.id+'_isPublic').prop('checked',true);
-        } else $('#'+response[i].media.id+'_isPublic').prop('checked',false);
+            $('#'+response[i].MEDIA_ID+'_isPublic').prop('checked',true);
+        } else $('#'+response[i].MEDIA_ID+'_isPublic').prop('checked',false);
     }
     //bindEvent();
 }
@@ -167,8 +163,8 @@ function setPublicOrprivate(id){
     var mediaId =  id.substring(0,i);
 
     $.ajax({
-        url:  `${baseUrl}/api/media/isPublic/${isPublic}/${mediaId}` ,
-        type: "PUT",
+        url:  `${baseUrl}/controller/paintingController.cfm?action=setIspublicOrprivate&mediaId=${mediaId}&isPublic=${isPublic}` ,
+        type: "POST",
         crossDomain: true,
         data: {},
         async: false,

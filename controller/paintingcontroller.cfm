@@ -15,6 +15,8 @@
 		<cfoutput>#jsondata#</cfoutput>
 	</cfcase>
 
+
+
 	<cfcase value = "paginationForAllPainting">
 		<cfset offset = #URL.counter# />
 		<cfset data = variables.paintingService.paginationForAllPainting(offset=#offset#) />

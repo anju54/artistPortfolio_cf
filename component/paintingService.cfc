@@ -17,6 +17,7 @@
 		<!--- Fetch profile name from session object --->
 		<cfset profileName = session.artistProfileId.profileName />
 		<cfset destination = "../media/artist/" & profileName & "/" />
+		<cfset storedDestinationAdress = "/media/artist/" & profileName & "/" />
 
 		<cfif len(trim(form.fileUpload))>
 		  <cffile action="upload"
@@ -42,7 +43,7 @@
 			insert into media( filename_original, path ) values (
 
 			<cfqueryparam cfsqltype="cf_sql_varchar" value="#newFileName#">,
-			<cfqueryparam cfsqltype="cf_sql_varchar" value="#destination#">
+			<cfqueryparam cfsqltype="cf_sql_varchar" value="#storedDestinationAdress#">
 			)
 		</cfquery>
 		<!--- get the primary key of the inserted record --->
@@ -79,6 +80,7 @@
 		<!--- Fetch profile name from session object --->
 		<cfset profileName = session.artistProfileId.profileName />
 		<cfset destination = "../media/artist/" & profileName & "/" & "thumb/" />
+		<cfset storedThumbDestination = "/media/artist/" & profileName & "/" & "thumb/" />
 
 		<cfset thumbDestination = "../media/artist/" & profileName & "/" & "thumb/" & fileName />
 
@@ -111,7 +113,7 @@
 			update media set filename =
 			<cfqueryparam cfsqltype="cf_sql_varchar" value="#newFileName#">,
 			path_thumb =
-			<cfqueryparam cfsqltype="cf_sql_varchar" value="#destination#">
+			<cfqueryparam cfsqltype="cf_sql_varchar" value="#storedThumbDestination#">
 			where media_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#mediaId#">
 		</cfquery>
 
@@ -152,8 +154,9 @@
 
 		<cfquery datasource="artistPortfolio" name="paginationForAllPaintings">
 
-			select filename , path_thumb, media.media_id from media inner join artist_media_bridge as amb on
-			media.media_id = amb.media_id
+			select filename , path_thumb,path,filename_original, media.media_id, is_public
+			from media inner join
+			artist_media_bridge as amb on media.media_id = amb.media_id
             where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
 			limit <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,
 				  <cfqueryparam cfsqltype="cf_sql_integer" value="#limitValue#">
@@ -161,5 +164,7 @@
 
 		<cfreturn paginationForAllPaintings>
 	</cffunction>
+
+
 
 </cfcomponent>
