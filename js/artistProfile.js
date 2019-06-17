@@ -1,3 +1,4 @@
+var artistId = 0;
 $(document).ready(function() {
    
     $('#update').hide(); 
@@ -42,11 +43,9 @@ $(document).ready(function() {
     }
     
     //getLoggedArtistProfile(username); 
-
-    
+ 
     showProfilePic();
     
-
     $("#deleteImage").click(function () {
         swal({
             title: "Are you sure?",
@@ -512,26 +511,9 @@ function isURLvalid(field,data){
     }
 }
 
-// This method is used to get artist id.
-function getArtistProfileId(){
-
-    $.ajax({
-        url:  `${baseUrl}/controller/artistProfileController.cfm?action=getArtistId` ,
-        type: "GET",
-        crossDomain: true,
-        data: {},
-       
-        success: function (response) {
-			console.log(response);  
-        },
-        error: function( ) {
-        }         
-    });
-}
-
 //This is used for uplaoding the profile pic
 function uploadProfilePic(file){
-
+console.log("1......");
     $('#profilePicShowError').text('');
    // hideLoader();
     showLoader();
@@ -572,6 +554,7 @@ function uploadProfilePic(file){
 
 //This is used for making ajax call displaying the profile pic
 function showProfilePic(){
+    console.log("2......");
 
     $.ajax({
         url:  `${baseUrl}/controller/artistProfileController.cfm?action=getProfilePic`,
@@ -583,8 +566,10 @@ function showProfilePic(){
         },
         'async': false,
         success: function (response) {
-            if(response){
-                response = JSON.parse(response);
+            console.log(response);
+            response = JSON.parse(response);
+            if(response[0].PATH && response[0].FILENAME_ORIGINAL){
+                
                 console.log(response);
 
                 setProfilePic(response);  
@@ -606,7 +591,7 @@ function showProfilePic(){
 
 //This is used to set the profile pic
 function setProfilePic(response){
-   
+    console.log("3......"); 
     path = baseUrl + response[0].PATH + response[0].FILENAME_ORIGINAL;
     console.log(path);
     $('#profileImage').attr("src",path);
@@ -640,8 +625,35 @@ function updateProfilePic(file){
                 showProfilePic(token);
             }
         });
-
     }
    
-    
  }
+
+function redirectArtistPublicProfile(){
+
+    var artistId = getArtistProfileId();
+    $('#previewProfile').attr("href","./artistPublicProfile.html?id="+artistId);
+}
+
+// This method is used to get artist id.
+function getArtistProfileId(){
+    
+    $.ajax({
+        url:  `${baseUrl}/controller/artistProfileController.cfm?action=getArtistId` ,
+        type: "GET",
+        crossDomain: true,
+        data: {},
+       
+        success: function (response) {
+            artistId = response; 
+            console.log("inside ajax");
+            console.log(artistId);
+            console.log(response);
+        },
+        error: function( ) {
+            console.log("inside error");
+        }         
+    });
+    console.log(artistId);
+    return artistId ;
+}

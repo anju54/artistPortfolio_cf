@@ -59,14 +59,14 @@
 					</cfloop>
 
 				</cfquery>
-				<cfif #addArtistProfiledata.recordCount# GT 0>
+				<cfif #result.recordCount# GT 0>
 					<cfset isInserted = true>
-					<cfset fullPath = "/media/artist/" & form.profileName & "/" />
+					<cfset fullPath = "../media/artist/" & form.profileName & "/" />
 					<!--- create folder with the artist profile name inside media/artist/ folder --->
-					<cfdirectory action="create" directory="#expandPath("fullPath")#">
+					<cfdirectory action="create" directory="#expandPath("#fullPath#")#">
 					<!--- Create folder for storing thumbnail of images --->
 					<cfset thumbPath = fullPath & "thumb" & "/" />
-					<cfdirectory action="create" directory="#expandPath("thumbPath")#">
+					<cfdirectory action="create" directory="#expandPath("#thumbPath#")#">
 				</cfif>
 			</cfif>
 
@@ -96,12 +96,18 @@
 
 		<cfif not ArrayIsEmpty(arguments.form.paintingType)>
 
+			<cfset size = ArrayLen(arguments.form.paintingType) />
+			<cfset paintingTypeList = arguments.form.paintingType />
+			<cfset artistId = "#session.artistProfileId.artistProfileId#">
 			<!--- This is used to add list of painting type to database --->
 			<cfloop from = "1" to = "#size#" index = "i">
+
 				<cfquery name="updatePaintingTypeForArtist" datasource="artistPortfolio">
+
 					update artist_painting_list_bridge set artist_profile_id =
-						<cfqueryparam cfsqltype="cf_sql_integer" value="#artistProfileId#">,
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">,
 					painting_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#paintingTypeList[i]#">
+
 				</cfquery>
 			</cfloop>
 
@@ -149,7 +155,7 @@
 		<cfreturn flag/>
 	</cffunction>
 
-	<cffunction name="getArtistProfileIdByUserId" access="public" output="false">
+	<cffunction name="getArtistProfileIdByUserId" access="public" output="true" returntype="numeric">
 
 		<!--- Fetch user_id from session object --->
 		<cfset userId = "#session.user.userId#">
@@ -161,13 +167,29 @@
 
 		<cfset session.artistProfileId = {'artistProfileId' = getArtistProfileIdByUserId.artist_profile_id,
 											'profileName' = getArtistProfileIdByUserId.profile_name } />
-
+		<cfreturn getArtistProfileIdByUserId.artist_profile_id />
 	</cffunction>
 
-	<cffunction name="getArtistPublicProfileInfo" access="public" output="false" returntype="Any">
+	<cffunction name="getPublicPainting" access="public" output="false" returntype="Any">
 
-		<!--- TODO: Implement Method --->
-		<cfreturn />
+		<cfargument name="offset" type="numeric" required="true" >
+
+		<cfset artistId = "#session.artistProfileId.artistProfileId#">
+		<cfset limitValue = 4 />
+
+		<cfquery datasource="artistPortfolio" name="paginationForPublicPaintings">
+
+			select filename , path_thumb,path,filename_original, media.media_id, is_public
+			from media inner join
+			artist_media_bridge as amb on media.media_id = amb.media_id
+            where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
+			and amb.is_public = "true"
+			limit <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,
+				  <cfqueryparam cfsqltype="cf_sql_integer" value="#limitValue#">
+		</cfquery>
+
+		<cfreturn paginationForPublicPaintings>
+
 	</cffunction>
 
 	<!--- This is used to fetch all the profile pic present in the application --->
@@ -186,6 +208,7 @@
 	<cffunction name="getProfilePic" access="public" output="false" returntype="query">
 
 		<cfset artistId = "#session.artistProfileId.artistProfileId#">
+
 
 		<cfquery name="selectProfilePic" datasource="artistPortfolio" result="profilePicResult">
 			select filename_original , path from media inner join artist_profile ap on
@@ -231,7 +254,7 @@
 			)
 		</cfquery>
 		<!--- get the primary key of the inserted record --->
-		<cfset profilePicId = result["GENERATEDKEY"] />
+		<cfset profilePicId = profilePicUpload["GENERATEDKEY"] />
 
 		<cfif #profilePicUpload.recordCount# gt 0>
 
@@ -250,4 +273,20 @@
 		<cfreturn flag/>
 	</cffunction>
 
+	<cffunction name="getPublicprofileInfo" access="public" output="true" returntype="Query">
+
+		<cfargument name="artistId" required="true">
+		<cfquery datasource="artistPortfolio" name="getPublicProfileInfo">
+			select ap.artist_profile_id,profile_name,facebook_info,twitter_info,linkedIn_url,about_me,
+					pt.painting_name,pt.painting_type_id,c.color_name,users.first_name,users.last_name,users.email_id
+					from artist_profile as ap
+                    left join artist_painting_list_bridge aplb
+					on ap.artist_profile_id = aplb.artist_profile_id
+                    left join painting_type pt on aplb.painting_id = pt.painting_type_id
+                    left join color as c on c.color_id = ap.color_id
+                    left join users on ap.user_id = users.user_id
+					where ap.artist_profile_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.artistId#">
+		</cfquery>
+		<cfreturn getPublicprofileInfo />
+	</cffunction>
 </cfcomponent>
