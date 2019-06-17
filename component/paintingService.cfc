@@ -165,6 +165,18 @@
 		<cfreturn paginationForAllPaintings>
 	</cffunction>
 
+	<cffunction name="setIspublicOrprivate" access="public" returntype="void">
 
+		<cfargument name="mediaId" type="numeric" required="true" >
+		<cfargument name="publicOrPrivate" type="string" required="true" >
+
+		<cfquery datasource="artistportfolio" name="setPublicOrPrivate">
+
+			update artist_media_bridge set is_public =
+			<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.publicOrPrivate#">
+			 where media_id =
+			<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.mediaId#">
+		</cfquery>
+	</cffunction>
 
 </cfcomponent>

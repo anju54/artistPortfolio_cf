@@ -15,7 +15,10 @@
 		<cfoutput>#jsondata#</cfoutput>
 	</cfcase>
 
+	<cfcase value = "setIspublicOrprivate">
 
+		<cfset data = variables.paintingService.setIspublicOrprivate(mediaId=#URL.mediaId#,publicOrPrivate=#URL.isPublic#) />
+	</cfcase>
 
 	<cfcase value = "paginationForAllPainting">
 		<cfset offset = #URL.counter# />
