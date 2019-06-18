@@ -301,25 +301,27 @@
 			<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#"> ;
 		</cfquery>
 
-		<cfif #getProfilePicId.recordCount# gt 0>
-			<cfquery datasource="artistPortfolio" name="deleteProfilePic">
+		<cfif not  #getProfilePicId.profile_pic_id# eq 0>
 
-			delete from media where media_id =
-					<cfqueryparam cfsqltype="cf_sql_integer" value="#getProfilePicId.profile_pic_id#"> ;
+			<cfquery datasource="artistPortfolio" result="deleteProfilePic">
+				update artist_profile set profile_pic_id = null where artist_profile_id =
+				<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#"> ;
 			</cfquery>
+
 		</cfif>
 
 		<cfif #deleteProfilePic.recordCount# gt 0>
-			<cfquery datasource="artistPortfolio" name="deleteFromArtist">
-				update artist_profile set profile_pic_id = null where artist_profile_id =
-				<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#"> ;
+
+			<cfquery datasource="artistPortfolio" result="deleteFromArtist">
+				delete from media where media_id =
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#getProfilePicId.profile_pic_id#"> ;
+
 			</cfquery>
 		</cfif>
 
 		<cfif #deleteFromArtist.recordCount# gt 0>
 			<cfset flag = false />
 		</cfif>
-
 
 	</cffunction>
 
