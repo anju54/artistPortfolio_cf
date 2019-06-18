@@ -2,7 +2,7 @@ var artistId = 0;
 $(document).ready(function() {
    
     $('#update').hide(); 
-    //$("#saveImage").hide();
+    $("#saveImage").hide();
     $('#updateImage').hide();
 
     //getUserDetail();
@@ -531,8 +531,9 @@ function uploadProfilePic(file){
             success: function (response) {
                 hideLoader();
                if(response!=null){
+                   console.log("1......");
                 swal("profile pic  uploaded!!"); 
-                showProfilePic(token);
+                showProfilePic();
                 $('#deleteImage').show();
                }   
             },
@@ -567,7 +568,7 @@ function showProfilePic(){
         success: function (response) {
             console.log(response);
             response = JSON.parse(response);
-            if(response[0].PATH && response[0].FILENAME_ORIGINAL){
+            if(response.length>0 && response[0].PATH && response[0].FILENAME_ORIGINAL){
                 
                 console.log(response);
 
@@ -621,7 +622,7 @@ function updateProfilePic(file){
                 $('#profilePicShowError').text(error.responseJSON.message);
             },
             complete: function () {
-                showProfilePic(token);
+                showProfilePic();
             }
         });
     }
@@ -648,6 +649,7 @@ function getArtistProfileId(){
             console.log("inside ajax");
             console.log(artistId);
             console.log(response);
+            $("#saveImage").show();
         },
         error: function( ) {
             console.log("inside error");
