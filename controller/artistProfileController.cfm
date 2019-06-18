@@ -19,6 +19,13 @@
 		<cfoutput>#jsondata#</cfoutput>
 	</cfcase>
 
+	<cfcase value = "getPublicProfilePicById">
+		<cfset artistId = #URL.artistId# />
+		<cfset profilePicInfo = application.artistprofileService.getPublicProfilePicById(artistId=#artistId#) />
+		<cfset jsondata =  SerializeJSON(profilePicInfo,'struct')/>
+		<cfoutput>#jsondata#</cfoutput>
+	</cfcase>
+
 	<cfcase value = "getArtistProfile">
 		<cfset artistProfileData = application.artistprofileService.getArtistProfileByUserId() />
 		<cfset jsondata =  SerializeJSON(artistProfileData,'struct')/>
@@ -34,9 +41,12 @@
 
 	<cfcase value = "saveArtistProfile">
 		<cfset requestBody = toString( getHttpRequestData().content ) />
-		<cfset data = deserializeJSON( requestBody )>
+		<cfset data = deserializeJSON( requestBody ) />
 		<cfset isInserted = application.artistprofileService.createArtistProfile(data) />
+	</cfcase>
 
+	<cfcase value = "deleteProfilePic">
+		<cfset isInserted = application.artistprofileService.deleteprofilePic() />
 	</cfcase>
 
 	<cfcase value = "paginationForPublicPainting">
@@ -68,5 +78,7 @@
 		<cfheader statuscode="404" statustext="Not Found" />
 		<cfset jsondata =  SerializeJSON("404 PAGE NOT FOUND")/>
 	</cfdefaultcase>
+
+
 
 </cfswitch>

@@ -209,12 +209,26 @@
 
 		<cfset artistId = "#session.artistProfileId.artistProfileId#">
 
-
 		<cfquery name="selectProfilePic" datasource="artistPortfolio" result="profilePicResult">
 			select filename_original , path from media inner join artist_profile ap on
 			media.media_id = ap.profile_pic_id
         	where artist_profile_id =
 			<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
+		</cfquery>
+
+		<cfreturn selectProfilePic/>
+	</cffunction>
+
+	<!--- This is used to get profile pic information --->
+	<cffunction name="getPublicProfilePicById" access="public" output="false" returntype="query">
+
+		<cfargument name="artistId" required="true" type="numeric">
+
+		<cfquery name="selectProfilePic" datasource="artistPortfolio" result="profilePicResult">
+			select filename_original , path from media inner join artist_profile ap on
+			media.media_id = ap.profile_pic_id
+        	where artist_profile_id =
+			<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.artistId#">
 		</cfquery>
 
 		<cfreturn selectProfilePic/>
@@ -273,6 +287,9 @@
 		<cfreturn flag/>
 	</cffunction>
 
+
+
+	<!--- This is used to get artist public profile page data --->
 	<cffunction name="getPublicprofileInfo" access="public" output="true" returntype="Query">
 
 		<cfargument name="artistId" required="true">
