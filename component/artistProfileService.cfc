@@ -93,6 +93,8 @@
 			color_name    = <cfqueryparam value="#arguments.form.colorName#" cfsqltype="cf_sql_varchar"> )
 			where artist_profile_id =  <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#"> ;
 		</cfquery>
+<cfdump var="#arguments.form.paintingType#">
+<cfabort>
 
 		<cfif not ArrayIsEmpty(arguments.form.paintingType)>
 
@@ -287,7 +289,39 @@
 		<cfreturn flag/>
 	</cffunction>
 
+	<!--- This is used to delete profile pic --->
+	<cffunction name="deleteprofilePic" access="public" output="true" returntype="void">
 
+		<cfset flag = true />
+		<!--- Fetch user_id from session object --->
+		<cfset artistId = "#session.artistProfileId.artistProfileId#">
+
+		<cfquery datasource="artistPortfolio" name="getProfilePicId">
+			select profile_pic_id from artist_profile where artist_profile_id =
+			<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#"> ;
+		</cfquery>
+
+		<cfif #getProfilePicId.recordCount# gt 0>
+			<cfquery datasource="artistPortfolio" name="deleteProfilePic">
+
+			delete from media where media_id =
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#getProfilePicId.profile_pic_id#"> ;
+			</cfquery>
+		</cfif>
+
+		<cfif #deleteProfilePic.recordCount# gt 0>
+			<cfquery datasource="artistPortfolio" name="deleteFromArtist">
+				update artist_profile set profile_pic_id = null where artist_profile_id =
+				<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#"> ;
+			</cfquery>
+		</cfif>
+
+		<cfif #deleteFromArtist.recordCount# gt 0>
+			<cfset flag = false />
+		</cfif>
+
+
+	</cffunction>
 
 	<!--- This is used to get artist public profile page data --->
 	<cffunction name="getPublicprofileInfo" access="public" output="true" returntype="Query">
@@ -305,5 +339,44 @@
 					where ap.artist_profile_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.artistId#">
 		</cfquery>
 		<cfreturn getPublicprofileInfo />
+	</cffunction>
+
+	<cffunction name="updateProfilePic"  access="public" returntype="boolean">
+
+		<cfargument name="form" type="any" required="true"/>
+		<cfset isUpdated = false />
+		<!--- Fetch user_id from session object --->
+		<cfset artistId = "#session.artistProfileId.artistProfileId#">
+
+		<cfif len(trim(form.fileUpload))>
+		  <cffile action="upload"
+		     fileField="fileUpload"
+		     destination="#expandPath("../media/profile-pics/")#">
+
+		</cfif>
+		<!--- Fetch user_id from session object --->
+		<cfset userId = "#session.user.userId#">
+
+		<cfset fileName = artistId & cffile.ATTEMPTEDSERVERFILE />
+		<cfset destination = "../media/profile-pics/" & fileName />
+		<cfset source = "../media/profile-pics/" & cffile.ATTEMPTEDSERVERFILE />
+
+		<cffile
+		action = "rename"
+		destination = "#expandPath("#destination#")#"
+		source = "#expandPath("#source#")#">
+
+		<cfquery datasource="artistPortfolio" name="updateProfilePic" result="updateProfilePicResult">
+			update media set filename_original =
+			<cfqueryparam cfsqltype="cf_sql_varchar" value="#fileName#"> where media_id =
+			( select profile_pic_id from artist_profile where artist_profile_id =
+			<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">  )
+		</cfquery>
+
+		<cfif updateProfilePicResult.recordCount Gt 0>
+			<cfset isUpdated = true />
+		</cfif>
+
+		<cfreturn isUpdated />
 	</cffunction>
 </cfcomponent>

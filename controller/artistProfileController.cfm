@@ -13,6 +13,11 @@
 
 	</cfcase>
 
+	<cfcase value = "updateProfilePic">
+		<cfset isInserted = application.artistprofileService.updateProfilePic(form) />
+
+	</cfcase>
+
 	<cfcase value = "getProfilePic">
 		<cfset profilePicInfo = application.artistprofileService.getProfilePic() />
 		<cfset jsondata =  SerializeJSON(profilePicInfo,'struct')/>

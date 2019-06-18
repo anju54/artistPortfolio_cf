@@ -352,15 +352,14 @@ function getLoggedArtistProfile(username){
 // This is used to delete profile pic
 function deleteProfile(){
 
-    var email = window.localStorage.getItem("USERNAME");
     $.ajax({
-        url:  `${baseUrl}/api/media/profile-pic/${email}` ,
-        type: "DELETE",
+        url:  `${baseUrl}/controller/artistProfileController.cfm?action=deleteProfilePic` ,
+        type: "Get",
         crossDomain: true,
         data: {},
        
         success: function (response) {
-              if(response!=null){  
+              if(response){  
                 $('#profileImage').attr("src","./assets/images/default-profile-pic.png");
                 $('#updateImage').hide();
                 $('#saveImage').show();
@@ -513,7 +512,7 @@ function isURLvalid(field,data){
 
 //This is used for uplaoding the profile pic
 function uploadProfilePic(file){
-console.log("1......");
+
     $('#profilePicShowError').text('');
    // hideLoader();
     showLoader();
@@ -604,8 +603,8 @@ function updateProfilePic(file){
 
         $.ajax({
 
-            url:  `${baseUrl}/api/media/profile-pic` ,
-            type: "PUT",
+            url:  `${baseUrl}/controller/artistProfileController.cfm?action=updateProfilePic` ,
+            type: "Post",
             enctype: "multipart/form-data",
             crossDomain: true,
             processData: false,  // it prevent jQuery form transforming the data into a query string
