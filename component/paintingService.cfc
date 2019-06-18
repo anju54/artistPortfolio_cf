@@ -140,11 +140,6 @@
 		<cfreturn />
 	</cffunction>
 
-	<cffunction name="deletePainting" access="public" output="false" returntype="Any">
-		<!--- TODO: Implement Method --->
-		<cfreturn />
-	</cffunction>
-
 	<cffunction name="paginationForAllPainting" access="public" output="true" returntype="Any">
 
 		<cfargument name="offset" type="numeric" required="true" >
@@ -177,6 +172,22 @@
 			 where media_id =
 			<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.mediaId#">
 		</cfquery>
+	</cffunction>
+
+	<!--- This is used to delete artist's painting by media id --->
+	<cffunction name="deletePainting" access="public" returntype="boolean">
+
+		<cfargument name="mediaId" required="true" >
+		<cfset flag = false />
+
+		<cfquery name="deletePainting" datasource="artistPortfolio">
+			delete from media where media_id =
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.mediaId#">
+		</cfquery>
+
+		<cfif #deletePainting.recordCount# gt 0>
+			<cfset flag = true />
+		</cfif>
 	</cffunction>
 
 </cfcomponent>

@@ -4,6 +4,11 @@
 
 <cfswitch expression = "#method#">
 
+	<cfcase value = "deletePainting">
+		<cfset paintingId = #URL.id# />  <!--- painting id --->
+		<cfset isDeleted = variables.paintingService.deletePainting(mediaId=#paintingId#) />
+	</cfcase>
+
 	<cfcase value = "uploadpainting">
 		<cfset isInserted = variables.paintingService.uploadPainting(form) />
 	</cfcase>
