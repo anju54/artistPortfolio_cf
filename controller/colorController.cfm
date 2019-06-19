@@ -1,4 +1,4 @@
-
+<!--- This is used for mapping the color related operation --->
 <cfset variable.colorService = CreateObject('component', 'component.colorService') />
 
 <cfset colorArray = variable.colorService.getAllColors() />

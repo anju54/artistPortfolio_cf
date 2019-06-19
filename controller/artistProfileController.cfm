@@ -1,7 +1,6 @@
-<!--- This is used for mapping the artist profile related information --->
+<!--- This is used for mapping the artist profile related operation --->
 
-<!---This is used for calling the method for creating artist profile--->
-
+<!---This is used for calling the method for artistProfileService component--->
 <cfset application.artistprofileService = CreateObject('component', 'component.artistProfileService') />
 
 <cfset method = #URL.action# />
@@ -10,7 +9,6 @@
 
 	<cfcase value = "uploadProfilePic">
 		<cfset isInserted = application.artistprofileService.uploadProfilePic(form) />
-
 	</cfcase>
 
 	<cfcase value = "updateProfilePic">
@@ -83,7 +81,5 @@
 		<cfheader statuscode="404" statustext="Not Found" />
 		<cfset jsondata =  SerializeJSON("404 PAGE NOT FOUND")/>
 	</cfdefaultcase>
-
-
 
 </cfswitch>

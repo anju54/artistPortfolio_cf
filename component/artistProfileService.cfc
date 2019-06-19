@@ -1,5 +1,6 @@
 <!---
   --- artistProfileService
+  --- This is used to handle operation related to artist profile page
   --- --------------------
   ---
   --- author: anjuk
@@ -179,6 +180,7 @@
 		<cfreturn getArtistProfileIdByUserId.artist_profile_id />
 	</cffunction>
 
+	<!--- This is used to get artist public paintings --->
 	<cffunction name="getPublicPainting" access="public" output="false" returntype="Any">
 
 		<cfargument name="offset" type="numeric" required="true" >
@@ -350,6 +352,7 @@
 		<cfreturn getPublicprofileInfo />
 	</cffunction>
 
+	<!--- This is used for updating artist profile picture --->
 	<cffunction name="updateProfilePic"  access="public" returntype="boolean">
 
 		<cfargument name="form" type="any" required="true"/>

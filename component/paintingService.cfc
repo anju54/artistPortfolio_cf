@@ -135,11 +135,13 @@
 		<cfreturn showAllPaintingByartistId/>
 	</cffunction>
 
+	<!--- This is used to show the all public painting of artist --->
 	<cffunction name="showPublicPaintingByArtistId" access="public" output="false" returntype="Any">
 		<!--- TODO: Implement Method --->
 		<cfreturn />
 	</cffunction>
 
+	<!--- This is used to handle the pagination in showing artist paintings --->
 	<cffunction name="paginationForAllPainting" access="public" output="true" returntype="Any">
 
 		<cfargument name="offset" type="numeric" required="true" >
@@ -160,6 +162,7 @@
 		<cfreturn paginationForAllPaintings>
 	</cffunction>
 
+	<!--- This is used to mark painting as public or private --->
 	<cffunction name="setIspublicOrprivate" access="public" returntype="void">
 
 		<cfargument name="mediaId" type="numeric" required="true" >

@@ -7,6 +7,7 @@
   --->
 <cfcomponent accessors="true" output="false" persistent="false">
 
+	<!--- This is used to display all the colors stored in the database --->
 	<cffunction name="getAllColors" returntype="query" access="public" displayname="getAllColors">
 		<cfset var getAllColors = "" />
 
