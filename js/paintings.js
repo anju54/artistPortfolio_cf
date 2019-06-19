@@ -89,8 +89,7 @@ function showPaintings(){
             }
              
             counter = 4 + counter ;
-            console.log(counter);
-            //bindEvent();          
+            bindEvent();          
         },
         error: function( error) {
            
@@ -127,7 +126,7 @@ function setAllPaintings(response){
             $('#'+response[i].MEDIA_ID+'_isPublic').prop('checked',true);
         } else $('#'+response[i].MEDIA_ID+'_isPublic').prop('checked',false);
     }
-    //bindEvent();
+    bindEvent();
 }
 
 // This is used to preview when user hover the image to see the full image
@@ -183,8 +182,8 @@ function setPublicOrprivate(id){
 function deletePainting(id){
 
     $.ajax({
-        url:  `${baseUrl}/api/media/${id}` ,
-        type: "DELETE",
+        url:  `${baseUrl}/paintingcontroller.cfm?action=deletePainting&id=${id}` ,
+        type: "Get",
         crossDomain: true,
         data: {},
         async: false,
@@ -228,6 +227,7 @@ function deletePainting(id){
         async:false,
         success: function (response) {
            swal("painting uploaded successfully");
+           showPaintings();
            hideLoader();
         },
         error: function(error) {    

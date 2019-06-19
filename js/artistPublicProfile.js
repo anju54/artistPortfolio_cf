@@ -63,8 +63,11 @@ function setAllPaintings(response){
 //This is used to preview the images when user hover the image
 function publicImagePreview(source){
     var source1 = source;
-    var index = source.indexOf('thumbnail/thumb');
+    console.log(source);
+    var index = source.indexOf('thumb');
+    console.log(index);
     source = source.substring(0,index)+source1.substring(index+15);
+    console.log(source);
     var div= document.createElement("div");
     div.className += 'over';
     div.id += 'over';
@@ -155,7 +158,7 @@ function setData(response){
 function getPublicProfilePic(id){
 
     $.ajax({
-        url:  `${baseUrl}/api/artist-profile/public/profile-pic/?id=${id}` ,
+        url:  `${baseUrl}/controller/artistProfileController.cfm?action=getPublicProfilePicById&artistId=${id}` ,
         type: "GET",
         crossDomain: true,
         data: {},
@@ -163,9 +166,10 @@ function getPublicProfilePic(id){
             "Content-Type": "application/json",
         },
         success: function (response) {
-            
+            response = JSON.parse(response);
             if(response){
-                var path = baseUrl + response.path + response.fileName ;
+                var path = baseUrl + response[0].PATH + response[0].FILENAME_ORIGINAL ;
+                console.log(response[0].FILENAME);
                 $('#profilePic').attr("src",path);
                  
             } else{

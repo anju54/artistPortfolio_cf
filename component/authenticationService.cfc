@@ -12,27 +12,34 @@
 
 		<cfargument name="userEmail" type="string" required="true" />
 		<cfargument name="userPassword" type="string" required="true" />
+		<cftry>
+			<cfset var aErrorMsg = ArrayNew(1) />
+			<!--- validate the email --->
+			<cfif NOT isValid('email', arguments.userEmail)>
+				<cfset arrayAppend(aErrorMsg, 'Please provide a valid email address')>
+			</cfif>
 
-		<cfset var aErrorMsg = ArrayNew(1) />
-		<!--- validate the email --->
-		<cfif NOT isValid('email', arguments.userEmail)>
-			<cfset arrayAppend(aErrorMsg, 'Please provide a valid email address')>
-		</cfif>
+			<!--- validate the password --->
+			<cfif arguments.userPassword EQ ''>
+				<cfset arrayAppend(aErrorMsg, 'Please provide a password')>
+			</cfif>
+			<cfif NOT
+			    ( len(arguments.userPassword) GTE 6
+			    AND refind('[A-Z]',arguments.userPassword)
+			    AND refind('[a-z]',arguments.userPassword)
+			    AND refind('[0-9]',arguments.userPassword)
+			    AND refind('[.!@##$&*]',arguments.userPassword)
+			     )>
+				   <cfset arrayAppend(aErrorMsg, 'Wrong password ...! it should contain 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter')>
+		    </cfif>
 
-		<!--- validate the password --->
-		<cfif arguments.userPassword EQ ''>
-			<cfset arrayAppend(aErrorMsg, 'Please provide a password')>
-		</cfif>
-		<cfif NOT
-		    ( len(arguments.userPassword) GTE 6
-		    AND refind('[A-Z]',arguments.userPassword)
-		    AND refind('[a-z]',arguments.userPassword)
-		    AND refind('[0-9]',arguments.userPassword)
-		    AND refind('[.!@##$&*]',arguments.userPassword)
-		     )>
-			   <cfset arrayAppend(aErrorMsg, 'Wrong password ...! it should contain 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter')>
-	    </cfif>
+		<cfcatch type="any" >
+			<cflog application="true" file="artistPortfolioError"
+			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:authenticationService ,
+					function:validateUser, Line:#cfcatch.TagContext[1].Line#">
 
+		</cfcatch>
+		</cftry>
 		<cfreturn aErrorMsg/>
 	</cffunction>
 
@@ -66,12 +73,12 @@
 				<cfset var isUserLoggedIn = false />
 				<cfreturn isUserLoggedIn>
 			</cfif>
-
-			<cfcatch type="database">
-			</cfcatch>
-
+		<cfcatch type="any" >
+			<cflog application="true" file="artistPortfolioError"
+			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:authenticationService ,
+					function:doLogin, Line:#cfcatch.TagContext[1].Line#">
+		</cfcatch>
 		</cftry>
-
 
 	</cffunction>
 
@@ -88,18 +95,24 @@
 	<!--- This is used to get current userId and then save it to session object --->
 	<cffunction name="getUserId" access="public" output="false" returntype="numeric">
 
-		<!--- Fetch email from session object --->
-		<cfif StructKeyExists(session.stLoggedInuser,"fullName")>
-			<cfset email = '#session.stLoggedInuser.userEmail#' />
+		<cftry>
+			<!--- Fetch email from session object --->
+			<cfif StructKeyExists(session.stLoggedInuser,"fullName")>
+				<cfset email = '#session.stLoggedInuser.userEmail#' />
 
-			<!--- This is used to get current user id --->
-			<cfquery datasource="artistPortfolio" name="getUserIdQuery">
-					select user_id from users where email_id = <cfqueryparam value="#email#" cfsqltype="cf_sql_varchar" > ;
-			</cfquery>
+				<!--- This is used to get current user id --->
+				<cfquery datasource="artistPortfolio" name="getUserIdQuery">
+						select user_id from users where email_id = <cfqueryparam value="#email#" cfsqltype="cf_sql_varchar" > ;
+				</cfquery>
 
-			<cfset session.user = {'userId' = getUserIdQuery.user_id } />
-		</cfif>
-
+				<cfset session.user = {'userId' = getUserIdQuery.user_id } />
+			</cfif>
+		<cfcatch type="any" >
+			<cflog application="true" file="artistPortfolioError"
+			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:authenticationService ,
+					function:getUserId, Line:#cfcatch.TagContext[1].Line#">
+		</cfcatch>
+		</cftry>
 		<cfreturn getUserIdQuery.user_id/>
 	</cffunction>
 
