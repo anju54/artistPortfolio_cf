@@ -2,7 +2,7 @@ var artistId = 0;
 $(document).ready(function() {
    
     $('#update').hide(); 
-    $("#saveImage").hide();
+    //$("#saveImage").hide();
     $('#updateImage').hide();
 
     //getUserDetail();
@@ -36,14 +36,7 @@ $(document).ready(function() {
         var data = new FormData(form);
         uploadProfilePic(data,type);
     }); 
-   
-    var id = window.localStorage.getItem("ARTIST");
-    if(id==0){
-        getLoggedArtistProfile(username);  
-    }
     
-    //getLoggedArtistProfile(username); 
- 
     showProfilePic();
     
     $("#deleteImage").click(function () {
@@ -294,8 +287,11 @@ function updateProfile(){
             'async': false,
             success: function (response) {
                 
-                $('#msg').show();
-                swal("data  updated");          
+                if(response){
+                    $('#msg').show();
+                    swal("data  updated");    
+                    getArtistProfileData(); 
+                }     
             },
             error: function(error) {
                 var err = error.responseJSON.message;
@@ -649,7 +645,7 @@ function getArtistProfileId(){
             console.log("inside ajax");
             console.log(artistId);
             console.log(response);
-            $("#saveImage").show();
+          
         },
         error: function( ) {
             console.log("inside error");

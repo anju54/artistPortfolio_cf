@@ -93,27 +93,34 @@
 			color_name    = <cfqueryparam value="#arguments.form.colorName#" cfsqltype="cf_sql_varchar"> )
 			where artist_profile_id =  <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#"> ;
 		</cfquery>
-<cfdump var="#arguments.form.paintingType#">
-<cfabort>
+
+		<cfset size = ArrayLen("#arguments.form.paintingType#") />
+		<cfset paintingTypeList = #arguments.form.paintingType# />
+
+		<cfquery datasource="artistPortfolio" name="deleteExistingPaintingType" result="deleteExistingPaintingTypeResult">
+
+			delete from  artist_painting_list_bridge where artist_profile_id =
+			<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
+		</cfquery>
 
 		<cfif not ArrayIsEmpty(arguments.form.paintingType)>
 
-			<cfset size = ArrayLen(arguments.form.paintingType) />
-			<cfset paintingTypeList = arguments.form.paintingType />
-			<cfset artistId = "#session.artistProfileId.artistProfileId#">
 			<!--- This is used to add list of painting type to database --->
-			<cfloop from = "1" to = "#size#" index = "i">
+			<cfquery name="addPaintingTypeForArtist" datasource="artistPortfolio">
 
-				<cfquery name="updatePaintingTypeForArtist" datasource="artistPortfolio">
+				insert into artist_painting_list_bridge(artist_profile_id, painting_id) values
+				<cfloop from = "1" to = "#size#" index = "i">
+					 <cfif i NEQ 1>,</cfif>
+					(
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">,
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#paintingTypeList[i]#">
+					)
 
-					update artist_painting_list_bridge set artist_profile_id =
-						<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">,
-					painting_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#paintingTypeList[i]#">
+				</cfloop>
 
-				</cfquery>
-			</cfloop>
-
+			</cfquery>
 		</cfif>
+
 		<cfif #updateResult.recordCount# GT 0>
 			<cfset isInserted = true>
 		</cfif>

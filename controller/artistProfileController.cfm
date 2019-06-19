@@ -65,7 +65,7 @@
 		<cfset requestBody = toString( getHttpRequestData().content ) />
 		<cfset data = deserializeJSON( requestBody )>
 		<cfset isInserted = application.artistprofileService.updateArtistProfile(data) />
-
+		<cfoutput>#isInserted#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "getArtistId">
