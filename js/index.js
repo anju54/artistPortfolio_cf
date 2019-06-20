@@ -56,7 +56,7 @@ console.log("2....");
 function showAllProfilePics(){
 
     $.ajax({
-        url:  `${baseUrl}/controller/artistProfileController.cfm?action=getAllProfilePic` ,
+        url:  `${baseUrl}/controller/artistProfileController.cfm?action=getAllProfilePic&offset=${counter}` ,
         type: "GET",
         crossDomain: true,
         data: {},
@@ -70,6 +70,7 @@ function showAllProfilePics(){
             if(response.length){
                 $('#selecArtistHeader').show();
                 setAllProfile(response);
+                counter = counter + 3;
                 $('#loadMore').show(); 
             } else if(counter == 0){
                 //swal("There are No Artist!");
@@ -80,7 +81,7 @@ function showAllProfilePics(){
                 swal('There are no more Artist!!')
                 $('#loadMore').hide();
             }
-            counter++;           
+                      
         },
         error: function( error) {
         },

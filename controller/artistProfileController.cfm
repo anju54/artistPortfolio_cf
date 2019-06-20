@@ -72,7 +72,7 @@
 	</cfcase>
 
 	<cfcase value = "getAllProfilePic">
-		<cfset profilePicData = application.artistprofileService.getAllprofilePicInformation() />
+		<cfset profilePicData = application.artistprofileService.getAllprofilePicInformation(offset=#URL.offset#) />
 		<cfset jsondata =  SerializeJSON(profilePicData,'struct')/>
 		<cfoutput>#jsondata#</cfoutput>
 	</cfcase>
