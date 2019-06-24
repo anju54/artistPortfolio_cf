@@ -223,9 +223,8 @@
 	<cffunction name="getPublicPainting" access="public" output="false" returntype="Any">
 
 		<cfargument name="offset" type="numeric" required="true" >
-
+		<cfargument name=artistId type="numeric" required="true">
 		<cftry>
-			<cfset artistId = "#session.artistProfileId.artistProfileId#">
 			<cfset limitValue = 4 />
 
 			<cfquery datasource="artistPortfolio" name="paginationForPublicPaintings">
@@ -233,7 +232,7 @@
 				select filename , path_thumb,path,filename_original, media.media_id, is_public
 				from media inner join
 				artist_media_bridge as amb on media.media_id = amb.media_id
-	            where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
+	            where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.artistId#">
 				and amb.is_public = "true"
 				limit <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,
 					  <cfqueryparam cfsqltype="cf_sql_integer" value="#limitValue#">

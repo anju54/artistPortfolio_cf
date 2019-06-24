@@ -9,9 +9,9 @@ $(document).ready(function() {
 
 //This is used for displaying all the public images
 function showPublicPaintings(){
-
+    var id = getUrlParameter('id');
     $.ajax({
-        url:  `${baseUrl}/controller/artistProfileController.cfm?action=paginationForPublicPainting&counter=${counter}` ,
+        url:  `${baseUrl}/controller/artistProfileController.cfm?action=paginationForPublicPainting&counter=${counter}&id=${id}` ,
         type: "GET",
         crossDomain: true,
         data: {},

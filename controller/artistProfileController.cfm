@@ -54,7 +54,7 @@
 
 	<cfcase value = "paginationForPublicPainting">
 		<cfset offset = #URL.counter# />
-		<cfset data = application.artistprofileService.getPublicPainting(offset=#offset#) />
+		<cfset data = application.artistprofileService.getPublicPainting(offset=#offset#,artistId=#URL.id#) />
 		<cfset jsondata =  SerializeJSON(data,'struct')/>
 		<cfoutput>#jsondata#</cfoutput>
 	</cfcase>

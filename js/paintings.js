@@ -66,7 +66,7 @@ function bindEvent(){
 
 // This is used to fetch all the painting of a particular artist
 function showPaintings(type){
-
+    
     if(type=="loadMore"){
         urlVar = `${baseUrl}/controller/paintingcontroller.cfm?action=paginationForAllPainting&counter=${counter}`;
     }
@@ -118,7 +118,7 @@ function showPaintings(type){
 
 // This is used to create img tag for displaying painting
 function setAllPaintings(response){
-
+    
     for(var i=0; i<response.length;i++){
 
 		var divid; 
@@ -214,15 +214,17 @@ function deletePainting(id){
         complete: function () {
 
             $('#imgDiv').empty();
-            showPaintings();
+            counter = 0;
+            var type = "loadMore";
+            showPaintings(type);
             for(var i=0; i<paintingList.length; i++){
                 if(paintingList[i].MEDIA_ID == id){
                     
                     paintingList.splice(i,1);
                 }
             }
-            setAllPaintings(paintingList);
-            bindEvent();
+            //setAllPaintings(paintingList);
+            //bindEvent();
         }         
     });
 }
