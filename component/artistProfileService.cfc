@@ -349,12 +349,17 @@
 			<!--- get the primary key of the inserted record --->
 			<cfset profilePicId = profilePicUpload["GENERATEDKEY"] />
 
+			<!--- Fetch user_id from session object --->
+			<cfset artistId = "#session.artistProfileId.artistProfileId#">
+
 			<cfif #profilePicUpload.recordCount# gt 0>
 
 				<cfset flag = true />
 				<cfquery result="updateProfilePicId" datasource="artistPortfolio">
 					update artist_profile set profile_pic_id =
 					<cfqueryparam cfsqltype="cf_sql_varchar" value="#profilePicId#">
+					where artist_profile_id =
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
 				</cfquery>
 				<cfif #updateProfilePicId.recordCount# gt 0>
 					<cfset flag = true />

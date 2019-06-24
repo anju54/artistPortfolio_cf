@@ -199,7 +199,7 @@
 
 				update artist_media_bridge set is_public =
 				<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.publicOrPrivate#">
-				 where media_id =
+				 where media_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#mediaId#">
 
 			</cfquery>
 		<cfcatch type="any" >

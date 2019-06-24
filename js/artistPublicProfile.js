@@ -63,11 +63,8 @@ function setAllPaintings(response){
 //This is used to preview the images when user hover the image
 function publicImagePreview(source){
     var source1 = source;
-    console.log(source);
     var index = source.indexOf('thumb');
-    console.log(index);
-    source = source.substring(0,index)+source1.substring(index+15);
-    console.log(source);
+    source = source.substring(0,index)+source1.substring(index+5);
     var div= document.createElement("div");
     div.className += 'over';
     div.id += 'over';
