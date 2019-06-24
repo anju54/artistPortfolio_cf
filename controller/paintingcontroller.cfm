@@ -13,6 +13,11 @@
 		<cfset isInserted = variables.paintingService.uploadPainting(form) />
 	</cfcase>
 
+	<cfcase value = "countPainting">
+		<cfset count = variables.paintingService.countPainting() />
+		<cfoutput>#count#</cfoutput>
+	</cfcase>
+
 	<cfcase value = "showPaintingByArtistId">
 
 		<cfset data = variables.paintingService.showAllPaintingByArtistId() />
@@ -28,6 +33,13 @@
 	<cfcase value = "paginationForAllPainting">
 		<cfset offset = #URL.counter# />
 		<cfset data = variables.paintingService.paginationForAllPainting(offset=#offset#) />
+		<cfset jsondata =  SerializeJSON(data,'struct')/>
+		<cfoutput>#jsondata#</cfoutput>
+	</cfcase>
+
+	<cfcase value = "displayLastUploadedImage">
+
+		<cfset data = variables.paintingService.displayLastUploadedImage() />
 		<cfset jsondata =  SerializeJSON(data,'struct')/>
 		<cfoutput>#jsondata#</cfoutput>
 	</cfcase>

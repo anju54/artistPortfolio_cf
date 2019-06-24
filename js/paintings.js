@@ -1,11 +1,13 @@
 var c = 0;
 var paintingList = [];
 var counter = 0;
+var countVal = 0;
 $(document).ready(function() {
 
-    showPaintings();   
+    showPaintings("loadMore");   
     $('#loadMore').click(function () {
-        showPaintings();
+        var type = "loadMore";
+        showPaintings(type);
     });
 
     $('input[name=publicOrPrivate]').change( function(){
@@ -19,8 +21,8 @@ $(document).ready(function() {
 
         var form = $('#uploadimage')[0];
         var data = new FormData(form);
+        counter = 0;
         uploadPaintings(data);
-
     }); 
 
 });
@@ -49,7 +51,7 @@ function bindEvent(){
                 if (willDelete) {
                     var id = this.id;
                     deletePainting(id);
-                    swal("Poof! Your profile pic has been deleted!", {
+                    swal("Poof! Your painting pic has been deleted!", {
                         icon: "success",
                     });
                 } else {
@@ -63,9 +65,17 @@ function bindEvent(){
 }
 
 // This is used to fetch all the painting of a particular artist
-function showPaintings(){
+function showPaintings(type){
+
+    if(type=="loadMore"){
+        urlVar = `${baseUrl}/controller/paintingcontroller.cfm?action=paginationForAllPainting&counter=${counter}`;
+    }
+    if(type=="upload"){
+        counter = 0;
+        urlVar = `${baseUrl}/controller/paintingcontroller.cfm?action=displayLastUploadedImage`;
+    }
     $.ajax({
-        url:  `${baseUrl}/controller/paintingcontroller.cfm?action=paginationForAllPainting&counter=${counter}` ,
+        url:  urlVar,
         type: "GET",
         crossDomain: true,
         data: {},
@@ -76,23 +86,31 @@ function showPaintings(){
         },
         success: function (response) {
             response = JSON.parse(response);
-            console.log(response);
+            getCountOfPaintings();
             if(response.length){
-               
+
+                for(var i=0; i<response.length; i++){
+                    if(JSON.stringify(paintingList).indexOf(JSON.stringify(response[i])) === -1){
+                        paintingList.push(response[i]);
+                    }
+                }
                $('#imgDiv').empty();
+              
                 setAllPaintings(response);
+                if(type=="loadMore"){
+                    counter = counter + 4;
+                }
+                    
                 $('#loadMore').show(); 
             } else if(counter == 0){
                 swal("There are No paintings!");
             } else {
+                swal("There are No paintings!");
                 $('#loadMore').hide();
             }
-             
-            counter = 4 + counter ;
-            bindEvent();          
+            //bindEvent();          
         },
-        error: function( error) {
-           
+        error: function( error) {  
         }             
     });
      
@@ -182,7 +200,7 @@ function setPublicOrprivate(id){
 function deletePainting(id){
 
     $.ajax({
-        url:  `${baseUrl}/paintingcontroller.cfm?action=deletePainting&id=${id}` ,
+        url:  `${baseUrl}/controller/paintingcontroller.cfm?action=deletePainting&id=${id}` ,
         type: "Get",
         crossDomain: true,
         data: {},
@@ -196,8 +214,9 @@ function deletePainting(id){
         complete: function () {
 
             $('#imgDiv').empty();
+            showPaintings();
             for(var i=0; i<paintingList.length; i++){
-                if(paintingList[i].media.id == id){
+                if(paintingList[i].MEDIA_ID == id){
                     
                     paintingList.splice(i,1);
                 }
@@ -227,16 +246,17 @@ function deletePainting(id){
         async:false,
         success: function (response) {
            swal("painting uploaded successfully");
-           showPaintings();
+           var type = "upload";
+           showPaintings(type);
            hideLoader();
         },
         error: function(error) {    
             $('#imageUploadError').text(error.responseJSON.message)
         },
         complete: function () {
-            counter =1;
+        
             paintingList=[];
-            showPaintings();
+            //showPaintings();
             hideLoader();
             bindEvent();
             $('#file').val('');
@@ -244,3 +264,23 @@ function deletePainting(id){
     });
     
  }
+
+// This is used to get the count of painting present by artist id.
+function getCountOfPaintings(){
+
+    $.ajax({
+        url:  `${baseUrl}/controller/paintingcontroller.cfm?action=countPainting` ,
+        type: "GET",
+        crossDomain: true,
+        async:false,
+        headers: {
+            "Content-Type": "application/json",
+        },
+        success: function (response) {
+            countVal = response;
+            
+        },
+        error: function( ) {
+        }         
+    });
+}

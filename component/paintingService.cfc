@@ -174,6 +174,21 @@
 		<cfreturn paginationForAllPaintings>
 	</cffunction>
 
+	<cffunction name="displayLastUploadedImage" access="public" returntype="query">
+
+		<cfset artistId = "#session.artistProfileId.artistProfileId#">
+		<cfquery datasource="artistPortfolio" name="selectLastImage" result="resultOfLastImage">
+
+			select filename , path_thumb,path,filename_original, media.media_id, is_public
+				from media inner join
+				artist_media_bridge as amb on media.media_id = amb.media_id
+	            where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
+				order by media.media_id desc limit 1;
+		</cfquery>
+
+		<cfreturn selectLastImage />
+	</cffunction>
+
 	<!--- This is used to mark painting as public or private --->
 	<cffunction name="setIspublicOrprivate" access="public" returntype="void">
 
@@ -185,7 +200,7 @@
 				update artist_media_bridge set is_public =
 				<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.publicOrPrivate#">
 				 where media_id =
-				<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.mediaId#">
+
 			</cfquery>
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
@@ -194,6 +209,20 @@
 
 		</cfcatch>
 		</cftry>
+	</cffunction>
+
+	<cffunction name="countPainting" access="public" returntype="any">
+
+		<cfset artistId = "#session.artistProfileId.artistProfileId#">
+		<cfquery datasource="artistPortfolio" name="countPainting" result="countPaintingResult">
+			select count(media.media_id) as countOfPainting
+				from media inner join
+				artist_media_bridge as amb on media.media_id = amb.media_id
+	            where artist_id =
+	            <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
+
+		</cfquery>
+		<cfreturn countPainting.countOfPainting />
 	</cffunction>
 
 	<!--- This is used to delete artist's painting by media id --->
@@ -218,6 +247,7 @@
 
 		</cfcatch>
 		</cftry>
+		<cfreturn flag/>
 	</cffunction>
 
 </cfcomponent>
