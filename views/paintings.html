@@ -71,9 +71,9 @@
                         Upload Painting here
                     </label>
                 </div>
-                <form enctype="multipart/form-data" id="uploadimage">
+                <form enctype="multipart/form-data" id="uploadimage" >
                     <div class="col-md-10">
-                        <input type="file" name="fileUpload" id="file" />
+                        <input type="file" name="fileUpload" id="file" onchange="ValidateSingleInput(this);" />
                         <p class="help-block">
                             Allowed formats: jpeg, jpg, png
                         </p>

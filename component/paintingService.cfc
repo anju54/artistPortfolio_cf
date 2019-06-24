@@ -74,7 +74,7 @@
 		</cfcatch>
 		</cftry>
 
-		<cfreturn true/>
+		<cfreturn flag/>
 	</cffunction>
 
 	<!--- This is used to create thumbnail of images --->
@@ -248,6 +248,17 @@
 		</cfcatch>
 		</cftry>
 		<cfreturn flag/>
+	</cffunction>
+
+	<cffunction access="public" name="validateImage" returntype="Array">
+
+		<cfargument name="form" type="any" required="true"/>
+
+		<cfset var aErrorMsg = ArrayNew(1) />
+		<cfif not isImageFile(form.fileUpload)>
+			<cfset arrayAppend(aErrorMsg, 'This file type is not allowed!')>
+		</cfif>
+		<cfreturn aErrorMsg/>
 	</cffunction>
 
 </cfcomponent>

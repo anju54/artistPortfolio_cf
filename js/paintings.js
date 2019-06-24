@@ -25,6 +25,17 @@ $(document).ready(function() {
         uploadPaintings(data);
     }); 
 
+    //binds to onchange event of your input field
+    $('#file').bind('change', function() {
+
+        //this.files[0].size gets the size of your file.
+       var size = this.files[0].size ;
+       if( size>10485760 ){
+           swal("please upload image lesser then 10mb");
+       }
+    
+    });
+
 });
 
 function bindEvent(){
@@ -285,4 +296,28 @@ function getCountOfPaintings(){
         error: function( ) {
         }         
     });
+}
+
+var _validFileExtensions = [".jpg", ".jpeg", ".png"];    
+function ValidateSingleInput(oInput) {
+    if (oInput.type == "file") {
+        var sFileName = oInput.value;
+         if (sFileName.length > 0) {
+            var blnValid = false;
+            for (var j = 0; j < _validFileExtensions.length; j++) {
+                var sCurExtension = _validFileExtensions[j];
+                if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                    blnValid = true;
+                    break;
+                }
+            }
+             
+            if (!blnValid) {
+                swal("Sorry, thil file is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                oInput.value = "";
+                return false;
+            }
+        }
+    }
+    return true;
 }

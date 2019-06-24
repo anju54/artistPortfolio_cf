@@ -10,7 +10,16 @@
 	</cfcase>
 
 	<cfcase value = "uploadpainting">
-		<cfset isInserted = variables.paintingService.uploadPainting(form) />
+
+		<cfset aErrMsg = variables.paintingService.validateImage(form) />
+		<cfif ArrayIsEmpty(aErrmsg)>
+			<cfset isUploaded = variables.paintingService.uploadPainting(form) />
+			<cfset jsondata =  SerializeJSON(isUploaded)/>
+			<cfoutput>#jsondata#</cfoutput>
+		<cfelse>
+			<cfset jsondata =  SerializeJSON(aErrmsg)/>
+			<cfoutput>#jsondata#</cfoutput>
+		</cfif>
 	</cfcase>
 
 	<cfcase value = "countPainting">
