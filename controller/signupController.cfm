@@ -7,12 +7,12 @@
 	<cfset data = deserializeJSON( requestBody )>
 </cfif>
 
-<cfset application.signupService = CreateObject('component', 'component.signupService') />
-<cfset aErrMsg = application.signupService.validateuser(data) />
+<cfset variables.signupService = CreateObject('component', 'component.signupService') />
+<cfset aErrMsg = variables.signupService.validateuser(data) />
 
 <cfif ArrayIsEmpty(aErrmsg)>
 
-	<cfset isInserted = application.signupService.addUser(data) />
+	<cfset isInserted = variables.signupService.addUser(data) />
 	<cfset jsondata =  SerializeJSON(isInserted)/>
 	<cfoutput>#jsondata#</cfoutput>
 <cfelse>

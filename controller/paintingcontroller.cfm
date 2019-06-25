@@ -53,9 +53,4 @@
 		<cfoutput>#jsondata#</cfoutput>
 	</cfcase>
 
-	 <cfdefaultcase>
-		<cfheader statuscode="404" statustext="Not Found" />
-		<cfset jsondata =  SerializeJSON("404 PAGE NOT FOUND")/>
-	</cfdefaultcase>
-
 </cfswitch>

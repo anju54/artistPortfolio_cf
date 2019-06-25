@@ -2,10 +2,9 @@ var artistId = 0;
 $(document).ready(function() {
    
     $('#update').hide(); 
-    //$("#saveImage").hide();
+    $("#saveImage").hide();
     $('#updateImage').hide();
 
-    //getUserDetail();
     getArtistProfileId();
     getAllPaintingType(); 
     getAllColors();
@@ -85,7 +84,7 @@ function getArtistProfileData(){
                 setProfileData(response); 
                 $('#save').hide();
                 $('#update').show();
-                
+                $("#saveImage").show();
                 //$('#deleteImage').show();
             }             
         },
@@ -191,37 +190,33 @@ function saveProfileData(){
             },
             'async': false,
             success: function (response) {
-                
-                window.localStorage.setItem("ARTIST",response);
-                if(response){
-                    swal("data saved successfully!!");  
-                    getLoggedArtistProfile();    
+                console.log(JSON.parse(response));
+                console.log( typeof(response));
+                if(response ==="true "){
+                    swal("data saved successfully!!");     
                     showProfilePic() ;
                     $("#saveImage").show();
                     getArtistProfileData();
+                }else if(response === "false "){
+                    $('#msg').show();
+                    $('#msg').text("Some error occured while creating artist account!");
                 }  
+                else if(response.includes('artist')){
+                    $('#msg').show();
+                    $('#msg').text(response);
+                }else if(response.includes('linkedIn')){
+                    $('#lError').show();
+                    $('#lError').text(response);
+
+                }else if(response.includes("facebook")){
+                    $('#fbError').show();
+                    $('#fbError').text(response);
+                }else if(response.includes("twitter")){
+                    $('#tError').show();
+                    $('#tError').text(response);
+                }
             },
             error: function( error) {
-
-                // var errorMsg = error.responseJSON.message;
-
-                // if(errorMsg.includes("Profile")){
-                //     $('#profileNameError').show();
-                //     $('#profileNameError').text(error.responseJSON.message)
-                // }if(errorMsg.includes("Facebook")){
-                //     $('#fbError').show();
-                //     $('#fbError').text(errorMsg);
-                // }else if(errorMsg.includes("Twitter")){
-                //     $('#tError').show();
-                //     $('#tError').text(errorMsg);
-                // }else if(errorMsg.includes("LinkdIn")){
-                //     $('#lError').show();
-                //     $('#lError').text(errorMsg);
-                // }
-                // else{
-                //     $('#msg').show();
-                //     $('#msg').text(errorMsg);
-                // }
             },  
             complete: function () {
                 
@@ -318,33 +313,6 @@ function updateProfile(){
 
 }
 
-// This is used to get logged in ArtistProfile Id
-function getLoggedArtistProfile(username){
-
-    $.ajax({
-        url:  `${baseUrl}/api/artist-profile/loggedIn/${username}` ,
-        type: "GET",
-        crossDomain: true,
-        data: {},
-        
-        headers: {
-            "Content-Type": "application/json",
-        },
-        'async': false,
-        success: function (response) {
-            if(response){
-
-                window.localStorage.setItem("ARTIST",response);  
-                var existingArtist = window.localStorage.getItem("ARTIST");
-                showProfilePic();    
-            }  
-        },
-        error: function( ) {
-           
-        }         
-    });
-}
-
 // This is used to delete profile pic
 function deleteProfile(){
 
@@ -355,8 +323,9 @@ function deleteProfile(){
         data: {},
        
         success: function (response) {
+            console.log(response);
               if(response){  
-                $('#profileImage').attr("src","./assets/images/default-profile-pic.png");
+                $('#profileImage').attr("src","../assets/images/default-profile-pic.png");
                 $('#updateImage').hide();
                 $('#saveImage').show();
                 $('#deleteImage').hide();
@@ -550,8 +519,7 @@ function uploadProfilePic(file){
 
 //This is used for making ajax call displaying the profile pic
 function showProfilePic(){
-    console.log("2......");
-
+    
     $.ajax({
         url:  `${baseUrl}/controller/artistProfileController.cfm?action=getProfilePic`,
         type: "GET",
@@ -562,25 +530,24 @@ function showProfilePic(){
         },
         'async': false,
         success: function (response) {
-            console.log(response);
+           
             response = JSON.parse(response);
+            
             if(response.length>0 && response[0].PATH && response[0].FILENAME_ORIGINAL){
-                
-                console.log(response);
 
                 setProfilePic(response);  
-                $('#updateImage').show(); 
-                $('#saveImage').hide(); 
-                $('#deleteImage').show(); 
+                $('#updateImage').show();  
+                 $('#deleteImage').show(); 
+                $('#saveImage').hide();
             }else{
-                $('#saveImage').show(); 
-                $('#deleteImage').hide();
-                $('#updateImage').hide();
+                // $('#saveImage').show(); 
+                // $('#deleteImage').hide();
+                // $('#updateImage').hide();
             }          
         },
         error: function( error) {
             
-            $('#profilePicShowError').text(error.responseJSON.message);
+           // $('#profilePicShowError').text(error.responseJSON.message);
         }             
     });
 }
@@ -641,17 +608,16 @@ function getArtistProfileId(){
         data: {},
        
         success: function (response) {
-            artistId = response; 
-            console.log("inside ajax");
-            console.log(artistId);
-            console.log(response);
-          
+            if(response>0){
+                artistId = response; 
+                //$("#saveImage").show();
+            } 
         },
         error: function( ) {
             console.log("inside error");
         }         
     });
-    console.log(artistId);
+    
     return artistId ;
 }
 

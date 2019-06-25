@@ -86,7 +86,7 @@
 	<cffunction name="doLogout" access="public" output="false" returntype="void">
 
 		<cfset structdelete(session, 'stLoggedInUser') />
-		<cfset structdelete(session, 'user') /> artistProfileId
+		<cfset structdelete(session, 'user') />
 		<cfset structdelete(session, 'artistProfileId') />
 		<cflogout />
 

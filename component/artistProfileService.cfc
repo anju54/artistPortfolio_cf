@@ -9,9 +9,9 @@
 <cfcomponent accessors="true" output="false" persistent="false">
 
 	<!--- This is used to create artist profile basic information with painting type --->
-	<cffunction name="createArtistProfile" displayname="createArtistProfile" access="public" output="false" returntype="Any">
+	<cffunction name="createArtistProfile" displayname="createArtistProfile" access="public" output="false" returntype="boolean">
 
-		<cfargument name="form" type="any" required="true"/>
+		<cfargument name="form" type="struct" required="true"/>
 		<cftry>
 			<cfset var isInserted = false />
 
@@ -23,19 +23,20 @@
 				<cfset userId = "#session.user.userId#">
 
 				<!--- insert artist profile record in artist_profile table --->
-				<cfquery name = "addArtistProfiledata" datasource = 'artistPortfolio' result="result">
+				<cfquery name = "addArtistProfiledata" datasource = "artistPortfolio" result="result">
 
-					insert into artist_profile (`profile_name`, `facebook_info`, `twitter_info`, `linkedIn_url`, `about_me`,
-				 	`user_id`, `color_id`) VALUES (
+					insert into artist_profile ( profile_name, facebook_info, twitter_info, linkedIn_url, about_me,
+				 	user_id, color_id) VALUES (
 
 						<cfqueryparam value="#arguments.form.profileName#"  cfsqltype="CF_SQL_VARCHAR">,
-						<cfqueryparam value="#arguments.form.facebookUrl#" cfsqltype="CF_SQL_VARCHAR">,
-						<cfqueryparam value="#arguments.form.twitterUrl#"  cfsqltype="CF_SQL_VARCHAR">,
-						<cfqueryparam value="#arguments.form.linkedInUrl#" cfsqltype="CF_SQL_VARCHAR">,
+						<cfqueryparam value="#arguments.form.facebookUrl#"  cfsqltype="CF_SQL_VARCHAR">,
+						<cfqueryparam value="#arguments.form.twitterUrl#"   cfsqltype="CF_SQL_VARCHAR">,
+						<cfqueryparam value="#arguments.form.linkedInUrl#"  cfsqltype="CF_SQL_VARCHAR">,
 						<cfqueryparam value="#arguments.form.aboutMe#"      cfsqltype="CF_SQL_VARCHAR">,
-						<cfqueryparam value="#userId#" cfsqltype="cf_sql_integer"> ,
-
-						( select color_id from color where color_name = <cfqueryparam value="#arguments.form.colorName#" cfsqltype="cf_sql_varchar"> )
+						<cfqueryparam value="#userId#"      cfsqltype="CF_SQL_INTEGER"> ,
+						( select color_id from color where color_name =
+							<cfqueryparam value="#arguments.form.colorName#"   cfsqltype="CF_SQL_VARCHAR">
+							)
 					)
 				</cfquery>
 
@@ -61,18 +62,22 @@
 						</cfloop>
 
 					</cfquery>
+				</cfif>
+
 					<cfif #result.recordCount# GT 0>
+
 						<cfset isInserted = true>
-						<cfset fullPath = "../media/artist/" & form.profileName & "/" />
+						<cfset fullPath = "../media/artist/" & arguments.form.profileName & "/" />
+
 						<!--- create folder with the artist profile name inside media/artist/ folder --->
 						<cfdirectory action="create" directory="#expandPath("#fullPath#")#">
+
 						<!--- Create folder for storing thumbnail of images --->
 						<cfset thumbPath = fullPath & "thumb" & "/" />
 						<cfdirectory action="create" directory="#expandPath("#thumbPath#")#">
 					</cfif>
 				</cfif>
 
-			</cfif>
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
 			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:artistProfileService ,
@@ -206,21 +211,29 @@
 				where u.user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#userId#">
 			</cfquery>
 
-			<cfset session.artistProfileId = {'artistProfileId' = getArtistProfileIdByUserId.artist_profile_id,
+			<cfif getArtistProfileIdByUserId.RecordCount gt 0>
+
+				<cfset session.artistProfileId = {'artistProfileId' = getArtistProfileIdByUserId.artist_profile_id,
 												'profileName' = getArtistProfileIdByUserId.profile_name } />
+			</cfif>
+
 
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
 			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:artistProfileService ,
 					function:getArtistProfileIdByUserId, Line:#cfcatch.TagContext[1].Line#">
-
 		</cfcatch>
 		</cftry>
-		<cfreturn getArtistProfileIdByUserId.artist_profile_id />
+		<cfif getArtistProfileIdByUserId.artist_profile_id Eq "">
+			<cfreturn 0/>
+		<cfelse>
+			<cfreturn getArtistProfileIdByUserId.artist_profile_id />
+		</cfif>
+
 	</cffunction>
 
 	<!--- This is used to get artist public paintings --->
-	<cffunction name="getPublicPainting" access="public" output="false" returntype="Any">
+	<cffunction name="getPublicPainting" access="public" output="false" returntype="query">
 
 		<cfargument name="offset" type="numeric" required="true" >
 		<cfargument name=artistId type="numeric" required="true">
@@ -271,15 +284,19 @@
 
 	<!--- This is used to get profile pic information --->
 	<cffunction name="getProfilePic" access="public" output="false" returntype="query">
+
+		<cfset selectProfilePic = QueryNew("") />
 		<cftry>
 			<cfset artistId = "#session.artistProfileId.artistProfileId#">
 
 			<cfquery name="selectProfilePic" datasource="artistPortfolio" result="profilePicResult">
+
 				select filename_original , path from media inner join artist_profile ap on
 				media.media_id = ap.profile_pic_id
 	        	where artist_profile_id =
 				<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
 			</cfquery>
+
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
 			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:artistProfileService ,
@@ -287,6 +304,7 @@
 
 		</cfcatch>
 		</cftry>
+
 		<cfreturn selectProfilePic/>
 	</cffunction>
 
@@ -316,7 +334,7 @@
 
 		<cfargument name="form" type="any" required="true"/>
 		<cftry>
-			<cfset var.flag = false />
+			<cfset flag = false />
 
 			<cfif len(trim(form.fileUpload))>
 			  <cffile action="upload"
@@ -377,7 +395,7 @@
 	</cffunction>
 
 	<!--- This is used to delete profile pic --->
-	<cffunction name="deleteprofilePic" access="public" output="true" returntype="void">
+	<cffunction name="deleteprofilePic" access="public" output="true" returntype="boolean">
 
 		<cftry>
 			<cfset flag = true />
@@ -385,6 +403,7 @@
 			<cfset artistId = "#session.artistProfileId.artistProfileId#">
 
 			<cfquery datasource="artistPortfolio" name="getProfilePicId">
+
 				select profile_pic_id from artist_profile where artist_profile_id =
 				<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#"> ;
 			</cfquery>
@@ -417,6 +436,7 @@
 
 		</cfcatch>
 		</cftry>
+		<cfreturn flag />
 	</cffunction>
 
 	<!--- This is used to get artist public profile page data --->
@@ -448,7 +468,7 @@
 	<!--- This is used for updating artist profile picture --->
 	<cffunction name="updateProfilePic"  access="public" returntype="boolean">
 
-		<cfargument name="form" type="any" required="true"/>
+		<cfargument name="form" type="struct" required="true"/>
 		<cftry>
 			<cfset isUpdated = false />
 			<!--- Fetch user_id from session object --->
@@ -491,4 +511,7 @@
 		</cftry>
 		<cfreturn isUpdated />
 	</cffunction>
+
+
+
 </cfcomponent>

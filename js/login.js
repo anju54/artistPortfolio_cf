@@ -60,7 +60,7 @@ function login(){
 function redirectPage(response){
     
     if(response.role=='ROLE_ARTIST'){
-        window.location.href = '../views/profile.html' ;
+        window.location.href = '../views/profile.html?type=edit' ;
     }
 }
 

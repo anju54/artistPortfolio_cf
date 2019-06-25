@@ -160,6 +160,7 @@ function setAllPaintings(response){
 
 // This is used to preview when user hover the image to see the full image
 function imagePreview(source){
+    console.log("image preview called");
     var source1 = source; 
     var index = source.indexOf('thumb');
     source = source.substring(0,index)+source1.substring(index+5);
@@ -271,7 +272,7 @@ function deletePainting(id){
             paintingList=[];
             //showPaintings();
             hideLoader();
-            bindEvent();
+            //bindEvent();
             $('#file').val('');
         }       
     });

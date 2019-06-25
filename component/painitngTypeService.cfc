@@ -1,5 +1,5 @@
 <!---
-  --- painitngTypeService
+  --- painitngTypeService is used to handle operation related to type of painting.
   --- -------------------
   ---
   --- author: anjuk
