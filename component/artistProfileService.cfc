@@ -512,6 +512,26 @@
 		<cfreturn isUpdated />
 	</cffunction>
 
+	<cffunction access="public" name="validationOfArtistdata" returntype="Array">
 
+		<cfargument name="form" type="struct" required="true"/>
+
+		<cfset var aErrorMsg = ArrayNew(1) />
+
+		<cfif len(arguments.form.linkedInUrl) gt 100>
+			<cfset arrayAppend(aErrorMsg, 'Enter the linkedIn Url  less 100!!')>
+		</cfif>
+		<cfif len(arguments.form.twitterUrl) gt 100>
+			<cfset arrayAppend(aErrorMsg, 'Enter the twitter Url less 100!!')>
+		</cfif>
+		<cfif len(arguments.form.facebookUrl) gt 100>
+			<cfset arrayAppend(aErrorMsg, 'Enter the facebook Url less 100!!')>
+		</cfif>
+		<cfif len(arguments.form.aboutMe) gt 255>
+			<cfset arrayAppend(aErrorMsg, 'Enter the about me less 100!!')>
+		</cfif>
+
+		<cfreturn aErrorMsg/>
+	</cffunction>
 
 </cfcomponent>

@@ -142,7 +142,6 @@ function saveProfileData(){
 
    $('#msg').text('');
 
-    var email = window.localStorage.getItem("USERNAME");
     var fbUrl = $("#fbUrl").val();
     var twitterUrl = $('#twitterUrl').val();
     var linkedInUrl = $('#linkedInUrl').val();
@@ -267,7 +266,6 @@ function updateProfile(){
             "paintingType" : newList,
             "colorName":color
         }
-        console.log(data); 
         data = JSON.stringify(data);
     
         $.ajax({
@@ -281,31 +279,32 @@ function updateProfile(){
             },
             'async': false,
             success: function (response) {
-                
-                if(response){
-                    $('#msg').show();
-                    swal("data  updated");    
+
+                if(response ==="true "){
+                    swal("data  updated successfully!!");    
                     getArtistProfileData(); 
-                }     
+                    $("#saveImage").hide();
+                }else if(response === "false "){
+                    $('#msg').show();
+                    $('#msg').text("Some error occured while creating artist account!");
+                }  
+                else if(response.includes('artist')){
+                    $('#msg').show();
+                    $('#msg').text(response);
+                }else if(response.includes('linkedIn')){
+                    $('#lError').show();
+                    $('#lError').text(response);
+
+                }else if(response.includes("facebook")){
+                    $('#fbError').show();
+                    $('#fbError').text(response);
+                }else if(response.includes("twitter")){
+                    $('#tError').show();
+                    $('#tError').text(response);
+                }
+                
             },
             error: function(error) {
-                var err = error.responseJSON.message;
-                if(err.includes("Facebook")){
-                    $('#fbError').show();
-                    $('#fbError').text(err);
-                }else if(err.includes("Twitter")){
-                    $('#tError').show();
-                    $('#tError').text(err);
-                }else if(err.includes("linkdIn")){
-                    $('#lError').show();
-                    $('#lError').text(err);
-                }
-                else{
-                    $('#msg').show();
-                    $('#msg').text(error.responseJSON.message);
-                    
-                }
-                
             }             
         });
     }

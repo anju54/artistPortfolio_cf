@@ -78,8 +78,17 @@
 	<cfcase value = "updateArtistProfile">
 		<cfset requestBody = toString( getHttpRequestData().content ) />
 		<cfset data = deserializeJSON( requestBody )>
-		<cfset isInserted = variables.artistprofileService.updateArtistProfile(data) />
-		<cfoutput>#isInserted#</cfoutput>
+
+		<cfset aErrMsg = variables.artistprofileService.validationOfArtistdata(data) />
+
+		<cfif Arraylen(aErrmsg) GT 0>
+			<cfset jsondata =  SerializeJSON(aErrmsg)/>
+			<cfoutput>#jsondata#</cfoutput>
+		<cfelse>
+			<cfset isInserted = variables.artistprofileService.updateArtistProfile(data) />
+			<cfoutput>#isInserted#</cfoutput>
+		</cfif>
+
 	</cfcase>
 
 	<cfcase value = "getArtistId">
