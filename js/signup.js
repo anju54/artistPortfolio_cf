@@ -33,7 +33,7 @@ function registration(){
     	        contentType: "application/json",
     	        
     	        success: function (response) {
-    	            console.log(response);
+    	            
     	            
     	            if(!response){
     	            	$('#mainErrMsg').show();
@@ -46,8 +46,6 @@ function registration(){
 	    	        }
     	        },
     	        error: function(error) {
-    	        	console.log(error);
-    	        	
     	        },
     	        complete: function () {
     	            hideLoader();               

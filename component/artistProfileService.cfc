@@ -268,7 +268,7 @@
 		<cftry>
 			<cfquery name="getAllProfilePic" datasource="artistPortfolio">
 				select filename_original, path,ap.artist_profile_id, users.first_name, users.last_name from media
-				 inner join artist_profile ap
+				 right join artist_profile ap
 				on media.media_id = ap.profile_pic_id inner join users on users.user_id = ap.user_id
 				limit <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,3;
 			</cfquery>
@@ -366,6 +366,7 @@
 			<!--- get the primary key of the inserted record --->
 			<cfset profilePicId = profilePicUpload["GENERATEDKEY"] />
 
+			<cfset getArtistProfileIdByUserId() />
 			<!--- Fetch user_id from session object --->
 			<cfset artistId = "#session.artistProfileId.artistProfileId#">
 
@@ -512,6 +513,7 @@
 		<cfreturn isUpdated />
 	</cffunction>
 
+	<!--- This is used for validating the artist profile data --->
 	<cffunction access="public" name="validationOfArtistdata" returntype="Array">
 
 		<cfargument name="form" type="struct" required="true"/>

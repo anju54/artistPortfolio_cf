@@ -14,7 +14,6 @@
 
 	<cfcase value = "updateProfilePic">
 		<cfset isInserted = variables.artistprofileService.updateProfilePic(form) />
-
 	</cfcase>
 
 	<cfcase value = "getProfilePic">

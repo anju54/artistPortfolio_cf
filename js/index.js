@@ -31,15 +31,14 @@ console.log("3....");
 
 
 function getUserDetail(){
-console.log("2....");
+
     $.ajax({
         url:  `${baseUrl}/controller/currentUserController.cfm` ,
         type: "GET",
         crossDomain: true,
         data: {},
-       
         success: function (response) {
-			console.log(response);
+			
 			console.log("1....");
 			if(response){
 				console.log(response);
@@ -51,7 +50,6 @@ console.log("2....");
         }         
     });
 }
-
 
 function showAllProfilePics(){
 
@@ -94,8 +92,11 @@ function setAllProfile(response){
 
     for(var i=0; i<response.length;i++){
         var fullName = response[i].FIRST_NAME +" "+ response[i].LAST_NAME;
-        if(response[i]){
 
+        if(response[i].PATH===null){
+            response[i].PATH =  "/assets/images/";
+            response[i].FILENAME_ORIGINAL = "default-profile-pic.png";
+        }
             var col =   '<div class="col-md-4 thumbnail img-responsive">'+
                             '<img style="height:300px" class="work" alt="'+fullName+'"'+
                             'src="'+ baseUrl + response[i].PATH + response[i].FILENAME_ORIGINAL +'" ></img>'+
@@ -104,7 +105,7 @@ function setAllProfile(response){
                         '</div>';
 
             $('#publicImgDiv').append(col);
-        }
+        
     }    
 }
 

@@ -79,8 +79,8 @@ function getArtistProfileData(){
         success: function (response) {
             
             response = JSON.parse(response);
-            console.log(response);
             if(response.length>0){
+                getUserDetail();
                 setProfileData(response); 
                 $('#save').hide();
                 $('#update').show();
@@ -189,8 +189,7 @@ function saveProfileData(){
             },
             'async': false,
             success: function (response) {
-                console.log(JSON.parse(response));
-                console.log( typeof(response));
+                
                 if(response ==="true "){
                     swal("data saved successfully!!");     
                     showProfilePic() ;
@@ -322,7 +321,7 @@ function deleteProfile(){
         data: {},
        
         success: function (response) {
-            console.log(response);
+            
               if(response){  
                 $('#profileImage').attr("src","../assets/images/default-profile-pic.png");
                 $('#updateImage').hide();
@@ -494,12 +493,15 @@ function uploadProfilePic(file){
            
             success: function (response) {
                 hideLoader();
-               if(response!=null){
-                   console.log("1......");
-                swal("profile pic  uploaded!!"); 
-                showProfilePic();
-                $('#deleteImage').show();
-               }   
+                
+               if(response=="true "){
+                   
+                    swal("profile pic  uploaded!!"); 
+                    showProfilePic();
+                    $('#deleteImage').show();
+               }   else{
+                   swal("Error uploading profile pic");
+               }
             },
             error: function(error) {
                 $('#profilePicShowError').text(error.responseJSON.message);
@@ -553,9 +555,9 @@ function showProfilePic(){
 
 //This is used to set the profile pic
 function setProfilePic(response){
-    console.log("3......"); 
+     
     path = baseUrl + response[0].PATH + response[0].FILENAME_ORIGINAL;
-    console.log(path);
+    
     $('#profileImage').attr("src",path);
 }
 
@@ -580,8 +582,8 @@ function updateProfilePic(file){
                 }
             },
             error: function (error) {
-                console.log(error);
-                $('#profilePicShowError').text(error.responseJSON.message);
+                
+                //$('#profilePicShowError').text(error.responseJSON.message);
             },
             complete: function () {
                 showProfilePic();
@@ -613,7 +615,7 @@ function getArtistProfileId(){
             } 
         },
         error: function( ) {
-            console.log("inside error");
+           
         }         
     });
     
