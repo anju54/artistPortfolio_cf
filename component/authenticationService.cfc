@@ -98,7 +98,7 @@
 		<cftry>
 			<!--- Fetch email from session object --->
 			<cfif StructKeyExists(session.stLoggedInuser,"fullName")>
-				<cfset email = '#session.stLoggedInuser.userEmail#' />
+				<cfset var email = '#session.stLoggedInuser.userEmail#' />
 
 				<!--- This is used to get current user id --->
 				<cfquery datasource="artistPortfolio" name="getUserIdQuery">

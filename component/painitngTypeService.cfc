@@ -11,6 +11,8 @@
 	<cffunction name="getAllPaintings" displayname="getAllPaintings" access="public" output="false" returntype="query">
 
 		<cftry>
+			<cfset var getAllPaintings = QueryNew("")/>
+
 			<cfquery datasource="artistPortfolio" name="getAllPaintings">
 				select * from painting_type;
 			</cfquery>

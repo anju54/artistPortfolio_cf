@@ -9,23 +9,30 @@
 
 	<!--- This is used to upload painting by artist_id --->
 	<cffunction name="uploadPainting" access="public" output="false" returntype="Any">
+
 		<cfargument name="form" type="any" required="true"/>
 		<cftry>
-			<cfset flag = false />
+			<cfset var flag = false />
+
 			<!--- Fetch profile name from session object --->
-			<cfset profileName = session.artistProfileId.profileName />
-			<cfset destination = "../media/artist/" & profileName & "/" />
-			<cfset storedDestinationAdress = "/media/artist/" & profileName & "/" />
+			<cfset variables.profileName = session.artistProfileId.profileName />
+
+			<cfset var destination = "../media/artist/" & profileName & "/" />
+			<cfset var storedDestinationAdress = "/media/artist/" & profileName & "/" />
 			<cfif len(trim(form.fileUpload))>
 				<cffile action="upload" fileField="fileUpload" destination="#expandPath("#destination#")#">
 			</cfif>
+
 			<!--- Fetch user_id from session object --->
-			<cfset userId = "#session.user.userId#">
-			<cfset newFileName = GetTickCount() & cffile.ATTEMPTEDSERVERFILE />
-			<cfset paintingDestination = destination & newFileName />
-			<cfset source = destination & cffile.ATTEMPTEDSERVERFILE />
+			<cfset var userId = "#session.user.userId#">
+
+			<cfset var newFileName = GetTickCount() & cffile.ATTEMPTEDSERVERFILE />
+			<cfset var paintingDestination = destination & newFileName />
+			<cfset var source = destination & cffile.ATTEMPTEDSERVERFILE />
+
 			<!--- To rename the file name --->
 			<cffile action = "rename" destination = "#expandPath("#paintingDestination#")#" source = "#expandPath("#source#")#">
+
 			<cfquery datasource="artistPortfolio" result="uploadPainting">
 
 				insert into media( filename_original, path ) values (
@@ -34,9 +41,11 @@
 				<cfqueryparam cfsqltype="cf_sql_varchar" value="#storedDestinationAdress#">
 				)
 			</cfquery>
+
 			<!--- get the primary key of the inserted record --->
-			<cfset paintingId = uploadPainting["GENERATEDKEY"] />
-			<cfset artistId = "#session.artistProfileId.artistProfileId#">
+			<cfset var paintingId = uploadPainting["GENERATEDKEY"] />
+			<cfset var artistId = "#session.artistProfileId.artistProfileId#">
+
 			<!--- update media information in the bridge table --->
 			<cfquery datasource="artistPortfolio" result="updatePainitngBridge">
 
@@ -45,6 +54,7 @@
 					<cfqueryparam cfsqltype="cf_sql_varchar" value="#paintingId#">
 				)
 			</cfquery>
+
 			<cfif uploadPainting.recordCount gt 0 and updatePainitngBridge.recordCount gt 0>
 				<cfset createThumbnailofImages(form=form,fileName=#newFileName#,mediaId=#paintingId#) />
 				<cfset flag = true />
@@ -60,23 +70,30 @@
 
 	<!--- This is used to create thumbnail of images --->
 	<cffunction name="createThumbnailofImages" access="public" output="false" returntype="boolean">
+
 		<cfargument name="form"  required="true"/>
 		<cfargument name="fileName" type="string" required="true" default="">
 		<cfargument name="mediaId" type="numeric" required="true">
+
 		<cftry>
-			<cfset flag = false />
+			<cfset var flag = false />
+
 			<!--- Fetch profile name from session object --->
 			<cfset profileName = session.artistProfileId.profileName />
-			<cfset destination = "../media/artist/" & profileName & "/" & "thumb/" />
-			<cfset storedThumbDestination = "/media/artist/" & profileName & "/" & "thumb/" />
-			<cfset thumbDestination = "../media/artist/" & profileName & "/" & "thumb/" & fileName />
+
+			<cfset var destination = "../media/artist/" & profileName & "/" & "thumb/" />
+			<cfset var storedThumbDestination = "/media/artist/" & profileName & "/" & "thumb/" />
+			<cfset var thumbDestination = "../media/artist/" & profileName & "/" & "thumb/" & fileName />
+
 			<cfset myImage=ImageNew(form.fileUpload)>
 			<cfset  ImageResize(myImage,"50%","","blackman",2)>
 			<cfimage source="#myImage#" action="write" destination="#expandPath("#thumbDestination#")#" overwrite="yes">
-			<cfset userId = "#session.user.userId#">
-			<cfset newFileName = fileName />
-			<cfset paintingDestination = destination & newFileName />
-			<cfset source = destination & cffile.ATTEMPTEDSERVERFILE />
+
+			<cfset var userId = "#session.user.userId#">
+			<cfset var newFileName = fileName />
+			<cfset var paintingDestination = destination & newFileName />
+			<cfset var source = destination & cffile.ATTEMPTEDSERVERFILE />
+
 			<cfquery datasource="artistPortfolio" result="uploadPainting">
 
 				update media set filename =
@@ -96,14 +113,19 @@
 
 	<!--- This is used to show all painting by artist id --->
 	<cffunction name="showAllPaintingByArtistId" access="public" output="false" returntype="query">
+
 		<cftry>
-			<cfset artistId = "#session.artistProfileId.artistProfileId#">
+			<cfset var showAllPaintingByartistId = QueryNew("") />
+
+			<cfset var artistId = "#session.artistProfileId.artistProfileId#">
+
 			<cfquery datasource="artistPortfolio" name="showAllPaintingByartistId">
 
 				select filename_original , path, media.media_id from media inner join artist_media_bridge as amb on
 				media.media_id = amb.media_id
 	            where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
 			</cfquery>
+
 			<cfcatch type="any" >
 				<cflog application="true" file="artistPortfolioError"
 					text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:paintingService ,
@@ -115,7 +137,10 @@
 
 	<!--- This is used to handle the pagination in showing artist paintings --->
 	<cffunction name="paginationForAllPainting" access="public" output="true" returntype="query">
+
 		<cfargument name="offset" type="numeric" required="true" >
+		<cfset var paginationForAllPaintings = QueryNew("")/>
+
 		<cftry>
 			<cfset artistId = "#session.artistProfileId.artistProfileId#">
 			<cfset limitValue = 4 />
@@ -128,6 +153,7 @@
 				limit <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,
 					  <cfqueryparam cfsqltype="cf_sql_integer" value="#limitValue#">
 			</cfquery>
+
 			<cfcatch type="any" >
 				<cflog application="true" file="artistPortfolioError"
 					text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:paintingService ,
@@ -139,7 +165,9 @@
 
 	<!--- This is used to display last uploaded image --->
 	<cffunction name="displayLastUploadedImage" access="public" returntype="query">
-		<cfset artistId = "#session.artistProfileId.artistProfileId#">
+
+		<cfset var artistId = "#session.artistProfileId.artistProfileId#">
+		<cfset var selectLastImage = QueryNew("")/>
 		<cfquery datasource="artistPortfolio" name="selectLastImage" result="resultOfLastImage">
 
 			select filename , path_thumb,path,filename_original, media.media_id, is_public
@@ -148,11 +176,13 @@
 	            where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
 				order by media.media_id desc limit 1;
 		</cfquery>
+
 		<cfreturn selectLastImage />
 	</cffunction>
 
 	<!--- This is used to mark painting as public or private --->
 	<cffunction name="setIspublicOrprivate" access="public" returntype="void">
+
 		<cfargument name="mediaId" type="numeric" required="true" >
 		<cfargument name="publicOrPrivate" type="string" required="true" >
 		<cftry>
@@ -171,9 +201,11 @@
 		</cftry>
 	</cffunction>
 
-
+	<!--- This is used for counting the number of media stored in table by artist id --->
 	<cffunction name="countPainting" access="public" returntype="numeric">
-		<cfset artistId = "#session.artistProfileId.artistProfileId#">
+
+		<cfset var artistId = "#session.artistProfileId.artistProfileId#">
+
 		<cfquery datasource="artistPortfolio" name="countPainting" result="countPaintingResult">
 			select count(media.media_id) as countOfPainting
 				from media inner join
@@ -188,9 +220,11 @@
 	<!--- This is used to delete artist's painting by media id --->
 
 	<cffunction name="deletePainting" access="public" returntype="boolean">
+
 		<cfargument name="mediaId" required="true" >
 		<cftry>
-			<cfset flag = false />
+			<cfset var flag = false />
+
 			<cfquery name="deletePainting" datasource="artistPortfolio">
 				delete from media where media_id =
 						<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.mediaId#">
@@ -198,6 +232,7 @@
 			<cfif #deletePainting.recordCount# gt 0>
 				<cfset flag = true />
 			</cfif>
+
 			<cfcatch type="any" >
 				<cflog application="true" file="artistPortfolioError"
 					text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:paintingService ,
@@ -209,6 +244,7 @@
 
 
 	<cffunction access="public" name="validateImage" returntype="Array">
+
 		<cfargument name="form" type="any" required="true"/>
 		<cfset var aErrorMsg = ArrayNew(1) />
 		<cfif not isImageFile(form.fileUpload)>
