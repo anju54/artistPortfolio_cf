@@ -8,11 +8,26 @@ $(document).ready(function() {
         totalPages: totalPageNo,
         visiblePages: 3,
         onPageClick: function (event, page) {
+            $('#publicImgDiv').empty();
             showPublicPaintings(page);
         }
     });
- 
+
+    $(".likeButton").click(function(){
+
+        var mediaId = this.id;
+        addLikes(mediaId);
+        console.log(mediaId);
+
+    });
 });
+
+function addLikes(id){
+
+    
+}
+
+
 
 //This is used for displaying all the public images
 function showPublicPaintings(pageNo){
@@ -31,10 +46,10 @@ function showPublicPaintings(pageNo){
         },
         success: function (response) {
             response = JSON.parse(response);
-            console.log(response);
+           
             getCountOfPaintings();
             if(response.length){
-                $('#imgDiv').empty();
+                $('#publicImgDiv').empty();
                 setAllPaintings(response); 
             } 
         },
@@ -51,12 +66,22 @@ function showPublicPaintings(pageNo){
 function setAllPaintings(response){
 
     var paintingList = response;
-
+    console.log(response);
     for(var i=0; i<paintingList.length;i++){
 
-        var col =   '<div class="col-md-3  col-padding " >'+
-                        '<img class="work" alt="img not loaded"'+
+        var col =   '<div class="mainContainer">'+
+                    '<div class="col-md-3  col-padding " >'+
+                        '<img class="work" alt="img not loaded" class="image" id="'+paintingList[i].MEDIA_ID+
+                        '"'+
                         'src="'+ baseUrl + paintingList[i].PATH_THUMB + paintingList[i].FILENAME +'" ></img>'+
+                        '<div class="middle">'+
+                            '<button type="submit" class="likeButton"  id="'+paintingList[i].MEDIA_ID+
+                            '"'+
+                            '><i class="fa fa-thumbs-up topright"></i></button>'+
+                            '<button type="submit" class="commentButton" id="'+paintingList[i].MEDIA_ID+
+                            'comment"'+
+                            '><i class="fa fa-comments-o" style="font-size:48px;color:red"></i></button>'+
+                        '</div></div>'
                     '</div>';
 
         $('#publicImgDiv').append(col);          
@@ -114,7 +139,7 @@ function getArtistProfileInfo(id){
         success: function (response) {
             
             response = JSON.parse(response);
-            console.log(response);
+           
             if(response.length>0){
                 setData(response); 
                 $('#save').hide();
@@ -169,7 +194,7 @@ function getPublicProfilePic(id){
             response = JSON.parse(response);
             if(response){
                 var path = baseUrl + response[0].PATH + response[0].FILENAME_ORIGINAL ;
-                console.log(response[0].FILENAME);
+                
                 $('#profilePic').attr("src",path);
                  
             } else{
@@ -214,6 +239,7 @@ function calculateTotalPageNo(countOfPainting){
         totalPageNo = countOfPainting / 4;
     }
 }
+
 
 // method to get url parameter
 var getUrlParameter = function getUrlParameter(sParam) {
