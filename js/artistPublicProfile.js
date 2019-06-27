@@ -1,15 +1,25 @@
 var counter = 0;
+var totalPageNo = 0;
 $(document).ready(function() {
 
-    showPublicPaintings(); 
-    $('#loadMore').click(function () {
-        showPublicPaintings(); 
+    showPublicPaintings(counter); 
+
+    $('#pagination-demo').twbsPagination({
+        totalPages: totalPageNo,
+        visiblePages: 3,
+        onPageClick: function (event, page) {
+            showPublicPaintings(page);
+        }
     });
+ 
 });
 
 //This is used for displaying all the public images
-function showPublicPaintings(){
+function showPublicPaintings(pageNo){
+
     var id = getUrlParameter('id');
+    var limit = 4;
+    counter = pageNo *  limit - limit ;
     $.ajax({
         url:  `${baseUrl}/controller/artistProfileController.cfm?action=paginationForPublicPainting&counter=${counter}&id=${id}` ,
         type: "GET",
@@ -22,18 +32,11 @@ function showPublicPaintings(){
         success: function (response) {
             response = JSON.parse(response);
             console.log(response);
+            getCountOfPaintings();
             if(response.length){
-                
+                $('#imgDiv').empty();
                 setAllPaintings(response); 
-                $('#loadMore').show(); 
-            } else if(counter == 0){
-                $('#warningMsg').text("Opps! Artist has not uploaded any Painting Yet!!");
-            //    swal("There are No paintings!");
-            } else{
-                swal('There are no more paintings')
-                $('#loadMore').hide();
             } 
-            counter = 4 + counter ;         
         },
         error: function( error) {
         }   ,
@@ -179,6 +182,37 @@ function getPublicProfilePic(id){
         }         
     });
 
+}
+
+// This is used to get the count of painting present by artist id.
+function getCountOfPaintings(){
+
+    $.ajax({
+        url:  `${baseUrl}/controller/paintingcontroller.cfm?action=countPainting` ,
+        type: "GET",
+        crossDomain: true,
+        async:false,
+        headers: {
+            "Content-Type": "application/json",
+        },
+        success: function (response) {
+            calculateTotalPageNo(response);
+            
+        },
+        error: function( ) {
+        }         
+    });
+}
+
+//This is used to get the total page number to show the paintings
+function calculateTotalPageNo(countOfPainting){
+
+    var remainder = countOfPainting % 4;
+    if( remainder==1 || remainder == 2 || remainder == 3){
+        totalPageNo = countOfPainting / 4 + 1;
+    }else{
+        totalPageNo = countOfPainting / 4;
+    }
 }
 
 // method to get url parameter
