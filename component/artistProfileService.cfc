@@ -22,7 +22,6 @@
 				<!--- Fetch user_id from session object --->
 				<cfset variables.userId = "#session.user.userId#">
 
-				<cfset errorMsg = checkForDuplicateProfileName("#arguments.form.profileName#")/>
 
 				<!--- insert artist profile record in artist_profile table --->
 				<cfquery name = "addArtistProfiledata" datasource = "artistPortfolio" result="result">

@@ -1,4 +1,5 @@
 var artistId = 0;
+var arrayOfErr = new Object();
 $(document).ready(function() {
    
     $('#update').hide(); 
@@ -148,9 +149,6 @@ function saveProfileData(){
     var aboutMe = $('#aboutMe').val();
     var profileName = $('#profileName').val();
     
-   
-    if(validate("save")){
-
         var paintingList = [];
         var newList = [];
         $.each($("input[name='paintingList']:checked"), function(){            
@@ -175,53 +173,61 @@ function saveProfileData(){
             "colorName": color,
             "paintingTypeList" : newList
         }
-        
-        data = JSON.stringify(data);
-        showLoader();
-        $.ajax({
-            url:  `${baseUrl}/controller/artistProfileController.cfm?action=saveArtistProfile` ,
-            type: "POST",
-            crossDomain: true,
-            data: data,
-           
-            headers: {
-                "Content-Type": "application/json",
-            },
-            'async': false,
-            success: function (response) {
-                console.log(response);
-                if(response ==="true "){
-                    swal("data saved successfully!!");     
-                    showProfilePic() ;
-                    $("#saveImage").show();
-                    getArtistProfileData();
-                }else if(response === "false "){
-                    $('#msg').show();
-                    $('#msg').text("Some error occured while creating artist account!");
-                }  
-                else if(response.includes('Artist')){
-                    $('#msg').show();
-                    $('#msg').text(response);
-                }else if(response.includes('linkedIn')){
-                    $('#lError').show();
-                    $('#lError').text(response);
+        validate("save");
+        console.log( Object.keys(arrayOfErr).length);
+        var size = Object.keys(arrayOfErr).length;
+        if( size > 0){
+            return false;
+        }else{
 
-                }else if(response.includes("facebook")){
-                    $('#fbError').show();
-                    $('#fbError').text(response);
-                }else if(response.includes("twitter")){
-                    $('#tError').show();
-                    $('#tError').text(response);
-                }
-            },
-            error: function( error) {
-            },  
-            complete: function () {
-                
-                hideLoader();
-            }            
-        });
-    }  
+            data = JSON.stringify(data);
+            showLoader();
+            $.ajax({
+                url:  `${baseUrl}/controller/artistProfileController.cfm?action=saveArtistProfile` ,
+                type: "POST",
+                crossDomain: true,
+                data: data,
+            
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                'async': false,
+                success: function (response) {
+                    console.log(response);
+                    if(response ==="true "){
+                        swal("data saved successfully!!");     
+                        showProfilePic() ;
+                        $("#saveImage").show();
+                        getArtistProfileData();
+                    }else if(response === "false "){
+                        $('#msg').show();
+                        $('#msg').text("Some error occured while creating artist account!");
+                    }  
+                    else if(response.includes('Artist')){
+                        $('#msg').show();
+                        $('#msg').text(response);
+                    }else if(response.includes('linkedIn')){
+                        $('#lError').show();
+                        $('#lError').text(response);
+
+                    }else if(response.includes("facebook")){
+                        $('#fbError').show();
+                        $('#fbError').text(response);
+                    }else if(response.includes("twitter")){
+                        $('#tError').show();
+                        $('#tError').text(response);
+                    }
+                },
+                error: function( error) {
+                },  
+                complete: function () {
+                    
+                    hideLoader();
+                }            
+            });
+     
+        }
+        
 }
 
 // This is used to save artist profile data
@@ -250,8 +256,13 @@ function updateProfile(){
         var id = str.substr(0,1);
         newList.push(id);
     }
-
-    if(validate("update")){
+    validate("update");
+    
+    var size = Object.keys(arrayOfErr).length;
+    if(size > 0){
+        return false;
+    }
+    else{
 
         data = {
             
@@ -353,30 +364,49 @@ function validate(type){
 
     if(type=="save"){
 
-        if(  isEmpty("Profile Name", profileNameVal) && isEmpty("color", colorVal) ) {          
-        
-            if(isURLvalid("Facebook",fbUrl) && isURLvalid("twitter",twitterUrl) 
-                && isURLvalid("LinkedIn",linkedInUrl)){
-                    return true;
-                }else{
-                    return false;
-                }
-        
-        } else return false;
+        isEmpty("Profile Name", profileNameVal);
+        isEmpty("color", colorVal);
+        isURLvalid("Facebook",fbUrl);
+        isURLvalid("LinkedIn",linkedInUrl);
+        isURLvalid("twitter",twitterUrl) ;
+        checkForlegth("Facebook",fbUrl);
+        checkForlegth("LinkedIn",linkedInUrl)
+        checkForlegth("twitter",twitterUrl);
     }else{
-
-        if(isEmpty("color", colorVal) ) {         
-       
-            if(isURLvalid("Facebook",fbUrl) && isURLvalid("twitter",twitterUrl) 
-            && isURLvalid("LinkedIn",linkedInUrl)){
-                return true;
-            }else{
-                return false;
-            }
-        } else return false;
+        isURLvalid("Facebook",fbUrl);
+        isURLvalid("LinkedIn",linkedInUrl);
+        isURLvalid("twitter",twitterUrl) ;
+        checkForlegth("Facebook",fbUrl);
+        checkForlegth("LinkedIn",linkedInUrl)
+        checkForlegth("twitter",twitterUrl);
     }
-    
-   
+
+}
+
+function checkForlegth(field, data){
+
+    var error = "Enter the data below 100";
+    if ( data.lenght > 100 ){
+
+        if(field=="LinkedIn"){
+            arrayOfErr["LinkedIn"] = error;
+            $('#lError').show;
+            $('#lError').text(error);
+               
+        }else if(field=="Facebook"){
+            
+            arrayOfErr["Facebook"] = error;
+            $('#fbError').show;
+            $('#fbError').text(error);
+               
+        }else if(field=="twitter"){
+            arrayOfErr["twitter"] = error;
+            $('#tError').show;
+            $('#tError').text(error);
+        }
+
+    }
+
 }
 
 // check for empty
@@ -388,43 +418,23 @@ function isEmpty(field, data){
         
         error = "You didn't enter "+field+".";
         if(field=="Profile Name"){
-            $('#profileNameError').show();
+             $('#profileNameError').show();
             $('#profileNameError').text(error);
+            console.log(error);
+            arrayOfErr["profilename"] = error;
         }else if(field=="First Name"){
-            $('#fnameError').show();
-            $('#fnameError').text(error);
+             $('#fnameError').show();
+             $('#fnameError').text(error);
+            console.log(error);
+            arrayOfErr["firstName"] = error;
         }else if(field =="color"){
-            $('#colorError').show();
+             $('#colorError').show();
             $('#colorError').text(error);
+            arrayOfErr[field] = error;
         }
-        return false;
+       
     } 
-    return true;
-}
-
-function hideError(){
-    $('#profileNameError').hide();
-    $('#profilePicShowError').hide();
-}
-
-function hidefbError(){
-    $('#fbError').text('');
-}
-
-function hideTError(){
-    $('#tError').text('');
-}
-
-function hideLError(){
-    $('#lError').text('');
-}
-
-function hideMainError(){
-    $('#msg').hide();
-}
-
-function hideColorError(){
-    $('#colorError').hide();
+    
 }
 
 function isURLvalid(field,data){
@@ -441,34 +451,37 @@ function isURLvalid(field,data){
        
         if (data === ''|| data === null || data === undefined)return true;
         if(data.match(linkedinUrlPattern)){
-            return true;
+            //return true;
         }else{
             error = "you entered wrong "+field+" URL!!";
+            arrayOfErr["LinkedIn"] = error;
             $('#lError').show;
             $('#lError').text(error);
-            return false;
+            //return false;
         }  
     }else if(field=="Facebook"){
         if (data === ''|| data === null || data === undefined)return true;
 
         if(data.match(facebookUrlPattern)){
-            return  true;
+            //return  true;
         }else{
             error = "You entered wrong "+field+" URL!!";
+            arrayOfErr["Facebook"] = error;
             $('#fbError').show;
             $('#fbError').text(error);
-            return false;
+            //return false;
         }
     }else if(field=="twitter"){
         if (data === ''|| data === null || data === undefined)return true;
 
         if(data.match(twitterUrlPattern)){
-           return true;
+           //return true;
         }else{
             error = "You entered wrong "+field+" URL!! ";
+            arrayOfErr["twitter"] = error;
             $('#tError').show;
             $('#tError').text(error);
-            return false;
+            //return false;
         }
     }
 }
@@ -645,4 +658,30 @@ function ValidateSingleInput(oInput) {
         }
     }
     return true;
+}
+
+
+function hideError(){
+    $('#profileNameError').hide();
+    $('#profilePicShowError').hide();
+}
+
+function hidefbError(){
+    $('#fbError').text('');
+}
+
+function hideTError(){
+    $('#tError').text('');
+}
+
+function hideLError(){
+    $('#lError').text('');
+}
+
+function hideMainError(){
+    $('#msg').hide();
+}
+
+function hideColorError(){
+    $('#colorError').hide();
 }

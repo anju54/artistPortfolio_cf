@@ -47,7 +47,7 @@
 		<cfset data = deserializeJSON( requestBody ) />
 
 		<cfset aErrMsg = variables.artistprofileService.validationOfArtistdata(data) />
-		<cfset msg = variables.artistprofileService.checkForDuplicateProfileName(profileName=data.profileName)/>
+		<cfset msg = variables.artistprofileService.checkForDuplicateProfileName(profileName=#data.profileName#)/>
 
 		<cfif StructKeyExists(session,"artistProfileId") >
 			<!--- <cfdump var="#session.artistProfileId#"> --->
