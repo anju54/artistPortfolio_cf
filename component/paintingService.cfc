@@ -217,8 +217,25 @@
 		<cfreturn countPainting.countOfPainting />
 	</cffunction>
 
-	<!--- This is used to delete artist's painting by media id --->
+	<!--- This is used for counting the number of public media stored in table by artist id --->
+	<cffunction name="countPublicPainting" access="public" returntype="numeric">
 
+		<cfargument name="artistId" required="true" type="numeric">
+
+		<cfquery datasource="artistPortfolio" name="countPublicPainting" result="countPaintingResult">
+			select count(media.media_id) as countOfPainting
+				from media inner join
+				artist_media_bridge as amb on media.media_id = amb.media_id
+	            where artist_id =
+	            <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.artistId#">
+	            and amb.is_public = "true";
+
+		</cfquery>
+		<cfreturn countPainting.countOfPainting />
+	</cffunction>
+
+
+	<!--- This is used to delete artist's painting by media id --->
 	<cffunction name="deletePainting" access="public" returntype="boolean">
 
 		<cfargument name="mediaId" required="true" >
@@ -242,7 +259,7 @@
 		<cfreturn flag/>
 	</cffunction>
 
-
+	<!--- This is used for validating the input image --->
 	<cffunction access="public" name="validateImage" returntype="Array">
 
 		<cfargument name="form" type="any" required="true"/>

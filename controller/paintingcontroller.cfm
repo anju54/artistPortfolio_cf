@@ -27,6 +27,14 @@
 		<cfoutput>#count#</cfoutput>
 	</cfcase>
 
+	<cfcase value = "countPublicPainting">
+
+		<cfset count = variables.paintingService.countPainting(artistId=#URL.id#) />
+		<cfoutput>#count#</cfoutput>
+	</cfcase>
+
+
+
 	<cfcase value = "showPaintingByArtistId">
 
 		<cfset data = variables.paintingService.showAllPaintingByArtistId() />

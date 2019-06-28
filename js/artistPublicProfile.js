@@ -3,7 +3,7 @@ var totalPageNo = 0;
 $(document).ready(function() {
 
     showPublicPaintings(counter); 
-
+    console.log(totalPageNo);
     $('#pagination-demo').twbsPagination({
         totalPages: totalPageNo,
         visiblePages: 3,
@@ -24,7 +24,21 @@ $(document).ready(function() {
 
 function addLikes(id){
 
-    
+    $.ajax({
+        url:  `${baseUrl}/controller/paintingcontroller.cfm?action=countPublicPainting` ,
+        type: "GET",
+        crossDomain: true,
+        async:false,
+        headers: {
+            "Content-Type": "application/json",
+        },
+        success: function (response) {
+            calculateTotalPageNo(response);
+            
+        },
+        error: function( ) {
+        }         
+    });    
 }
 
 
@@ -34,7 +48,7 @@ function showPublicPaintings(pageNo){
 
     var id = getUrlParameter('id');
     var limit = 4;
-    counter = pageNo *  limit - limit ;
+    counter = pageNo *  limit - limit  ;
     $.ajax({
         url:  `${baseUrl}/controller/artistProfileController.cfm?action=paginationForPublicPainting&counter=${counter}&id=${id}` ,
         type: "GET",
@@ -47,7 +61,7 @@ function showPublicPaintings(pageNo){
         success: function (response) {
             response = JSON.parse(response);
            
-            getCountOfPaintings();
+            getCountOfPublicPaintings();
             if(response.length){
                 $('#publicImgDiv').empty();
                 setAllPaintings(response); 
@@ -125,6 +139,7 @@ $(document).ready(function() {
 
 //This is used to fetch artist profile basic information
 function getArtistProfileInfo(id){
+
     var id = getUrlParameter('id');
     $.ajax({
         url:  `${baseUrl}/controller/artistProfileController.cfm?action=getPublicProfile&id=${id}` ,
@@ -210,10 +225,11 @@ function getPublicProfilePic(id){
 }
 
 // This is used to get the count of painting present by artist id.
-function getCountOfPaintings(){
+function getCountOfPublicPaintings(){
 
+    var id = getUrlParameter('id');
     $.ajax({
-        url:  `${baseUrl}/controller/paintingcontroller.cfm?action=countPainting` ,
+        url:  `${baseUrl}/controller/paintingcontroller.cfm?action=countPublicPainting&id=${id}` ,
         type: "GET",
         crossDomain: true,
         async:false,
@@ -221,6 +237,7 @@ function getCountOfPaintings(){
             "Content-Type": "application/json",
         },
         success: function (response) {
+            console.log(response);
             calculateTotalPageNo(response);
             
         },

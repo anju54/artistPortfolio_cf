@@ -22,11 +22,13 @@
 				<!--- Fetch user_id from session object --->
 				<cfset variables.userId = "#session.user.userId#">
 
+				<cfset errorMsg = checkForDuplicateProfileName("#arguments.form.profileName#")/>
+
 				<!--- insert artist profile record in artist_profile table --->
 				<cfquery name = "addArtistProfiledata" datasource = "artistPortfolio" result="result">
 
 					insert into artist_profile ( profile_name, facebook_info, twitter_info, linkedIn_url, about_me,
-				 	user_id, color_id) VALUES (
+				 	user_id, color_id) values (
 
 						<cfqueryparam value="#arguments.form.profileName#"  cfsqltype="CF_SQL_VARCHAR">,
 						<cfqueryparam value="#arguments.form.facebookUrl#"  cfsqltype="CF_SQL_VARCHAR">,
@@ -539,6 +541,25 @@
 		</cfif>
 
 		<cfreturn aErrorMsg/>
+	</cffunction>
+
+	<!--- This is used to check for duplicate profile name. --->
+	<cffunction access="public" name="checkForDuplicateProfileName" returntype="string">
+
+		<cfargument name="profileName" type="string" required="true">
+		<cfset errorMsg = ""/>
+
+		<cfquery name="checkForDuplicateProfileName" datasource="artistPortfolio">
+
+			select profile_name from artist_profile where profile_name =
+				<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.profileName#">;
+		</cfquery>
+
+		<cfif checkForDuplicateProfileName.recordCount gt 0>
+			<cfset errorMsg = "Artist exists with the given profile name.!!">
+		</cfif>
+
+		<cfreturn errorMsg />
 	</cffunction>
 
 </cfcomponent>

@@ -189,7 +189,7 @@ function saveProfileData(){
             },
             'async': false,
             success: function (response) {
-                
+                console.log(response);
                 if(response ==="true "){
                     swal("data saved successfully!!");     
                     showProfilePic() ;
@@ -199,7 +199,7 @@ function saveProfileData(){
                     $('#msg').show();
                     $('#msg').text("Some error occured while creating artist account!");
                 }  
-                else if(response.includes('artist')){
+                else if(response.includes('Artist')){
                     $('#msg').show();
                     $('#msg').text(response);
                 }else if(response.includes('linkedIn')){
