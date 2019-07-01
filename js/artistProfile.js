@@ -347,8 +347,7 @@ function deleteProfile(){
 
 function redirectArtistPublicProfile(){
 
-    var id = window.localStorage.getItem("ARTIST");
-    $('#previewProfile').attr("href","./artistPublicProfile.html?id="+id);
+    $('#previewProfile').attr("href","./artistPublicProfile.html");
 }
 
 // this is used for validation the form

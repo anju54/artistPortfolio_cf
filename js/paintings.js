@@ -4,8 +4,14 @@ var counter = 0;
 var totalPageNo = 0;
 $(document).ready(function() {
 
-    showPaintings("loadMore");  
+    showPaintings("loadMore",0);  
+    console.log(totalPageNo);
 
+    if(totalPageNo <= 0){
+        totalPageNo = 1;
+        $('#pagination-demo').hide();
+    }
+    
     $('#pagination-demo').twbsPagination({
         totalPages: totalPageNo,
         visiblePages: 3,
@@ -14,7 +20,7 @@ $(document).ready(function() {
             showPaintings(type,page);
         }
     });
- 
+    
     $('input[name=publicOrPrivate]').change( function(){
         var id = $(this).attr('id');
         setPublicOrprivate(id);
@@ -82,13 +88,14 @@ function bindEvent(){
 
 // This is used to fetch all the painting of a particular artist
 function showPaintings(type,pageNo){
-    console.log("show paint");
-    console.log(pageNo);
     
     if(type=="loadMore"){
 
         var limit = 4;
         counter = pageNo * limit - limit ;
+        if(pageNo == 0){
+            counter = 0;
+        }
         urlVar = `${baseUrl}/controller/paintingcontroller.cfm?action=paginationForAllPainting&counter=${counter}`;
     }
     if(type=="upload"){
@@ -107,7 +114,16 @@ function showPaintings(type,pageNo){
         },
         success: function (response) {
             response = JSON.parse(response);
-            getCountOfPaintings();
+            console.log(response);
+
+            if(!response.length){
+                console.log(response);
+                $('#msgDiv').show();
+                $('#paintingsDiv').hide();
+            }else{
+                $('#msgDiv').hide();
+                $('#paintingsDiv').show();
+            }
             if(response.length){
 
                 for(var i=0; i<response.length; i++){
@@ -116,11 +132,14 @@ function showPaintings(type,pageNo){
                     }
                 }
                $('#imgDiv').empty();
-                setAllPaintings(response);
+               console.log("inside ajax response");
+               getCountOfPaintings();
+               setAllPaintings(response);
             }
             //bindEvent();          
         },
         error: function( error) {  
+            console.log(error);
         }             
     });
      
@@ -290,6 +309,8 @@ function getCountOfPaintings(){
             "Content-Type": "application/json",
         },
         success: function (response) {
+           
+            console.log(response);
             calculateTotalPageNo(response);
             
         },
@@ -303,10 +324,12 @@ function calculateTotalPageNo(countOfPainting){
 
     var remainder = countOfPainting % 4;
     if( remainder==1 || remainder == 2 || remainder == 3){
-        totalPageNo = countOfPainting / 4 + 1;
+        totalPageNo = Math.round( countOfPainting / 4 + 1 );
+
     }else{
         totalPageNo = countOfPainting / 4;
     }
+    console.log(totalPageNo);
 }
 
 var _validFileExtensions = [".jpg", ".jpeg", ".png"];    

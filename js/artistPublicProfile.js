@@ -3,16 +3,19 @@ var totalPageNo = 0;
 $(document).ready(function() {
 
     showPublicPaintings(counter); 
-    console.log(totalPageNo);
-    $('#pagination-demo').twbsPagination({
-        totalPages: totalPageNo,
-        visiblePages: 3,
-        onPageClick: function (event, page) {
-            $('#publicImgDiv').empty();
-            showPublicPaintings(page);
-        }
-    });
 
+    if(totalPageNo > 0){
+
+        $('#pagination-demo').twbsPagination({
+            totalPages: totalPageNo,
+            visiblePages: 3,
+            onPageClick: function (event, page) {
+                $('#publicImgDiv').empty();
+                showPublicPaintings(page);
+            }
+        });
+    }
+       
     $(".likeButton").click(function(){
 
         var mediaId = this.id;

@@ -38,7 +38,7 @@
                 <ul class="nav navbar-nav side-nav">
                     <li><a href="index.html"><i class="fa fa-bullseye"></i> Dashboard</a></li>
                     <!-- <li><a href="portfolio.html"><i class="fa fa-tasks"></i> Portfolio</a></li> -->
-                    <li><a href="paintings.html"><i class="fa fa-list-ol"></i>My Paintings</a></li>
+                    <li><a href="paintings.html" id="paintingHref"><i class="fa fa-list-ol"></i>My Paintings</a></li>
                     <!-- <li><a href="register.html"><i class="fa fa-font"></i> Register</a></li> -->
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
@@ -86,7 +86,7 @@
             <!-- Column -->
             <div class="col-lg-4 col-xlg-3 col-md-5">
                 <div class="card">
-                    <div class="card-block">
+                    <div class="card-block mainContainer">
                         <center class="m-t-30"> <img src="../assets/images/default-profile-pic.png" class="img-circle" width="160" id="profileImage"
                             alt="upload image here"/>
                             <h4 class="card-title m-t-10" id="name"></h4>
@@ -170,7 +170,7 @@
 
                             <label class="col-md-12">Facebook url</label>
                             <div class="col-md-12">
-                                <input type="text" id="fbUrl" name="fbUrl" class="form-control form-control-line" onclick="hidefbError()">
+                                <input type="text" id="fbUrl" name="facebookUrl" class="form-control form-control-line" onclick="hidefbError()">
                                 <p id="fbError"></p>
                             </div>
                             <br>
@@ -188,7 +188,7 @@
 
                             <label class="col-md-12">Background colour*</label>
                             <div class="col-md-12">
-                                <select type="text" id="bgcol" name="color" class="form-control form-control-line" onclick="hideColorError()">
+                                <select type="text" id="bgcol" name="colorName" class="form-control form-control-line" onclick="hideColorError()">
                                     <option>Select</option>
                                     <!-- <option>red</option>
                                     <option>yellow</option> -->
@@ -230,8 +230,8 @@
                             </div>
                             <div class="col-sm-4">
                                     <button class="btn btn-success" id="update" style="float: right;">Update Profile</button>
-                                </div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>

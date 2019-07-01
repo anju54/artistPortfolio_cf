@@ -206,14 +206,18 @@
 
 		<cfset var artistId = "#session.artistProfileId.artistProfileId#">
 
-		<cfquery datasource="artistPortfolio" name="countPainting" result="countPaintingResult">
+		<cfif not artistId Eq 0>
+
+			<cfquery datasource="artistPortfolio" name="countPainting" result="countPaintingResult">
 			select count(media.media_id) as countOfPainting
 				from media inner join
 				artist_media_bridge as amb on media.media_id = amb.media_id
 	            where artist_id =
 	            <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
 
-		</cfquery>
+			</cfquery>
+		</cfif>
+
 		<cfreturn countPainting.countOfPainting />
 	</cffunction>
 
