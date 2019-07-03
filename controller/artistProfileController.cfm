@@ -45,8 +45,6 @@
 	<cfcase value = "saveArtistProfile">
 		<cfset requestBody = toString( getHttpRequestData().content ) />
 		<cfset data = deserializeJSON( requestBody ) />
-		<cfset data=form/>
-		<cfdump var="#form#"><cfabort>
 
 		<cfset aErrMsg = variables.artistprofileService.validationOfArtistdata(data) />
 		<cfset msg = variables.artistprofileService.checkForDuplicateProfileName(profileName=#data.profileName#)/>

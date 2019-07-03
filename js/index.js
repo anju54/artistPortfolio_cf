@@ -5,9 +5,10 @@ $(document).ready(function() {
 	history.pushState({}, '');
 	getUserDetail();
     
-    $('#sideBar').hide();
+    $('#sidebar').hide();
+    $('#sidebarLogOut').hide();
     $('#selecArtistHeader').hide();
-   
+
     showAllProfilePics();   
    
     $('#loadMore').click(function () {
@@ -16,10 +17,10 @@ $(document).ready(function() {
    
 });
 
-
 function setName(response){    
-console.log("3....");
- 	$('#sideBar').show();
+
+    $('#sidebar').show();
+    $('#sidebarLogOut').hide();
     $('#signinButton').hide();
     
     $("#fullName").text(response.fullName) ;
@@ -33,7 +34,7 @@ console.log("3....");
 function getUserDetail(){
 
     $.ajax({
-        url:  `${baseUrl}/controller/currentUserController.cfm` ,
+        url:  `http://172.16.8.78:90/controller/currentUserController.cfm` ,
         type: "GET",
         crossDomain: true,
         data: {},
@@ -57,7 +58,6 @@ function showAllProfilePics(){
         url:  `${baseUrl}/controller/artistProfileController.cfm?action=getAllProfilePic&offset=${counter}` ,
         type: "GET",
         crossDomain: true,
-        data: {},
         async: false,
         headers: {
             "Content-Type": "application/json",
@@ -97,12 +97,20 @@ function setAllProfile(response){
             response[i].PATH =  "/assets/images/";
             response[i].FILENAME_ORIGINAL = "default-profile-pic.png";
         }
-            var col =   '<div class="col-md-4 thumbnail img-responsive">'+
-                            '<img style="height:300px" class="work" alt="'+fullName+'"'+
-                            'src="'+ baseUrl + response[i].PATH + response[i].FILENAME_ORIGINAL +'" ></img>'+
-                            '<a style="cursor: pointer; text-align:centre" id="'+response[i].ARTIST_PROFILE_ID+
-                            '" href="./artistPublicProfile.html?id='+response[i].ARTIST_PROFILE_ID+'">'+fullName+'</a>';
-                        '</div>';
+            var col =   '<div class="col-md-4 col-sm-6 portfolio-item">'+
+              '<a class="portfolio-link" href="./artistPublicProfile.html?id='+response[i].ARTIST_PROFILE_ID+'">'+
+                '<div class="portfolio-hover">'+
+                  '<div class="portfolio-hover-content">'+
+                    '<i class="fas fa-plus fa-3x"></i>'+
+                  '</div>'+
+                '</div>'+
+                '<img class="img-fluid img-fixed-size" src="'+response[i].PATH+response[i].FILENAME_ORIGINAL+'" alt="">'+
+              '</a>'+
+              '<div class="portfolio-caption">'+
+                '<h4>'+fullName+'</h4>'+
+                
+              '</div>'+
+            '</div>';
 
             $('#publicImgDiv').append(col);
         

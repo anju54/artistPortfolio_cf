@@ -185,7 +185,7 @@ function saveProfileData(){
             "profileName":profileName,
             "facebookUrl": fbUrl,
             "twitterUrl": twitterUrl,
-            "linkedinUrl": linkedInUrl,
+            "linkedInUrl": linkedInUrl,
             "aboutMe": aboutMe,
             "colorName": color,
             "paintingTypeList" : newList
