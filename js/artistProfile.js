@@ -1,5 +1,6 @@
 var artistId = 0;
 var arrayOfErr = new Object();
+var typeOfProfilePic = "";
 $(document).ready(function() {
    
     $('#update').hide(); 
@@ -20,21 +21,29 @@ $(document).ready(function() {
 
     var type ="artist";
 
-    $("#updateImage").click(function(event) {
+    // $("#updateImage").click(function(event) {
+
+    //     event.preventDefault();
+
+    //     var form = $('#uploadimage')[0];
+    //     var data = new FormData(form);
+    //     updateProfilePic(data,type);
+    // });
+
+    $("#editUpdateBtn").click(function(event) {
 
         event.preventDefault();
-
         var form = $('#uploadimage')[0];
         var data = new FormData(form);
-        updateProfilePic(data,type);
-    });
 
-    $("#saveImage").click(function(event) {
-
-        event.preventDefault();
-        var form = $('#uploadimage')[0];
-        var data = new FormData(form);
-        uploadProfilePic(data,type);
+        if(typeOfProfilePic == "save"){
+            console.log(typeOfProfilePic);
+            uploadProfilePic(data,type);
+        }else if(typeOfProfilePic=="update"){
+            console.log(typeOfProfilePic);
+            updateProfilePic(data,type);
+        }
+        
     }); 
     
     showProfilePic();
@@ -78,9 +87,17 @@ function getArtistProfileData(){
         },
         'async': false,
         success: function (response) {
-            
             response = JSON.parse(response);
+            console.log(response);
+
             if(response.length>0){
+
+                if(response[0].PROFILE_PIC_ID){
+                    typeOfProfilePic = "update";
+                }else{
+                    typeOfProfilePic = "save";
+                }
+
                 getUserDetail();
                 setProfileData(response); 
                 $('#save').hide();
@@ -487,7 +504,7 @@ function isURLvalid(field,data){
 
 //This is used for uplaoding the profile pic
 function uploadProfilePic(file){
-
+    
     $('#profilePicShowError').text('');
    // hideLoader();
     showLoader();

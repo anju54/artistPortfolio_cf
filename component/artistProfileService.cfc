@@ -159,7 +159,7 @@
 
 			<cfquery datasource="artistPortfolio" name="getArtistProfileByUserId">
 					select ap.artist_profile_id,profile_name,facebook_info,twitter_info,linkedIn_url,about_me,
-						pt.painting_name,pt.painting_type_id,c.color_name
+						pt.painting_name,pt.painting_type_id,c.color_name,ap.profile_pic_id
 						from artist_profile as ap left join artist_painting_list_bridge aplb
 						on ap.artist_profile_id = aplb.artist_profile_id
 	                    left join painting_type pt on aplb.painting_id = pt.painting_type_id

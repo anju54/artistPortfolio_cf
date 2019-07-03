@@ -10,6 +10,8 @@
 
 		<cfset data = '#session.stLoggedInuser#' />
 		<cfreturn data>
+	<cfelse>
+		<cfreturn false/>
 	</cfif>
 
 </cffunction>
