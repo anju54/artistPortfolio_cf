@@ -47,22 +47,15 @@
 		<cfset data = deserializeJSON( requestBody ) />
 
 		<cfset aErrMsg = variables.artistprofileService.validationOfArtistdata(data) />
-		<cfset msg = variables.artistprofileService.checkForDuplicateProfileName(profileName=#data.profileName#)/>
 
-		<cfif StructKeyExists(session,"artistProfileId") >
-			<!--- <cfdump var="#session.artistProfileId#"> --->
-			<cfset msg = "This Artist is already exixts !!">
-			<cfoutput>#msg#</cfoutput>
-		<cfelseif not msg Eq "">
-			<cfoutput>#msg#</cfoutput>
-		<cfelseif Arraylen(aErrmsg) GT 0>
+		<cfif StructCount(aErrMsg) gt 0>
 			<cfset jsondata =  SerializeJSON(aErrmsg)/>
 			<cfoutput>#jsondata#</cfoutput>
-		<cfelse>
+			<cfelse>
 			<cfset isInserted = variables.artistprofileService.createArtistProfile(data) />
 			<cfoutput>#isInserted#</cfoutput>
-		</cfif>
 
+		</cfif>
 	</cfcase>
 
 	<cfcase value = "deleteProfilePic">
@@ -83,7 +76,7 @@
 
 		<cfset aErrMsg = variables.artistprofileService.validationOfArtistdata(data) />
 
-		<cfif Arraylen(aErrmsg) GT 0>
+		<cfif StructCount(aErrmsg) GT 0>
 			<cfset jsondata =  SerializeJSON(aErrmsg)/>
 			<cfoutput>#jsondata#</cfoutput>
 		<cfelse>

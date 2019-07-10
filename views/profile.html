@@ -47,7 +47,7 @@
                 <ul class="nav navbar-nav navbar-right navbar-user">
                     <li class="dropdown messages-dropdown">
                       <div class="col-md-7 col-4 align-self-center">
-                          <a href="" class="btn waves-effect waves-light btn-danger pull-right hidden-sm-down"
+                          <a href="" class="btn waves-effect waves-light btn-success pull-right hidden-sm-down"
                            onclick="redirectArtistPublicProfile()" id="previewProfile">
                               Preview profile</a>
                       </div>
@@ -93,11 +93,11 @@
                         <center class="m-t-30">
                             <div class="mainContainer">
                                 <div id="profilePicDiv"  class="profile-img-container">
-                                    <img src="../assets/images/default-profile-pic.png" class="img-circle" width="160" id="profileImage"
+                                    <img src="../assets/images/default-profile-pic.png" height="200px" width="200px" class="img-circle" width="160" id="profileImage"
                                         alt="upload image here"/>
                                     <div class="profile-img-i-container middle">
                                         <button type="submit" class="commentButton" id="myBtn" >
-                                            <i class="fa fa-edit" style="font-size:24px;color:red"></i>   
+                                            <i class="fa fa-edit" style="font-size:24px;color:green"></i>   
                                         <br>
                                             <button type="submit" class="likeButton" id="deleteImage">
                                                 <i class="fa fa-remove" style="font-size:24px;color:red"></i></i></button>
@@ -112,38 +112,36 @@
                             </div>
                             
                             <!-- The Modal -->
-                            <div id="myModal" class="modal">
+                            <div id="profilePicModal" class="modal" >
 
-                                    <!-- Modal content -->
+                                <!-- Modal content -->
                                 <div class="modal-content">
                                     <span class="close">&times;</span>
                                     <p>Upload Your profile picture here</p>
 
-                                    <form enctype="multipart/form-data" id="uploadimage" >
-                                        <div class="col-md-10">
-                                            <input type="file" name="fileUpload" id="file"  onchange="ValidateSingleInput(this);"/>
-                                            <p class="help-block">
-                                                Allowed formats: jpeg, jpg, png
-                                            </p>
-                                        </div>
-                                    </form>
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col-md-6 col-md-offset-3">
-                                                <button class="btn" id="editUpdateBtn" style="background-color: #00ff90b5;color: black;">
-                                                        Upload Image
-                                                </button>
+                                            <div class="col-md-5">
+                                                <form enctype="multipart/form-data" id="uploadimage" >
+                                                    <div class="col-md-10">
+                                                        <input type="file" name="fileUpload" id="file"  onchange="ValidateSingleInput(this);"/>
+                                                        <p class="help-block">
+                                                            Allowed formats: jpeg, jpg, png
+                                                        </p>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="col-md-2">
+                                                    <button class="btn" id="editUpdateBtn" style="background-color: #00ff90b5;color: black;">
+                                                            Upload Image
+                                                    </button>
                                             </div>
                                         </div>
-                                        
                                     </div>
-
+                                   
                                 </div>
                                 
                             </div>
-                           
-                            
-
                             <div class="col-sm-6">
                                 <p id="profilePicShowError"></p>
                             </div>
@@ -152,7 +150,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Column -->
+           
             <!-- Column -->
             <div class="col-lg-8 col-xlg-9 col-md-7">
                 <div class="card">
@@ -186,35 +184,35 @@
                             <div class="col-md-12">
                                 <input type="text" id="profileName"  onclick="hideError()"
                                 class="form-control form-control-line">
-                                <p id="profileNameError"></p>
+                                <p id="profilenameerror"></p>
                             </div>
 
                             <label class="col-md-12">Facebook url</label>
                             <div class="col-md-12">
-                                <input type="text" id="fbUrl" name="facebookUrl" class="form-control form-control-line" onclick="hidefbError()">
-                                <p id="fbError"></p>
+                                <input type="text" id="fbUrl" name="facebookUrl" class="form-control form-control-line" onclick="hidefberror()">
+                                <p id="fberror"></p>
                             </div>
                             <br>
                             <label class="col-md-12">Twitter url</label>
                             <div class="col-md-12">
-                                <input type="text" id="twitterUrl" name="twitterUrl" class="form-control form-control-line" onclick="hideTError()">
-                                <p id="tError"></p>
+                                <input type="text" id="twitterUrl" name="twitterUrl" class="form-control form-control-line" onclick="hideterror()">
+                                <p id="terror"></p>
                             </div>
                             <br>
                             <label class="col-md-12">LinkedIn url</label>
                             <div class="col-md-12">
                                 <input type="text" id="linkedInUrl" name="linkedInUrl" class="form-control form-control-line" onclick="hideLError()">
-                                <p id="lError"></p>
+                                <p id="lerror"></p>
                             </div>
 
                             <label class="col-md-12">Background colour*</label>
                             <div class="col-md-12">
-                                <select type="text" id="bgcol" name="colorName" class="form-control form-control-line" onclick="hideColorError()">
+                                <select type="text" id="bgcol" name="colorName" class="form-control form-control-line" onclick="hidecolorerror()">
                                     <option>Select</option>
                                     <!-- <option>red</option>
                                     <option>yellow</option> -->
                                 </select>
-                                <p id="colorError"></p>
+                                <p id="colorerror"></p>
                             </div>
 
                             <br>
@@ -241,12 +239,13 @@
                             <div class="col-md-12">
                                 <textarea rows="5" id="aboutMe" placeholder="max 255 chars" onclick="hideMainError()"
                                 class="form-control form-control-line"></textarea>
+                                <p id="aboutmeerr"></p>
                             </div>
 
-                            <div class="col-sm-4">
+                            <!-- <div class="col-sm-4">
                                 <button class="btn btn-success" id="save">Save Profile</button>
-                            </div>
-                            <div class="col-sm-4">
+                            </div> -->
+                            <div class="col-sm-8">
                                 <p id="msg"></p>
                             </div>
                             <div class="col-sm-4">
@@ -268,7 +267,7 @@
 
     <script>
             // Get the modal
-            var modal = document.getElementById("myModal");
+            var modal = document.getElementById("profilePicModal");
             
             // Get the button that opens the modal
             var btn = document.getElementById("myBtn");

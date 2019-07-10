@@ -1,7 +1,7 @@
-#error,#emailError,#fnameError,#lnameError,#passwordError,#imageUploadError,#profileNameError,
-#profilePicShowError,#emailErrorMsg,#colorError,#fbError,#tError,#lError,
+#error,#emailError,#fnameError,#lnameError,#passwordError,#imageUploadError,#profilenameerror,
+#profilePicShowError,#emailErrorMsg,#colorerror,#fberror,#terror,#lerror,
 #errName,#errCN,#errWebsite,#domainErr,#fnameErrorMsg,#saveError,#saveOrgErr,#passwordErrorMsg,
-#mainErrMsg,#msg
+#mainErrMsg,#msg,#aboutmeerr
 {
     color: red;
 }
