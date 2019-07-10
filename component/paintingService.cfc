@@ -150,8 +150,10 @@
 				from media inner join
 				artist_media_bridge as amb on media.media_id = amb.media_id
 	            where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
+	              order by media_id desc
 				limit <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,
 					  <cfqueryparam cfsqltype="cf_sql_integer" value="#limitValue#">
+					;
 			</cfquery>
 
 			<cfcatch type="any" >

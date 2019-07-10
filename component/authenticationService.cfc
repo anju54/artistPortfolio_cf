@@ -52,7 +52,7 @@
 		<cfset var isUserLoggedIn = false />
 		<cfset password = Hash(userPassword) />
 
-		<cftry>
+		<!--- <cftry> --->
 
 			<cfquery name="rsLoginUser" datasource = 'artistPortfolio'>
 				select email_id,password,first_name,last_name ,role.role as role from users inner join role on users.role_id = role.role_id
@@ -73,12 +73,12 @@
 				<cfset var isUserLoggedIn = false />
 				<cfreturn isUserLoggedIn>
 			</cfif>
-		<cfcatch type="any" >
-			<cflog application="true" file="artistPortfolioError"
-			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:authenticationService ,
-					function:doLogin, Line:#cfcatch.TagContext[1].Line#">
-		</cfcatch>
-		</cftry>
+		<!--- <cfcatch type="any" > --->
+<!--- 			<cflog application="true" file="artistPortfolioError" --->
+<!--- 			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:authenticationService , --->
+<!--- 					function:doLogin, Line:#cfcatch.TagContext[1].Line#"> --->
+<!--- 		</cfcatch> --->
+<!--- 		</cftry> --->
 
 	</cffunction>
 

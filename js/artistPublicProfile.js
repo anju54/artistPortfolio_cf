@@ -4,6 +4,10 @@ $(document).ready(function() {
 
     showPublicPaintings(counter); 
 
+    var id = getUrlParameter('id');
+    getPublicProfilePic(id);
+    getArtistProfileInfo(id); 
+
     if(totalPageNo > 0){
 
         $('#pagination-demo').twbsPagination({
@@ -16,34 +20,7 @@ $(document).ready(function() {
         });
     }
        
-    $(".likeButton").click(function(){
-
-        var mediaId = this.id;
-        addLikes(mediaId);
-        console.log(mediaId);
-
-    });
 });
-
-function addLikes(id){
-
-    $.ajax({
-        url:  `${baseUrl}/controller/paintingcontroller.cfm?action=countPublicPainting` ,
-        type: "GET",
-        crossDomain: true,
-        async:false,
-        headers: {
-            "Content-Type": "application/json",
-        },
-        success: function (response) {
-            calculateTotalPageNo(response);
-            
-        },
-        error: function( ) {
-        }         
-    });    
-}
-
 
 
 //This is used for displaying all the public images
@@ -132,13 +109,13 @@ function closePreview(){
     $('#over').remove();
 }
 
-$(document).ready(function() {
+// $(document).ready(function() {
 
-    var id = getUrlParameter('id');
-    getPublicProfilePic(id);
-    getArtistProfileInfo(id);  
+//     var id = getUrlParameter('id');
+//     getPublicProfilePic(id);
+//     getArtistProfileInfo(id);  
      
-});
+// });
 
 //This is used to fetch artist profile basic information
 function getArtistProfileInfo(id){
@@ -177,6 +154,8 @@ function getArtistProfileInfo(id){
 //This is used to set the artist basic information to artist profile page
 function setData(response){
 
+    console.log(response);
+
     $("#fullName").text(response[0].FIRST_NAME+" "+response[0].LAST_NAME) ;
     $("#name").text(response[0].FIRST_NAME+" "+response[0].LAST_NAME) ;
     $("#email").text(response[0].EMAIL_ID) ;
@@ -190,6 +169,7 @@ function setData(response){
     $('#mainColorDiv').css({backgroundColor: color});
     $('#fh5co-work').css({backgroundColor: color});
 
+    
     for(var i=0; i<response.length;i++){
 
         var listrow = '<h3 class="card-subtitle" id="paintingType">'+ response[i].PAINTING_NAME+'</h6>'
@@ -210,13 +190,16 @@ function getPublicProfilePic(id){
         },
         success: function (response) {
             response = JSON.parse(response);
-            if(response){
+            console.log(response.length);
+
+            if(response.length>0){
+                
                 var path = baseUrl + response[0].PATH + response[0].FILENAME_ORIGINAL ;
                 
                 $('#profilePic').attr("src",path);
                  
             } else{
-                var staticPath = "./assets/images/default-profile-pic.png";
+                var staticPath = "http://172.16.8.78:90/assets/images/default-profile-pic.png";
                 $('#profilePic').attr("src",staticPath);
             }
             

@@ -399,6 +399,7 @@ function uploadProfilePic(file){
                     swal("profile pic  uploaded!!"); 
                     showProfilePic();
                     $('#deleteImage').show();
+                    $('#profilePicModal').remove();
                }   else{
                    swal("Error uploading profile pic");
                }

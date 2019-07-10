@@ -206,7 +206,7 @@
 
 			<cfif getArtistProfileIdByUserId.RecordCount gt 0>
 
-				<cfset session.artistProfileId = {'artistProfileId' = getArtistProfileIdByUserId.artist_profile_id,
+				<cfset session.artistProfile = {'artistProfileId' = getArtistProfileIdByUserId.artist_profile_id,
 												'profileName' = getArtistProfileIdByUserId.profile_name } />
 			</cfif>
 
@@ -355,7 +355,7 @@
 				)
 			</cfquery>
 			<!--- get the primary key of the inserted record --->
-			<cfset var profilePicId = profilePicUpload["GENERATEDKEY"] />
+			<!--- <cfset var profilePicId = profilePicUpload["GENERATEDKEY"] /> --->
 
 			<cfset getArtistProfileIdByUserId() />
 
@@ -364,7 +364,7 @@
 				<cfset var flag = true />
 				<cfquery result="updateProfilePicId" datasource="artistPortfolio">
 					update artist_profile set profile_pic_id =
-					<cfqueryparam cfsqltype="cf_sql_varchar" value="#profilePicId#">
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#profilePicUpload["GENERATEDKEY"]#">
 					where artist_profile_id =
 					<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">
 				</cfquery>

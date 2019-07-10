@@ -5,21 +5,13 @@ var totalPageNo = 0;
 $(document).ready(function() {
 
     showPaintings("loadMore",0);  
-    console.log(totalPageNo);
 
     if(totalPageNo <= 0){
         totalPageNo = 1;
         $('#pagination-demo').hide();
     }
-    
-    $('#pagination-demo').twbsPagination({
-        totalPages: totalPageNo,
-        visiblePages: 3,
-        onPageClick: function (event, page) {
-            var type = "loadMore";
-            showPaintings(type,page);
-        }
-    });
+
+    bindPagination();
     
     $('input[name=publicOrPrivate]').change( function(){
         var id = $(this).attr('id');
@@ -29,11 +21,12 @@ $(document).ready(function() {
     $("#saveImage").click(function(event) {
 
         event.preventDefault();
-
+        $('#imageUploadError').hide();
         var form = $('#uploadimage')[0];
         var data = new FormData(form);
         counter = 0;
         uploadPaintings(data);
+        bindPagination();
     }); 
 
     //binds to onchange event of your input field
@@ -42,12 +35,27 @@ $(document).ready(function() {
         //this.files[0].size gets the size of your file.
        var size = this.files[0].size ;
        if( size>10485760 ){
-           swal("please upload image lesser then 10mb");
+           //swal("please upload image lesser then 10mb");
+           $('#imageUploadError').show();
+           $('#imageUploadError').text("please upload image lesser then 10mb");
        }
     
     });
 
 });
+
+function bindPagination(){
+console.log(totalPageNo);
+    $('#pagination-demo').twbsPagination({
+        totalPages: totalPageNo,
+        visiblePages: 3,
+        onPageClick: function (event, page) {
+            var type = "loadMore";
+            console.log("callling from twbs pagination");
+            showPaintings(type,page);
+        }
+    });
+}
 
 function bindEvent(){
 
@@ -97,6 +105,7 @@ function showPaintings(type,pageNo){
             counter = 0;
         }
         urlVar = `${baseUrl}/controller/paintingcontroller.cfm?action=paginationForAllPainting&counter=${counter}`;
+        console.log("pagination ajax call");
     }
     if(type=="upload"){
         counter = 0;
@@ -108,21 +117,15 @@ function showPaintings(type,pageNo){
         crossDomain: true,
         data: {},
         async: false,
-        
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: {   "Content-Type": "application/json" },
         success: function (response) {
             response = JSON.parse(response);
-            console.log(response);
-
             if(!response.length){
-                console.log(response);
-                $('#msgDiv').show();
-                $('#paintingsDiv').hide();
+                //$('#msgDiv').show();
+                //$('#paintingsDiv').hide();
             }else{
-                $('#msgDiv').hide();
-                $('#paintingsDiv').show();
+                //$('#msgDiv').hide();
+                //$('#paintingsDiv').show();
             }
             if(response.length){
 
@@ -132,14 +135,14 @@ function showPaintings(type,pageNo){
                     }
                 }
                $('#imgDiv').empty();
-               console.log("inside ajax response");
                getCountOfPaintings();
                setAllPaintings(response);
+               //bindPagination();
             }
             //bindEvent();          
         },
         error: function( error) {  
-            console.log(error);
+           
         }             
     });
      
@@ -160,7 +163,7 @@ function setAllPaintings(response){
 
         var col =  '<div class=col-md-5>'+
         '<div class = "well">'+
-            '<img style="height:200px" class="thumbnail img-responsive" alt="opps!! imgae is not loaded"'+
+            '<img style="height:200px;width:300px" class="thumbnail img-responsive" alt="opps!! imgae is not loaded"'+
                 'src="'+baseUrl + response[i].PATH_THUMB + response[i].FILENAME +'" />'+
                 '<input type="checkbox" name="publicOrPrivate" class="form-check-input" id="'+response[i].MEDIA_ID+"_isPublic"+'">Public?'+
                 '<button class="btn btn-success deleteBtn" id="'+response[i].MEDIA_ID+ '"'+
@@ -178,7 +181,7 @@ function setAllPaintings(response){
 
 // This is used to preview when user hover the image to see the full image
 function imagePreview(source){
-    console.log("image preview called");
+   
     var source1 = source; 
     var index = source.indexOf('thumb');
     source = source.substring(0,index)+source1.substring(index+5);
@@ -200,7 +203,7 @@ function closePreview(){
 function setPublicOrprivate(id){
 
     var isPublic;
-    
+  
     if ( $('#'+id).is(":checked")){
             isPublic = "true";
     }else{
@@ -237,30 +240,25 @@ function deletePainting(id){
         async: false,
        
         success: function (response) {
-              
-        },
-        error: function( ) {
-        },
-        complete: function () {
-
             $('#imgDiv').empty();
             var type = "loadMore";
             var pageNo = 1;
             showPaintings(type,pageNo);
             for(var i=0; i<paintingList.length; i++){
                 if(paintingList[i].MEDIA_ID == id){
-                    
                     paintingList.splice(i,1);
                 }
             }
+        },
+        error: function( ) {
+        },
+        complete: function () {
             //setAllPaintings(paintingList);
             //bindEvent();
         }         
     });
 }
 
-
- 
  //This is used for making ajax call for uploading painting
  function uploadPaintings(file){
 
@@ -278,6 +276,7 @@ function deletePainting(id){
         async:false,
         success: function (response) {
            swal("painting uploaded successfully");
+           console.log("upload painting called");
            var type = "upload";
            showPaintings(type);
            hideLoader();
@@ -309,10 +308,7 @@ function getCountOfPaintings(){
             "Content-Type": "application/json",
         },
         success: function (response) {
-           
-            console.log(response);
             calculateTotalPageNo(response);
-            
         },
         error: function( ) {
         }         
@@ -324,12 +320,10 @@ function calculateTotalPageNo(countOfPainting){
 
     var remainder = countOfPainting % 4;
     if( remainder==1 || remainder == 2 || remainder == 3){
-        totalPageNo = Math.round( countOfPainting / 4 + 1 );
-
+        totalPageNo = Math.floor( countOfPainting / 4 + 1 );
     }else{
         totalPageNo = countOfPainting / 4;
     }
-    console.log(totalPageNo);
 }
 
 var _validFileExtensions = [".jpg", ".jpeg", ".png"];    
@@ -347,7 +341,9 @@ function ValidateSingleInput(oInput) {
             }
              
             if (!blnValid) {
-                swal("Sorry, thil file is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                //swal("Sorry, this file is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                $('#imageUploadError').show();
+                $('#imageUploadError').text("Sorry, this file is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
                 oInput.value = "";
                 return false;
             }
