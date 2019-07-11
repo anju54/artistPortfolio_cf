@@ -29,7 +29,7 @@
 
 	<cfcase value = "countPublicPainting">
 
-		<cfset count = variables.paintingService.countPainting(artistId=#URL.id#) />
+		<cfset count = variables.paintingService.countPublicPainting(artistId=#URL.id#) />
 		<cfoutput>#count#</cfoutput>
 	</cfcase>
 

@@ -4,12 +4,19 @@ $(document).ready(function() {
 
     showPublicPaintings(counter); 
 
+    if(totalPageNo <= 0){
+        //totalPageNo = 1;
+        $('#pagination-demo').hide();
+        $('#warningMsg').text("Artist has not uploded any Painting yet!!");
+    }
+
     var id = getUrlParameter('id');
     getPublicProfilePic(id);
     getArtistProfileInfo(id); 
 
     if(totalPageNo > 0){
 
+        $('#pagination-demo').show();
         $('#pagination-demo').twbsPagination({
             totalPages: totalPageNo,
             visiblePages: 3,
@@ -126,26 +133,17 @@ function getArtistProfileInfo(id){
         type: "GET",
         crossDomain: true,
         data: {},
-      
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json",},
         'async': false,
         success: function (response) {
-            
             response = JSON.parse(response);
-           
             if(response.length>0){
                 setData(response); 
-                $('#save').hide();
-                $('#update').show();
-                
-                //$('#deleteImage').show();
+                // $('#save').hide();
+                // $('#update').show();
             }             
         },
         error: function(error) {
-            
-            //swal(error.responseJSON.message)
         }             
     });
 
@@ -169,12 +167,14 @@ function setData(response){
     $('#mainColorDiv').css({backgroundColor: color});
     $('#fh5co-work').css({backgroundColor: color});
 
-    
-    for(var i=0; i<response.length;i++){
+    if(response[0].PAINTING_NAME){
+        for(var i=0; i<response.length;i++){
 
-        var listrow = '<h3 class="card-subtitle" id="paintingType">'+ response[i].PAINTING_NAME+'</h6>'
-        $('#paintingType').append(listrow);
+            var listrow = '<h3 class="card-subtitle" id="paintingType">'+ response[i].PAINTING_NAME+'</h6>'
+            $('#paintingType').append(listrow);
+        }
     }
+   
 }
 
 // This method is used to get profile pic
@@ -237,7 +237,7 @@ function calculateTotalPageNo(countOfPainting){
 
     var remainder = countOfPainting % 4;
     if( remainder==1 || remainder == 2 || remainder == 3){
-        totalPageNo = countOfPainting / 4 + 1;
+        totalPageNo = Math.floor( countOfPainting / 4 + 1 );
     }else{
         totalPageNo = countOfPainting / 4;
     }
