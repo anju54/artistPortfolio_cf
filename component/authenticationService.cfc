@@ -87,7 +87,7 @@
 
 		<cfset structdelete(session, 'stLoggedInUser') />
 		<cfset structdelete(session, 'user') />
-		<cfset structdelete(session, 'artistProfileId') />
+		<cfset structdelete(session, 'artistProfile') />
 		<cflogout />
 
 	</cffunction>

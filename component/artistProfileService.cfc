@@ -265,7 +265,7 @@
 				select filename_original, path,ap.artist_profile_id, users.first_name, users.last_name from media
 				 right join artist_profile ap
 				on media.media_id = ap.profile_pic_id inner join users on users.user_id = ap.user_id
-				limit <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,3;
+				limit <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,8;
 			</cfquery>
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
@@ -501,6 +501,19 @@
 		<cfreturn  isUpdated />
 	</cffunction>
 
+	<cffunction access="public" name="countOfProfilePic" returntype="numeric">
+
+		<cfset var countOfProfilePic = 0 />
+
+		<cfquery name="getCountOfprofilePic" datasource="artistPortfolio">
+			select count(*) as countOfProfilePic from media
+				 right join artist_profile ap
+				on media.media_id = ap.profile_pic_id inner join users on users.user_id = ap.user_id;
+		</cfquery>
+
+		<cfreturn getCountOfprofilePic.countOfProfilePic />
+	</cffunction>
+
 	<!--- This is used for validating artist profile data --->
 	<cffunction access="public" name="validationOfArtistdata" returntype="Struct">
 
@@ -599,7 +612,7 @@
 	</cffunction>
 
 	<!--- This is used to check for duplicate profile name. --->
-	<cffunction access="public" name="checkForDuplicateProfileName" returntype="string">
+	<cffunction access="public" name="checkForDuplicateProfileName" returntype="void">
 
 		<cfargument name="profileName" type="string" required="true">
 		<cfset errorMsg = ""/>

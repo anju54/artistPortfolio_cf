@@ -29,8 +29,8 @@
   <style>
   /* Custom CSS */
   .img-fixed-size {
-    height: 350px;
-    width: 350px;
+    height: 250px;
+    width: 250px;
     border-radius: 50%;
   }
   </style>
@@ -49,15 +49,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav text-uppercase ml-auto">
-          <!-- <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#services">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#about">About</a>
-          </li>-->
+          
           <li class="nav-item" id="sidebar">
             <a class="nav-link js-scroll-trigger" href="../views/profile.html">Profile</a>
           </li> 
@@ -93,28 +85,16 @@
         </div>
       </div>
       <div class="row" id="publicImgDiv">
-
-        <!-- <div class="col-md-4 col-sm-6 portfolio-item">
-          <a class="portfolio-link" data-toggle="modal" href="#portfolioModal1">
-            <div class="portfolio-hover">
-              <div class="portfolio-hover-content">
-                <i class="fas fa-plus fa-3x"></i>
-              </div>
-            </div>
-            <img class="img-fluid" src="img/portfolio/01-thumbnail.jpg" alt="">
-          </a>
-          <div class="portfolio-caption">
-            <h4>Threads</h4>
-            <p class="text-muted">Illustration</p>
-          </div>
-        </div> -->
-        
+ 
+      </div>
+      <div class="row justify-content-center">
+        <div">
+          <ul id="pagination-demo" class="pagination-sm flex-wrap mt-50 mb-70 justify-content-center">
+          </ul>
+        </div>
       </div>
     </div>
   </section>
-
-          
- 
 
   <!-- About -->
   <section class="page-section" id="about">
@@ -188,16 +168,6 @@
             </li>
           </ul>
         </div>
-        <!-- <div class="col-md-4">
-          <ul class="list-inline quicklinks">
-            <li class="list-inline-item">
-              <a href="#">Privacy Policy</a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">Terms of Use</a>
-            </li>
-          </ul>
-        </div> -->
       </div>
     </div>
   </footer>
@@ -220,6 +190,10 @@
 
   <!-- Custom scripts for this template -->
   <script src="../js/agency.min.js"></script>
+
+  <script type="text/javascript" src="../js/jquery.twbsPagination.js"></script>
+	<script type="text/javascript" src="../js/jquery.twbsPagination.min.js"></script>
+
 
 </body>
 

@@ -237,7 +237,7 @@
 	            and amb.is_public = "true";
 
 		</cfquery>
-		<cfreturn countPainting.countOfPainting />
+		<cfreturn countPublicPainting.countOfPainting />
 	</cffunction>
 
 

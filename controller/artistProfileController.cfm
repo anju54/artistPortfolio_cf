@@ -97,4 +97,9 @@
 		<cfoutput>#jsondata#</cfoutput>
 	</cfcase>
 
+	<cfcase value = "countOfProfilePic">
+		<cfset count = variables.artistprofileService.countOfProfilePic() />
+		<cfoutput>#count#</cfoutput>
+	</cfcase>
+
 </cfswitch>
