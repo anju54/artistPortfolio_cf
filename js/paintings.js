@@ -4,7 +4,8 @@ var counter = 0;
 var totalPageNo = 0;
 $(document).ready(function() {
 
-    showPaintings("loadMore",0);  
+    //showPaintings("loadMore",0);  
+    getCountOfPaintings();
 
     if(totalPageNo <= 0){
         totalPageNo = 1;
@@ -44,19 +45,22 @@ $(document).ready(function() {
 
 });
 
+//This is used for handling the pagination
 function bindPagination(){
-console.log(totalPageNo);
+
+$('#pagination-demo').twbsPagination('destroy');
+
     $('#pagination-demo').twbsPagination({
         totalPages: totalPageNo,
         visiblePages: 3,
         onPageClick: function (event, page) {
             var type = "loadMore";
-            console.log("callling from twbs pagination");
             showPaintings(type,page);
         }
     });
 }
 
+// This is used to bind delete and preview of image ( for the pusrpose of auto refresh).
 function bindEvent(){
 
     $('#imgDiv img').click(function(){
@@ -81,6 +85,7 @@ function bindEvent(){
                 if (willDelete) {
                     var id = this.id;
                     deletePainting(id);
+                    bindPagination();
                     swal("Poof! Your painting pic has been deleted!", {
                         icon: "success",
                     });
@@ -88,28 +93,24 @@ function bindEvent(){
                     swal("Your file is safe!");
                 }
             });
-
-            // var id = this.id;
-            // deletePainting(id);
     });
 }
 
 // This is used to fetch all the painting of a particular artist
 function showPaintings(type,pageNo){
-    
-    if(type=="loadMore"){
 
+    if(type=="loadMore"){
         var limit = 4;
         counter = pageNo * limit - limit ;
         if(pageNo == 0){
             counter = 0;
         }
         urlVar = `${baseUrl}/controller/paintingcontroller.cfm?action=paginationForAllPainting&counter=${counter}`;
-        console.log("pagination ajax call");
     }
     if(type=="upload"){
         counter = 0;
-        urlVar = `${baseUrl}/controller/paintingcontroller.cfm?action=displayLastUploadedImage`;
+        urlVar = `${baseUrl}/controller/paintingcontroller.cfm?action=paginationForAllPainting&counter=${counter}`;
+        //`${baseUrl}/controller/paintingcontroller.cfm?action=displayLastUploadedImage`;
     }
     $.ajax({
         url:  urlVar,
@@ -137,9 +138,7 @@ function showPaintings(type,pageNo){
                $('#imgDiv').empty();
                getCountOfPaintings();
                setAllPaintings(response);
-               //bindPagination();
-            }
-            //bindEvent();          
+            }         
         },
         error: function( error) {  
            
@@ -253,8 +252,6 @@ function deletePainting(id){
         error: function( ) {
         },
         complete: function () {
-            //setAllPaintings(paintingList);
-            //bindEvent();
         }         
     });
 }
@@ -276,9 +273,8 @@ function deletePainting(id){
         async:false,
         success: function (response) {
            swal("painting uploaded successfully");
-           console.log("upload painting called");
            var type = "upload";
-           showPaintings(type);
+           getCountOfPaintings();
            hideLoader();
         },
         error: function(error) {    
@@ -287,9 +283,7 @@ function deletePainting(id){
         complete: function () {
         
             paintingList=[];
-            //showPaintings();
             hideLoader();
-            //bindEvent();
             $('#file').val('');
         }       
     });
@@ -326,6 +320,7 @@ function calculateTotalPageNo(countOfPainting){
     }
 }
 
+//This is used for file type validation
 var _validFileExtensions = [".jpg", ".jpeg", ".png"];    
 function ValidateSingleInput(oInput) {
     if (oInput.type == "file") {

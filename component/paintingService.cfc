@@ -15,7 +15,7 @@
 			<cfset var flag = false />
 
 			<!--- Fetch profile name from session object --->
-			<cfset variables.profileName = session.artistProfileId.profileName />
+			<cfset variables.profileName = session.artistProfile.profileName />
 
 			<cfset var destination = "../media/artist/" & profileName & "/" />
 			<cfset var storedDestinationAdress = "/media/artist/" & profileName & "/" />
@@ -44,7 +44,7 @@
 
 			<!--- get the primary key of the inserted record --->
 			<cfset var paintingId = uploadPainting["GENERATEDKEY"] />
-			<cfset var artistId = "#session.artistProfileId.artistProfileId#">
+			<cfset var artistId = "#session.artistProfile.artistProfileId#">
 
 			<!--- update media information in the bridge table --->
 			<cfquery datasource="artistPortfolio" result="updatePainitngBridge">
@@ -79,7 +79,7 @@
 			<cfset var flag = false />
 
 			<!--- Fetch profile name from session object --->
-			<cfset profileName = session.artistProfileId.profileName />
+			<cfset profileName = session.artistProfile.profileName />
 
 			<cfset var destination = "../media/artist/" & profileName & "/" & "thumb/" />
 			<cfset var storedThumbDestination = "/media/artist/" & profileName & "/" & "thumb/" />
@@ -117,7 +117,7 @@
 		<cftry>
 			<cfset var showAllPaintingByartistId = QueryNew("") />
 
-			<cfset var artistId = "#session.artistProfileId.artistProfileId#">
+			<cfset var artistId = "#session.artistProfile.artistProfileId#">
 
 			<cfquery datasource="artistPortfolio" name="showAllPaintingByartistId">
 
@@ -142,7 +142,7 @@
 		<cfset var paginationForAllPaintings = QueryNew("")/>
 
 		<cftry>
-			<cfset artistId = "#session.artistProfileId.artistProfileId#">
+			<cfset artistId = "#session.artistProfile.artistProfileId#">
 			<cfset limitValue = 4 />
 			<cfquery datasource="artistPortfolio" name="paginationForAllPaintings">
 
@@ -168,7 +168,7 @@
 	<!--- This is used to display last uploaded image --->
 	<cffunction name="displayLastUploadedImage" access="public" returntype="query">
 
-		<cfset var artistId = "#session.artistProfileId.artistProfileId#">
+		<cfset var artistId = "#session.artistProfile.artistProfileId#">
 		<cfset var selectLastImage = QueryNew("")/>
 		<cfquery datasource="artistPortfolio" name="selectLastImage" result="resultOfLastImage">
 
@@ -206,7 +206,7 @@
 	<!--- This is used for counting the number of media stored in table by artist id --->
 	<cffunction name="countPainting" access="public" returntype="numeric">
 
-		<cfset var artistId = "#session.artistProfileId.artistProfileId#">
+		<cfset var artistId = "#session.artistProfile.artistProfileId#">
 
 		<cfif not artistId Eq 0>
 
