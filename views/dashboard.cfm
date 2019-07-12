@@ -24,13 +24,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Admin Panel</a>
+                <a class="navbar-brand" href="index.cfm">Admin Panel</a>
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul id="active" class="nav navbar-nav side-nav">
-                    <li class="selected"><a href="dashboard.html"><i class="fa fa-bullseye"></i> Dashboard</a></li>
+                    <li class="selected"><a href="dashboard.cfm"><i class="fa fa-bullseye"></i> Dashboard</a></li>
                     <li><i class="fa fa-tasks"></i> Artist's List </li>
-                    <li><a href="register.html"><i class="fa fa-font"></i>Update</a></li>
+                    <li><a href="register.cfm"><i class="fa fa-font"></i>Update</a></li>
                     <li><a href="#"><i class="fa fa-list-ol"></i> Profile</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">

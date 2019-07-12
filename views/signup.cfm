@@ -61,7 +61,7 @@
 					<p id="mainErrMsg">
 					</p>
                 </form>
-                <a href="signin.html"> Already have an account.</a>
+                <a href="signin.cfm"> Already have an account.</a>
             </div>
         </div>
         <br>

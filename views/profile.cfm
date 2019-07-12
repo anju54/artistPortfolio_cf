@@ -39,10 +39,10 @@
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                    <li><a href="index.html"><i class="fa fa-bullseye"></i> Dashboard</a></li>
-                    <!-- <li><a href="portfolio.html"><i class="fa fa-tasks"></i> Portfolio</a></li> -->
-                    <li><a href="paintings.html" id="paintingHref"><i class="fa fa-list-ol"></i>My Paintings</a></li>
-                    <!-- <li><a href="register.html"><i class="fa fa-font"></i> Register</a></li> -->
+                    <li><a href="index.cfm"><i class="fa fa-bullseye"></i> Dashboard</a></li>
+                    <!-- <li><a href="portfolio.cfm"><i class="fa fa-tasks"></i> Portfolio</a></li> -->
+                    <li><a href="paintings.cfm" id="paintingHref"><i class="fa fa-list-ol"></i>My Paintings</a></li>
+                    <!-- <li><a href="register.cfm"><i class="fa fa-font"></i> Register</a></li> -->
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
                     <li class="dropdown messages-dropdown">

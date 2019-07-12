@@ -44,8 +44,8 @@
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                    <li><a href="index.html"><i class="fa fa-bullseye"></i> Dashboard</a></li>
-                    <li class="selected"><a href="profile.html"><i class="fa fa-tasks"></i> Profile</a></li>
+                    <li><a href="index.cfm"><i class="fa fa-bullseye"></i> Dashboard</a></li>
+                    <li class="selected"><a href="profile.cfm"><i class="fa fa-tasks"></i> Profile</a></li>
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
@@ -54,7 +54,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-user"></i> <span id="fullName"> </span><b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <!-- <li><a href="profile.html"><i class="fa fa-user"></i> Profile</a></li> -->
+                            <!-- <li><a href="profile.cfm"><i class="fa fa-user"></i> Profile</a></li> -->
                             <!-- <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li> -->
                             <li class="divider"></li>
                             <li><a href="javascript:void(0)" id="logout"><i class="fa fa-power-off"></i> Log Out</a></li>

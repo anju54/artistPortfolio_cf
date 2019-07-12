@@ -246,7 +246,7 @@ function deleteProfile(){
 }
 
 function redirectArtistPublicProfile(){
-    $('#previewProfile').attr("href","./artistPublicProfile.html");
+    $('#previewProfile').attr("href","./artistPublicProfile.cfm");
 }
 
 // this is used for validation the form
@@ -497,7 +497,7 @@ function updateProfilePic(file){
 function redirectArtistPublicProfile(){
 
     var artistId = getArtistProfileId();
-    $('#previewProfile').attr("href","./artistPublicProfile.html?id="+artistId);
+    $('#previewProfile').attr("href","./artistPublicProfile.cfm?id="+artistId);
 }
 
 // This method is used to get artist id.

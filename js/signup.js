@@ -42,7 +42,7 @@ function registration(){
     	            }else{
     	            	alert("Congratulations!! account has been created successfully!");
 	    	            $('#msg').text("Congratulations!! account has been created successfully!");
-	    	            window.location.href = './signin.html';
+	    	            window.location.href = './signin.cfm';
 	    	        }
     	        },
     	        error: function(error) {

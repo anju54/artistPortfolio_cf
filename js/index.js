@@ -113,7 +113,7 @@ function setAllProfile(response){
             response[i].FILENAME_ORIGINAL = "default-profile-pic.png";
         }
         var col =   '<div class="col-md-3 col-sm-6 portfolio-item">'+
-            '<a class="portfolio-link" href="./artistPublicProfile.html?id='+response[i].ARTIST_PROFILE_ID+'">'+
+            '<a class="portfolio-link" href="./artistPublicProfile.cfm?id='+response[i].ARTIST_PROFILE_ID+'">'+
             '<div class="portfolio-hover">'+
                 '<div class="portfolio-hover-content">'+
                 '<i class="fas fa-plus fa-3x"></i>'+
@@ -135,11 +135,11 @@ function redirectpage(response){
     
     if(response=='ROLE_ARTIST'){
         
-        $('#redirectBtn').attr("href",'./profile.html?email='+response.username+'&val=edit');
-        //window.location.href = './profile.html?email='+response.username+'&val=edit' ;
+        $('#redirectBtn').attr("href",'./profile.cfm?email='+response.username+'&val=edit');
+        //window.location.href = './profile.cfm?email='+response.username+'&val=edit' ;
     }else if(response=='ROLE_ORGADMIN'){
-        $('#redirectBtn').attr("href",'./orgAdminProfile.html?email='+response.username+'&val=edit');
-        //window.location.href = './orgAdminProfile.html?email='+response.username+'&val=edit' ;
+        $('#redirectBtn').attr("href",'./orgAdminProfile.cfm?email='+response.username+'&val=edit');
+        //window.location.href = './orgAdminProfile.cfm?email='+response.username+'&val=edit' ;
     }
     
 }

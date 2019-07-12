@@ -18,8 +18,8 @@ function logout(){
         success: function (result) {
             
             swal("successfuly logout from the application");
-            $('#logout').attr("href","../views/index.html");
-            window.location.href = '../views/index.html';
+            $('#logout').attr("href","../views/index.cfm");
+            window.location.href = '../views/index.cfm';
         } 
     });   
 }

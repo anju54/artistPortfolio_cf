@@ -51,13 +51,13 @@
         <ul class="navbar-nav text-uppercase ml-auto">
           
           <li class="nav-item" id="sidebar">
-            <a class="nav-link js-scroll-trigger" href="../views/profile.html">Profile</a>
+            <a class="nav-link js-scroll-trigger" href="../views/profile.cfm">Profile</a>
           </li> 
           <li class="nav-item" id="sidebarLogOut">
             <a class="nav-link js-scroll-trigger" href="">Log Out</a>
           </li>
           <li class="nav-item" id="signinButton">
-            <a class="nav-link js-scroll-trigger" href="../views/signin.html">Log In</a>
+            <a class="nav-link js-scroll-trigger" href="../views/signin.cfm">Log In</a>
           </li>
         </ul>
       </div>

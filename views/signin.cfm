@@ -42,7 +42,7 @@
                           <button class="btn btn-lg btn-primary" id="loginBtn" style="width: 340px"; type="su">SignIn</button>
                       </div>
                   <!-- </form> -->
-                    <a href="signup.html"> SignUp</a>
+                    <a href="signup.cfm"> SignUp</a>
                     <p id="error"></p>
               </div>
           </div>
