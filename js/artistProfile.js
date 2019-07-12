@@ -3,10 +3,9 @@ var arrayOfErr = new Object();
 var typeOfProfilePic = "";
 var actionInProfileData = "save";
 $(document).ready(function() {
-   
-     
-    $("#saveImage").hide();
-    $('#updateImage').hide();
+    
+    //$("#saveImage").hide();
+    //$('#updateImage').hide();
 
     getArtistProfileId();
     getAllPaintingType(); 
@@ -69,7 +68,6 @@ function getArtistProfileData(){
         type: "GET",
         crossDomain: true,
         data: {},
-      
         headers: {
             "Content-Type": "application/json",
         },
@@ -79,8 +77,7 @@ function getArtistProfileData(){
             if(response.length>0){
                 actionInProfileData = "update";
                 if(response[0].PROFILE_PIC_ID){
-                    typeOfProfilePic = "update";
-                    
+                    typeOfProfilePic = "update";    
                 }else{
                     typeOfProfilePic = "save";
                 }
@@ -188,7 +185,6 @@ function saveProfileData(type){
             type: "POST",
             crossDomain: true,
             data: data,
-        
             headers: {
                 "Content-Type": "application/json",
             },
@@ -231,15 +227,13 @@ function deleteProfile(){
         type: "Get",
         crossDomain: true,
         data: {},
-       
+        'async': false,
         success: function (response) {
             
-              if(response){  
-                $('#profileImage').attr("src","../assets/images/default-profile-pic.png");
-                $('#updateImage').hide();
-                $('#saveImage').show();
-                $('#deleteImage').hide();
-              }
+            if(response){  
+            $('#profileImage').attr("src","../assets/images/default-profile-pic.png");
+            $('#deleteImage').hide();
+            }
         },
         error: function( ) {}         
     });

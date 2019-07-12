@@ -3,8 +3,6 @@
 <html lang="en">
 <head>
 
-        
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
@@ -132,21 +130,18 @@
                                                 </form>
                                             </div>
                                             <div class="col-md-2">
-                                                    <button class="btn" id="editUpdateBtn" style="background-color: #00ff90b5;color: black;">
-                                                            Upload Image
-                                                    </button>
+                                                <button class="btn" id="editUpdateBtn" style="background-color: #00ff90b5;color: black;">
+                                                    Upload Image
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                   
-                                </div>
-                                
+                                </div>     
                             </div>
                             <div class="col-sm-6">
                                 <p id="profilePicShowError"></p>
                             </div>
                         </center>
-
                     </div>
                 </div>
             </div>

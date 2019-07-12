@@ -1,4 +1,4 @@
 <!-- This is used for mapping the logout requests -->
-<cfset variables.authenticationService = CreateObject('component', 'component.authenticationService') />
+<cfset VARIABLES.authenticationService = CreateObject('component', 'component.authenticationService') />
 
-<cfset userLoggedOut = variables.authenticationService.doLogout() />
+<cfset VAR userLoggedOut = VARIABLES.authenticationService.doLogout() />

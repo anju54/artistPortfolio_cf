@@ -1,21 +1,21 @@
 <!--- controller for mapping user registration request --->
 
 <!--- recieve data coming from UI --->
-<cfset requestBody = toString( getHttpRequestData().content ) />
+<cfset VAR requestBody = toString( getHttpRequestData().content ) />
 <cfif isJSON( requestBody )>
 
-	<cfset data = deserializeJSON( requestBody )>
+	<cfset requestBody = deserializeJSON( requestBody )>
 </cfif>
 
-<cfset variables.signupService = CreateObject('component', 'component.signupService') />
-<cfset aErrMsg = variables.signupService.validateuser(data) />
+<cfset VARIABLES.signupService = CreateObject('component', 'component.signupService') />
+<cfset VAR aErrMsg = VARIABLES.signupService.validateuser(data) />
 
 <cfif ArrayIsEmpty(aErrmsg)>
 
-	<cfset isInserted = variables.signupService.addUser(data) />
-	<cfset jsondata =  SerializeJSON(isInserted)/>
-	<cfoutput>#jsondata#</cfoutput>
+	<cfset VAR isInserted = VARIABLES.signupService.addUser(data) />
+	<cfset isInserted =  SerializeJSON(isInserted)/>
+	<cfoutput>#isInserted#</cfoutput>
 <cfelse>
-	<cfset jsondata =  SerializeJSON(aErrmsg)/>
-	<cfoutput>#jsondata#</cfoutput>
+	<cfset aErrmsg =  SerializeJSON(aErrmsg)/>
+	<cfoutput>#aErrmsg#</cfoutput>
 </cfif>

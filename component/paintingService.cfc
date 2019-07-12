@@ -7,56 +7,52 @@
 	--->
 <cfcomponent>
 
+	<!--- Fetch profile name from session object --->
+	<cfset VARIABLES.profileName = session.artistProfile.profileName />
+
 	<!--- This is used to upload painting by artist_id --->
 	<cffunction name="uploadPainting" access="public" output="false" returntype="Any">
 
 		<cfargument name="form" type="any" required="true"/>
 		<cftry>
-			<cfset var flag = false />
+			<cfset VAR flag = false />
 
-			<!--- Fetch profile name from session object --->
-			<cfset variables.profileName = session.artistProfile.profileName />
-
-			<cfset var destination = "../media/artist/" & profileName & "/" />
-			<cfset var storedDestinationAdress = "/media/artist/" & profileName & "/" />
+			<cfset VAR destination = "../media/artist/" & profileName & "/" />
+			<cfset VAR storedDestinationAdress = "/media/artist/" & profileName & "/" />
 			<cfif len(trim(form.fileUpload))>
 				<cffile action="upload" fileField="fileUpload" destination="#expandPath("#destination#")#">
 			</cfif>
 
 			<!--- Fetch user_id from session object --->
-			<cfset var userId = "#session.user.userId#">
+			<!--- <cfset VAR userId = "#session.user.userId#"> --->
 
-			<cfset var newFileName = GetTickCount() & cffile.ATTEMPTEDSERVERFILE />
-			<cfset var paintingDestination = destination & newFileName />
-			<cfset var source = destination & cffile.ATTEMPTEDSERVERFILE />
+			<cfset VAR newFileName = GetTickCount() & cffile.ATTEMPTEDSERVERFILE />
+			<cfset VAR paintingDestination = destination & newFileName />
+			<cfset VAR source = destination & cffile.ATTEMPTEDSERVERFILE />
 
 			<!--- To rename the file name --->
 			<cffile action = "rename" destination = "#expandPath("#paintingDestination#")#" source = "#expandPath("#source#")#">
 
 			<cfquery datasource="artistPortfolio" result="uploadPainting">
 
-				insert into media( filename_original, path ) values (
+				INSERT INTO media( filename_original, path ) VALUES (
 
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#newFileName#">,
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#storedDestinationAdress#">
+				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#newFileName#">,
+				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#storedDestinationAdress#">
 				)
 			</cfquery>
-
-			<!--- get the primary key of the inserted record --->
-			<cfset var paintingId = uploadPainting["GENERATEDKEY"] />
-			<cfset var artistId = "#session.artistProfile.artistProfileId#">
 
 			<!--- update media information in the bridge table --->
 			<cfquery datasource="artistPortfolio" result="updatePainitngBridge">
 
-				insert artist_media_bridge ( artist_id , media_id ) values (
-					<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">,
-					<cfqueryparam cfsqltype="cf_sql_varchar" value="#paintingId#">
+				INSERT artist_media_bridge ( artist_id , media_id ) VALUES (
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">,
+					<cfqueryparam cfsqltype="cf_sql_VARchar" value="#uploadPainting["GENERATEDKEY"]#">
 				)
 			</cfquery>
 
 			<cfif uploadPainting.recordCount gt 0 and updatePainitngBridge.recordCount gt 0>
-				<cfset createThumbnailofImages(form=form,fileName=#newFileName#,mediaId=#paintingId#) />
+				<cfset createThumbnailofImages(form=form,fileName=newFileName,mediaId=uploadPainting["GENERATEDKEY"]) />
 				<cfset flag = true />
 			</cfif>
 			<cfcatch type="any" >
@@ -76,31 +72,27 @@
 		<cfargument name="mediaId" type="numeric" required="true">
 
 		<cftry>
-			<cfset var flag = false />
+			<cfset VAR flag = false />
 
-			<!--- Fetch profile name from session object --->
-			<cfset profileName = session.artistProfile.profileName />
-
-			<cfset var destination = "../media/artist/" & profileName & "/" & "thumb/" />
-			<cfset var storedThumbDestination = "/media/artist/" & profileName & "/" & "thumb/" />
-			<cfset var thumbDestination = "../media/artist/" & profileName & "/" & "thumb/" & fileName />
+			<cfset VAR destination = "../media/artist/" & #session.artistProfile.profileName# & "/" & "thumb/" />
+			<cfset VAR storedThumbDestination = "/media/artist/" & #session.artistProfile.profileName# & "/" & "thumb/" />
+			<cfset VAR thumbDestination = "../media/artist/" & #session.artistProfile.profileName# & "/" & "thumb/" & fileName />
 
 			<cfset myImage=ImageNew(form.fileUpload)>
 			<cfset  ImageResize(myImage,"50%","","blackman",2)>
 			<cfimage source="#myImage#" action="write" destination="#expandPath("#thumbDestination#")#" overwrite="yes">
 
-			<cfset var userId = "#session.user.userId#">
-			<cfset var newFileName = fileName />
-			<cfset var paintingDestination = destination & newFileName />
-			<cfset var source = destination & cffile.ATTEMPTEDSERVERFILE />
+			<cfset VAR newFileName = fileName />
+			<cfset VAR paintingDestination = destination & newFileName />
+			<cfset VAR source = destination & cffile.ATTEMPTEDSERVERFILE />
 
 			<cfquery datasource="artistPortfolio" result="uploadPainting">
 
-				update media set filename =
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#newFileName#">,
+				UPDATE media SET filename =
+				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#newFileName#">,
 				path_thumb =
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#storedThumbDestination#">
-				where media_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#mediaId#">
+				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#storedThumbDestination#">
+				WHERE media_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#mediaId#">
 			</cfquery>
 			<cfcatch type="any" >
 				<cflog application="true" file="artistPortfolioError"
@@ -115,15 +107,13 @@
 	<cffunction name="showAllPaintingByArtistId" access="public" output="false" returntype="query">
 
 		<cftry>
-			<cfset var showAllPaintingByartistId = QueryNew("") />
-
-			<cfset var artistId = "#session.artistProfile.artistProfileId#">
+			<cfset VAR showAllPaintingByartistId = QueryNew("") />
 
 			<cfquery datasource="artistPortfolio" name="showAllPaintingByartistId">
 
-				select filename_original , path, media.media_id from media inner join artist_media_bridge as amb on
+				SELECT filename_original , path, media.media_id FROM media INNER JOIN artist_media_bridge as amb on
 				media.media_id = amb.media_id
-	            where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
+	            WHERE artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">
 			</cfquery>
 
 			<cfcatch type="any" >
@@ -139,21 +129,17 @@
 	<cffunction name="paginationForAllPainting" access="public" output="true" returntype="query">
 
 		<cfargument name="offset" type="numeric" required="true" >
-		<cfset var paginationForAllPaintings = QueryNew("")/>
+		<cfset VAR paginationForAllPaintings = QueryNew("")/>
 
 		<cftry>
-			<cfset artistId = "#session.artistProfile.artistProfileId#">
-			<cfset limitValue = 4 />
 			<cfquery datasource="artistPortfolio" name="paginationForAllPaintings">
 
-				select filename , path_thumb,path,filename_original, media.media_id, is_public
-				from media inner join
-				artist_media_bridge as amb on media.media_id = amb.media_id
-	            where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
-	              order by media_id desc
-				limit <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,
-					  <cfqueryparam cfsqltype="cf_sql_integer" value="#limitValue#">
-					;
+				SELECT filename , path_thumb,path,filename_original, media.media_id, is_public
+				FROM media INNER JOIN artist_media_bridge as amb on
+				media.media_id = amb.media_id WHERE artist_id =
+	            <cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">
+	            ORDER BY media_id DESC LIMIT
+	            <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,4;
 			</cfquery>
 
 			<cfcatch type="any" >
@@ -168,15 +154,14 @@
 	<!--- This is used to display last uploaded image --->
 	<cffunction name="displayLastUploadedImage" access="public" returntype="query">
 
-		<cfset var artistId = "#session.artistProfile.artistProfileId#">
-		<cfset var selectLastImage = QueryNew("")/>
+		<cfset VAR selectLastImage = QueryNew("")/>
 		<cfquery datasource="artistPortfolio" name="selectLastImage" result="resultOfLastImage">
 
-			select filename , path_thumb,path,filename_original, media.media_id, is_public
-				from media inner join
-				artist_media_bridge as amb on media.media_id = amb.media_id
-	            where artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
-				order by media.media_id desc limit 1;
+			SELECT filename , path_thumb,path,filename_original, media.media_id, is_public
+				FROM media INNER JOIN
+				artist_media_bridge AS amb ON media.media_id = amb.media_id
+	            WHERE artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">
+				ORDER BY media.media_id DESC LIMIT 1;
 		</cfquery>
 
 		<cfreturn selectLastImage />
@@ -190,9 +175,9 @@
 		<cftry>
 			<cfquery datasource="artistportfolio" name="setPublicOrPrivate">
 
-				update artist_media_bridge set is_public =
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.publicOrPrivate#">
-				 where media_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#mediaId#">
+				UPDATE artist_media_bridge SET is_public =
+				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#arguments.publicOrPrivate#">
+				 WHERE media_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#mediaId#">
 
 			</cfquery>
 			<cfcatch type="any" >
@@ -206,16 +191,15 @@
 	<!--- This is used for counting the number of media stored in table by artist id --->
 	<cffunction name="countPainting" access="public" returntype="numeric">
 
-		<cfset var artistId = "#session.artistProfile.artistProfileId#">
-
-		<cfif not artistId Eq 0>
+		<cfif not session.artistProfile.artistProfileId Eq 0>
 
 			<cfquery datasource="artistPortfolio" name="countPainting" result="countPaintingResult">
-			select count(media.media_id) as countOfPainting
-				from media inner join
-				artist_media_bridge as amb on media.media_id = amb.media_id
-	            where artist_id =
-	            <cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
+
+			SELECT COUNT(media.media_id) as countOfPainting
+				FROM media INNER JOIN
+				artist_media_bridge AS amb ON media.media_id = amb.media_id
+	            WHERE artist_id =
+	            <cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">
 
 			</cfquery>
 		</cfif>
@@ -229,12 +213,13 @@
 		<cfargument name="artistId" required="true" type="numeric">
 
 		<cfquery datasource="artistPortfolio" name="countPublicPainting" result="countPaintingResult">
-			select count(media.media_id) as countOfPainting
-				from media inner join
-				artist_media_bridge as amb on media.media_id = amb.media_id
-	            where artist_id =
+
+			SELECT COUNT(media.media_id) AS countOfPainting
+				FROM media INNER JOIN
+				artist_media_bridge AS amb ON media.media_id = amb.media_id
+	            WHERE artist_id =
 	            <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.artistId#">
-	            and amb.is_public = "true";
+	            AND amb.is_public = "true";
 
 		</cfquery>
 		<cfreturn countPublicPainting.countOfPainting />
@@ -246,10 +231,11 @@
 
 		<cfargument name="mediaId" required="true" >
 		<cftry>
-			<cfset var flag = false />
+			<cfset VAR flag = false />
 
 			<cfquery name="deletePainting" datasource="artistPortfolio">
-				delete from media where media_id =
+
+				DELETE FROM media WHERE media_id =
 						<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.mediaId#">
 			</cfquery>
 			<cfif #deletePainting.recordCount# gt 0>
@@ -269,10 +255,12 @@
 	<cffunction access="public" name="validateImage" returntype="Array">
 
 		<cfargument name="form" type="any" required="true"/>
-		<cfset var aErrorMsg = ArrayNew(1) />
+		<cfset VAR aErrorMsg = ArrayNew(1) />
+
 		<cfif not isImageFile(form.fileUpload)>
 			<cfset arrayAppend(aErrorMsg, 'This file type is not allowed!')>
 		</cfif>
+
 		<cfreturn aErrorMsg/>
 	</cffunction>
 

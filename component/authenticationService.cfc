@@ -13,7 +13,7 @@
 		<cfargument name="userEmail" type="string" required="true" />
 		<cfargument name="userPassword" type="string" required="true" />
 		<cftry>
-			<cfset var aErrorMsg = ArrayNew(1) />
+			<cfset VAR aErrorMsg = ArrayNew(1) />
 			<!--- validate the email --->
 			<cfif NOT isValid('email', arguments.userEmail)>
 				<cfset arrayAppend(aErrorMsg, 'Please provide a valid email address')>
@@ -49,16 +49,16 @@
 		<cfargument name="userEmail" type="string" required="true" />
 		<cfargument name="userPassword" type="string" required="true" />
 
-		<cfset var isUserLoggedIn = false />
+		<cfset VAR isUserLoggedIn = false />
 		<cfset password = Hash(userPassword) />
 
-		<!--- <cftry> --->
-
+		<cftry>
 			<cfquery name="rsLoginUser" datasource = 'artistPortfolio'>
-				select email_id,password,first_name,last_name ,role.role as role from users inner join role on users.role_id = role.role_id
-				where email_id =  <cfqueryparam value="#arguments.userEmail#" cfsqltype="cf_sql_varchar" /> and
-				password = <cfqueryparam value="#password#" cfsqltype="cf_sql_varchar" />
 
+				SELECT email_id,password,first_name,last_name ,role.role AS role FROM users INNER JOIN  role ON
+				users.role_id = role.role_id WHERE email_id =
+				<cfqueryparam value="#arguments.userEmail#" cfsqltype="cf_sql_VARchar" /> AND
+				password = <cfqueryparam value="#password#" cfsqltype="cf_sql_VARchar" />
 			</cfquery>
 
 			<cfif #rsLoginUser.RecordCount# EQ 1>
@@ -67,18 +67,18 @@
 				<cfset session.stLoggedInuser = {'userEmail' = rsLoginUser.email_id, 'role' = rsLoginUser.role, 'fullName' = #fullName#} />
 
 				<cfset userId = getUserId() />
-				<cfset var isUserLoggedIn = true />
+				<cfset VAR isUserLoggedIn = true />
 				<cfreturn session.stLoggedInuser />
 			<cfelse>
-				<cfset var isUserLoggedIn = false />
+				<cfset VAR isUserLoggedIn = false />
 				<cfreturn isUserLoggedIn>
 			</cfif>
-		<!--- <cfcatch type="any" > --->
-<!--- 			<cflog application="true" file="artistPortfolioError" --->
-<!--- 			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:authenticationService , --->
-<!--- 					function:doLogin, Line:#cfcatch.TagContext[1].Line#"> --->
-<!--- 		</cfcatch> --->
-<!--- 		</cftry> --->
+		<cfcatch type="any" >
+			<cflog application="true" file="artistPortfolioError"
+			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:authenticationService ,
+					function:doLogin, Line:#cfcatch.TagContext[1].Line#">
+		</cfcatch>
+		</cftry>
 
 	</cffunction>
 
@@ -96,13 +96,13 @@
 	<cffunction name="getUserId" access="public" output="false" returntype="numeric">
 
 		<cftry>
-			<!--- Fetch email from session object --->
+			<!--- Fetch email FROM session object --->
 			<cfif StructKeyExists(session.stLoggedInuser,"fullName")>
-				<cfset var email = '#session.stLoggedInuser.userEmail#' />
+				<cfset VAR email = '#session.stLoggedInuser.userEmail#' />
 
 				<!--- This is used to get current user id --->
 				<cfquery datasource="artistPortfolio" name="getUserIdQuery">
-						select user_id from users where email_id = <cfqueryparam value="#email#" cfsqltype="cf_sql_varchar" > ;
+						SELECT user_id FROM users WHERE email_id = <cfqueryparam value="#email#" cfsqltype="cf_sql_VARchar" > ;
 				</cfquery>
 
 				<cfset session.user = {'userId' = getUserIdQuery.user_id } />

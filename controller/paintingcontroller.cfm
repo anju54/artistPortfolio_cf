@@ -1,64 +1,59 @@
-<cfset variables.paintingService = CreateObject('component', 'component.paintingService') />
+<cfset VARIABLES.paintingService = CreateObject('component', 'component.paintingService') />
 
 <cfset method = #URL.action# />
+<cfset VARIABLES.returnData = ""/>
+<cfset VARIABLES.aErrMsg = ""/>
 
 <cfswitch expression = "#method#">
 
 	<cfcase value = "deletePainting">
-		<cfset paintingId = #URL.id# />  <!--- painting id --->
-		<cfset isDeleted = variables.paintingService.deletePainting(mediaId=#paintingId#) />
+		<cfset returnData = VARIABLES.paintingService.deletePainting(mediaId=#URL.id#) />  <!--- painting id --->
 	</cfcase>
 
 	<cfcase value = "uploadpainting">
+		<cfset aErrMsg = VARIABLES.paintingService.validateImage(form) />
 
-		<cfset aErrMsg = variables.paintingService.validateImage(form) />
-		<cfif ArrayIsEmpty(aErrmsg)>
-			<cfset isUploaded = variables.paintingService.uploadPainting(form) />
-			<cfset jsondata =  SerializeJSON(isUploaded)/>
-			<cfoutput>#jsondata#</cfoutput>
+		<cfif ArrayIsEmpty(aErrMsg)>
+			<cfset returnData = SerializeJSON ( VARIABLES.paintingService.uploadPainting(form) ) />
+			<cfoutput>#returnData#</cfoutput>
 		<cfelse>
-			<cfset jsondata =  SerializeJSON(aErrmsg)/>
-			<cfoutput>#jsondata#</cfoutput>
+			<cfset aErrMsg =  SerializeJSON(aErrMsg)/>
+			<cfoutput>#aErrMsg#</cfoutput>
 		</cfif>
 	</cfcase>
 
 	<cfcase value = "countPainting">
-		<cfset count = variables.paintingService.countPainting() />
-		<cfoutput>#count#</cfoutput>
+		<cfset returnData = VARIABLES.paintingService.countPainting() />
+		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "countPublicPainting">
 
-		<cfset count = variables.paintingService.countPublicPainting(artistId=#URL.id#) />
-		<cfoutput>#count#</cfoutput>
+		<cfset returnData = VARIABLES.paintingService.countPublicPainting(artistId=#URL.id#) />
+		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
-
-
 	<cfcase value = "showPaintingByArtistId">
-
-		<cfset data = variables.paintingService.showAllPaintingByArtistId() />
-		<cfset jsondata =  SerializeJSON(data,'struct')/>
-		<cfoutput>#jsondata#</cfoutput>
+		<cfset returnData = VARIABLES.paintingService.showAllPaintingByArtistId() />
+		<cfset returnData =  SerializeJSON(returnData,'struct')/>
+		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "setIspublicOrprivate">
-
-		<cfset data = variables.paintingService.setIspublicOrprivate(mediaId=#URL.mediaId#,publicOrPrivate=#URL.isPublic#) />
+		<cfset returnData = VARIABLES.paintingService.setIspublicOrprivate(mediaId=#URL.mediaId#,publicOrPrivate=#URL.isPublic#) />
 	</cfcase>
 
 	<cfcase value = "paginationForAllPainting">
-		<cfset offset = #URL.counter# />
-		<cfset data = variables.paintingService.paginationForAllPainting(offset=#offset#) />
-		<cfset jsondata =  SerializeJSON(data,'struct')/>
-		<cfoutput>#jsondata#</cfoutput>
+		<cfset returnData = VARIABLES.paintingService.paginationForAllPainting(offset=#URL.counter#) />
+		<cfset returnData =  SerializeJSON(returnData,'struct')/>
+		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "displayLastUploadedImage">
 
-		<cfset data = variables.paintingService.displayLastUploadedImage() />
-		<cfset jsondata =  SerializeJSON(data,'struct')/>
-		<cfoutput>#jsondata#</cfoutput>
+		<cfset returnData = VARIABLES.paintingService.displayLastUploadedImage() />
+		<cfset returnData =  SerializeJSON(returnData,'struct')/>
+		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
 </cfswitch>

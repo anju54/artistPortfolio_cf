@@ -1,7 +1,7 @@
 <!--- This is used for mapping the painting type related operation --->
-<cfset variables.paintingTypeService = CreateObject('component', 'component.painitngTypeService') />
+<cfset VARIABLES.paintingTypeService = CreateObject('component', 'component.painitngTypeService') />
 
-<cfset paintingTypeStruct = variables.paintingTypeService.getAllPaintings() />
+<cfset VARIABLES.paintingTypeStruct = VARIABLES.paintingTypeService.getAllPaintings() />
 
-<cfset jsondata =  SerializeJSON(paintingTypeStruct,'struct')/>
-	<cfoutput>#jsondata#</cfoutput>
+<cfset paintingTypeStruct =  SerializeJSON(paintingTypeStruct,'struct')/>
+	<cfoutput>#paintingTypeStruct#</cfoutput>

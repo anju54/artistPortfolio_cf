@@ -11,8 +11,8 @@
 	<cffunction name="getAllColors" returntype="query" access="public" displayname="getAllColors">
 
 		<cftry>
-			<cfset var getAllColors = "" />
-			<cfset var getAllColors = QueryNew("")/>
+			<cfset VAR getAllColors = "" />
+			<cfset VAR getAllColors = QueryNew("")/>
 
 			<cfquery name="getAllColors" datasource="artistPortfolio">
 				SELECT * FROM color;

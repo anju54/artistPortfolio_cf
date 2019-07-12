@@ -5,10 +5,6 @@ $(document).ready(function() {
         login();
     }); 
     
-    var email = window.localStorage.getItem("EMAIL"); 
-    if(email){
-    	window.location.href = './profile.html';
-    }
 });
 
 function login(){
@@ -36,9 +32,6 @@ function login(){
             },
             success: function (response) {
             	
-            	//window.localStorage.setItem("EMAIL",response.UserEmail); 
-            	//window.localStorage.setItem('session',JSON.stringify(response));
-            	
             	redirectPage(response);
             	if(!response){
             		 $('#error').show(); 
@@ -46,9 +39,6 @@ function login(){
             	}
             },
             error: function(error) {
-            	console.log(error);
-            	 $('#error').show(); 
-            	 $('#error').text(error.statusText);
             },
             complete: function () {
                 hideLoader();

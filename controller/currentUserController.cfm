@@ -1,4 +1,4 @@
-
+<!--- This is used to get current user information --->
 <cfset sessionValue = getSessionData() />
 <cfset jsondata =  SerializeJSON(sessionValue)/>
 <cfoutput>#jsondata#</cfoutput>
@@ -8,7 +8,7 @@
 
 	<cfif StructKeyExists(session.stLoggedInuser,"fullName")>
 
-		<cfset data = '#session.stLoggedInuser#' />
+		<cfset VAR data = '#session.stLoggedInuser#' />
 		<cfreturn data>
 	<cfelse>
 		<cfreturn false/>

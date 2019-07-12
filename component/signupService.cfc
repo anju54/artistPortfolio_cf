@@ -9,29 +9,27 @@
 
 		<cfargument name="data" type="any" required="true"/>
 		<cftry>
-			<cfset var isInserted = false />
-			<cfset roleId = 1 />
+			<cfset VAR isInserted = false />
 			<cfset password = Hash(data.password) />
 
 			<cfset row = checkForDuplicateEmailId("#data.email#")>
 			<cfif row EQ 0>
-				<!--- insert user record in users table --->
+				<!--- INSERT user record in users table --->
 				<cfquery name = "addUser" result="addUserResult" datasource = 'artistPortfolio'>
 
-					insert into users(first_name, last_name, email_id, password, role_id)
-					values (
+					INSERT INTO users(first_name, last_name, email_id, password, role_id)
+					VALUES (
 								<cfqueryparam value="#arguments.data.fname#" cfsqltype="CF_SQL_VARCHAR">,
 								<cfqueryparam value="#arguments.data.lname#" cfsqltype="CF_SQL_VARCHAR">,
 								<cfqueryparam value="#arguments.data.email#" cfsqltype="CF_SQL_VARCHAR">,
-								<cfqueryparam value="#password#" cfsqltype="CF_SQL_VARCHAR">,
-								<cfqueryparam value="#roleId#" cfsqltype="CF_SQL_INTEGER">
+								<cfqueryparam value="#password#" cfsqltype="CF_SQL_VARCHAR">,1
 							)
 				</cfquery>
 
 				<cfif #addUserResult.recordCount# gt 0>
-					<cfset var isInserted = true />
+					<cfset VAR isInserted = true />
 				<cfelse>
-					<cfset var isInserted = false />
+					<cfset VAR isInserted = false />
 				</cfif>
 			</cfif>
 		<cfcatch type="any" >
@@ -49,7 +47,7 @@
 
 		<cfargument name="data" type="any" required="true" />
 
-		<cfset var aErrorMsg = ArrayNew(1) />
+		<cfset VAR aErrorMsg = ArrayNew(1) />
 		<!--- validate the email --->
 		<cfif NOT isValid('email', arguments.data.email)>
 			<cfset arrayAppend(aErrorMsg, 'Please provide a valid email address')>
@@ -81,9 +79,11 @@
 	<cffunction name="checkForDuplicateEmailId" returnType="numeric">
 
 		<cfargument name="emailId" type="string" />
+		<cfset VAR rowvalue = 0 />
 		<cftry>
 			<cfquery name="getUserId" datasource = 'artistPortfolio'>
-				select count(*) as rowvalue from users where email_id = <cfqueryparam value="#arguments.emailId#" />;
+
+				SELECT COUNT(*) AS rowvalue FROM users WHERE email_id = <cfqueryparam value="#arguments.emailId#" />;
 			</cfquery>
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
