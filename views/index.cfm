@@ -49,13 +49,11 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav text-uppercase ml-auto">
-          
+
           <li class="nav-item" id="sidebar">
             <a class="nav-link js-scroll-trigger" href="../views/profile.cfm">Profile</a>
-          </li> 
-          <li class="nav-item" id="sidebarLogOut">
-            <a class="nav-link js-scroll-trigger" href="">Log Out</a>
           </li>
+
           <li class="nav-item" id="signinButton">
             <a class="nav-link js-scroll-trigger" href="../views/signin.cfm">Log In</a>
           </li>
@@ -85,7 +83,7 @@
         </div>
       </div>
       <div class="row" id="publicImgDiv">
- 
+
       </div>
       <div class="row justify-content-center">
         <div">
@@ -125,7 +123,7 @@
                 </div>
               </div>
             </li>
-      
+
             <li class="timeline-inverted">
               <div class="timeline-image">
                 <h4>Be Part
@@ -139,8 +137,8 @@
     </div>
   </section>
 
-  
-  
+
+
 
   <!-- Footer -->
   <footer class="footer">
@@ -172,8 +170,8 @@
     </div>
   </footer>
 
-  
-  
+
+
   <!-- Bootstrap core JavaScript -->
   <script src="../vendor/jquery/jquery.min.js"></script>
   <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

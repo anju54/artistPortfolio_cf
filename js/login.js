@@ -32,11 +32,13 @@ function login(){
             },
             success: function (response) {
             	
-            	redirectPage(response);
+            	//redirectPage(response);
             	if(!response){
             		 $('#error').show(); 
             		 $('#error').text("Email and password that you entered is wrong!!")
-            	}
+            	}else{
+                    redirectPage(response)
+                }
             },
             error: function(error) {
             },

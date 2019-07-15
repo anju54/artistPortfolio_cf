@@ -1,4 +1,6 @@
-
+<cfif StructKeyExists(session,"stLoggedInuser")>
+       <cflocation url="profile.cfm">
+<cfelse>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,3 +66,4 @@
 
 </body>
 </html>
+</cfif>

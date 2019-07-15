@@ -195,6 +195,8 @@
 
 	<cffunction name="getArtistProfileIdByUserId" access="public" output="true" returntype="numeric">
 
+		<cfset VAR artist_profile_id = 0/>
+		<cfset VAR profileName = ""/>
 		<cftry>
 			<cfquery datasource="artistPortfolio" name="getArtistProfileIdByUserId">
 
@@ -202,7 +204,7 @@
 				WHERE u.user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.user.userId#">
 			</cfquery>
 
-			<cfif getArtistProfileIdByUserId.RecordCount gt 0>
+			<cfif getArtistProfileIdByUserId.RecordCount GT 0>
 
 				<cfset session.artistProfile = {'artistProfileId' = getArtistProfileIdByUserId.artist_profile_id,
 												'profileName' = getArtistProfileIdByUserId.profile_name } />

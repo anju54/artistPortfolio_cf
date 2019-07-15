@@ -3,10 +3,12 @@
 <cfset data = deserializeJSON( requestBody )>
 
 <cfset VARIABLES.authenticationService = CreateObject('component', 'component.authenticationService') />
-<cfset VAR aErrMsg = VARIABLES.authenticationService.validateuser(data.email,data.password)>
+<cfset VARIABLES.aErrMsg = VARIABLES.authenticationService.validateuser(data.email,data.password)>
+
+<cfset VARIABLES.isUserLoggedIn = ""/>
 
 <cfif ArrayIsEmpty(aErrmsg)>
-	<cfset VAR isUserLoggedIn = VARIABLES.authenticationService.doLogin(data.email,data.password)>
+	<cfset isUserLoggedIn = VARIABLES.authenticationService.doLogin(data.email,data.password)>
 	<cfset isUserLoggedIn =  SerializeJSON(isUserLoggedIn)/>
 	<cfoutput>#isUserLoggedIn#</cfoutput>
 

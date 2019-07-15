@@ -3,6 +3,8 @@ var arrayOfErr = new Object();
 var typeOfProfilePic = "";
 var actionInProfileData = "save";
 $(document).ready(function() {
+
+    
     
     //$("#saveImage").hide();
     //$('#updateImage').hide();

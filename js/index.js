@@ -14,11 +14,9 @@ $(document).ready(function() {
     }
     
     $('#sidebar').hide();
-    $('#sidebarLogOut').hide();
-    $('#selecArtistHeader').hide();
-
+    $('#signinButton').show();
+   
     //showAllProfilePics();   
-   console.log(totalPageNo);
     if(totalPageNo > 0){
 
         $('#pagination-demo').show();
@@ -34,11 +32,7 @@ $(document).ready(function() {
 });
 
 function setName(response){    
-
-    $('#sidebar').show();
-    $('#sidebarLogOut').hide();
-    $('#signinButton').hide();
-    
+ 
     $("#fullName").text(response.fullName) ;
     $("#name").text(response.fullName) ;
     
@@ -54,13 +48,18 @@ function getUserDetail(){
         crossDomain: true,
         data: {},
         success: function (response) {
-			
+            response = JSON.parse(response);
+			console.log(response.userEmail);
 			console.log("1....");
-			if(response){
-				console.log(response);
-				response = JSON.parse(response);
+			if(response.userEmail){
+				
+                $('#sidebar').show();
+                $('#signinButton').hide();
 	            setName(response); 
-            }   
+            }   else if(response == "false "){
+                $('#sidebar').hide();
+                $('#signinButton').hide();
+            }
         },
         error: function( ) {
         }         

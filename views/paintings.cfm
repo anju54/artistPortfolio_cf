@@ -1,4 +1,6 @@
-
+<cfif NOT StructKeyExists(session,"stLoggedInuser")>
+         	<cflocation url="signin.cfm">
+<cfelse>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,7 +106,7 @@
         <div class="container" style="display: none" id="msgDiv">
             <div class="row">
                 <div class="col-md-12">
-                    <p style="color: red"> 
+                    <p style="color: red">
                         Please create artist account then proceed with uploading painting.
                     </p>
                 </div>
@@ -117,3 +119,4 @@
 
 </body>
 </html>
+</cfif>
