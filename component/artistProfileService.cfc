@@ -43,7 +43,7 @@
 				<cfif not ArrayIsEmpty(arguments.form.paintingTypeList)>
 
 					<!--- This is used to add list of painting type to database --->
-					<cfquery name="addPaintingTypeForArtist" datasource="artistPortfolio">
+					<cfquery name="addPaintingTypeForArtist" >
 
 						insert into artist_painting_list_bridge(artist_profile_id, painting_id) values
 						<cfloop from = "1" to = "#size#" index = "i">
@@ -90,7 +90,7 @@
 			<cfset VAR isInserted = false />
 
 			<!--- <cfset VARiables.artistId = "#session.artistProfile.artistProfileId#"> --->
-			<cfquery name="updateArtist" datasource="artistPortfolio" result="updateResult">
+			<cfquery name="updateArtist"  result="updateResult">
 
 				UPDATE artist_profile SET
 				facebook_info = <cfqueryparam value="#arguments.form.facebookUrl#" cfsqltype="CF_SQL_VARCHAR"> ,
@@ -104,7 +104,7 @@
 
 			<cfset VAR paintingTypeList = #arguments.form.paintingTypeList# />
 
-			<cfquery datasource="artistPortfolio" name="deleteExistingPaintingType" result="deleteExistingPaintingTypeResult">
+			<cfquery  name="deleteExistingPaintingType" result="deleteExistingPaintingTypeResult">
 
 				DELETE FROM artist_painting_list_bridge WHERE artist_profile_id =
 				<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">
@@ -113,7 +113,7 @@
 			<cfif not ArrayIsEmpty(arguments.form.paintingTypeList)>
 
 				<!--- This is used to add list of painting type to database --->
-				<cfquery name="addPaintingTypeForArtist" datasource="artistPortfolio">
+				<cfquery name="addPaintingTypeForArtist" >
 
 					INSERT INTO artist_painting_list_bridge(artist_profile_id, painting_id) VALUES
 					<cfloop from = "1" to = "#ArrayLen("#arguments.form.paintingTypeList#")#" index = "i">
@@ -147,7 +147,7 @@
 		<cfset VAR getArtistProfileByUserId = QueryNew("")/>
 		<cftry>
 
-			<cfquery datasource="artistPortfolio" name="getArtistProfileByUserId">
+			<cfquery  name="getArtistProfileByUserId">
 
 					SELECT ap.artist_profile_id,profile_name,facebook_info,twitter_info,linkedIn_url,about_me,
 						pt.painting_name,pt.painting_type_id,c.color_name,ap.profile_pic_id
@@ -174,7 +174,7 @@
 			<!--- Fetch user_id from session object --->
 			<cfset VARiables.artistId = "#session.artistProfile.artistProfileId#">
 			<cfset VAR flag = false>
-			<cfquery name="deleteArtist" datasource="artistPortfolio">
+			<cfquery name="deleteArtist" >
 
 				DELETE FROM artist_profile WHERE artsit_profile_id =
 							<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
@@ -198,7 +198,7 @@
 		<cfset VAR artist_profile_id = 0/>
 		<cfset VAR profileName = ""/>
 		<cftry>
-			<cfquery datasource="artistPortfolio" name="getArtistProfileIdByUserId">
+			<cfquery  name="getArtistProfileIdByUserId">
 
 				SELECT artist_profile_id, profile_name FROM artist_profile AS ap INNER JOIN users AS u ON u.user_id = ap.user_id
 				WHERE u.user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.user.userId#">
@@ -233,7 +233,7 @@
 		<cfset VAR paginationForPublicPaintings = QueryNew("")/>
 		<cftry>
 
-			<cfquery datasource="artistPortfolio" name="paginationForPublicPaintings">
+			<cfquery  name="paginationForPublicPaintings">
 
 				SELECT filename , path_thumb,path,filename_original, media.media_id, is_public
 				FROM media INNER JOIN
@@ -259,7 +259,7 @@
 		<cfargument name="offset" type="numeric" required="true" >
 		<cfset VAR getAllProfilePic = QueryNew("")/>
 		<cftry>
-			<cfquery name="getAllProfilePic" datasource="artistPortfolio">
+			<cfquery name="getAllProfilePic" >
 
 				SELECT filename_original, path,ap.artist_profile_id, users.first_name, users.last_name FROM media
 				 RIGHT JOIN artist_profile ap
@@ -281,7 +281,7 @@
 
 		<cfset VAR selectProfilePic = QueryNew("") />
 		<cftry>
-			<cfquery name="selectProfilePic" datasource="artistPortfolio" result="profilePicResult">
+			<cfquery name="selectProfilePic"  result="profilePicResult">
 
 				SELECT filename_original , path FROM media INNER JOIN artist_profile ap ON
 				media.media_id = ap.profile_pic_id
@@ -305,7 +305,7 @@
 		<cfargument name="artistId" required="true" type="numeric">
 		<cfset VAR selectProfilePic = QueryNew("")/>
 			<cftry>
-			<cfquery name="selectProfilePic" datasource="artistPortfolio" result="profilePicResult">
+			<cfquery name="selectProfilePic"  result="profilePicResult">
 
 				SELECT filename_original , path FROM media INNER JOIN artist_profile ap ON
 				media.media_id = ap.profile_pic_id
@@ -345,7 +345,7 @@
 			destination = "#expandPath("#destination#")#"
 			source = "#expandPath("#source#")#">
 
-			<cfquery name="uploadImage" datasource="artistPortfolio" result="profilePicUpload">
+			<cfquery name="uploadImage"  result="profilePicUpload">
 
 				insert into media( filename_original, path ) values (
 
@@ -362,7 +362,7 @@
 			<cfif #profilePicUpload.recordCount# gt 0>
 
 				<cfset VAR flag = true />
-				<cfquery result="updateProfilePicId" datasource="artistPortfolio">
+				<cfquery result="updateProfilePicId" >
 
 					UPDATE artist_profile SET profile_pic_id =
 					<cfqueryparam cfsqltype="cf_sql_VARchar" value="#profilePicUpload["GENERATEDKEY"]#">
@@ -392,7 +392,7 @@
 		<cftry>
 			<cfset VAR flag = true />
 
-			<cfquery datasource="artistPortfolio" name="getProfilePicId">
+			<cfquery  name="getProfilePicId">
 
 				SELECT profile_pic_id FROM artist_profile WHERE artist_profile_id =
 				<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#"> ;
@@ -400,7 +400,7 @@
 
 			<cfif not  #getProfilePicId.profile_pic_id# eq 0>
 
-				<cfquery datasource="artistPortfolio" result="deleteProfilePic">
+				<cfquery  result="deleteProfilePic">
 
 					UPDATE artist_profile SET profile_pic_id = NULL WHERE artist_profile_id =
 					<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#"> ;
@@ -410,7 +410,7 @@
 
 			<cfif #deleteProfilePic.recordCount# gt 0>
 
-				<cfquery datasource="artistPortfolio" result="deleteFromArtist">
+				<cfquery  result="deleteFromArtist">
 					delete from media where media_id =
 						<cfqueryparam cfsqltype="cf_sql_integer" value="#getProfilePicId.profile_pic_id#"> ;
 				</cfquery>
@@ -435,7 +435,7 @@
 		<cfargument name="artistId" required="true">
 		<cfset VAR getPublicProfileInfo = QueryNew("")/>
 		<cftry>
-			<cfquery datasource="artistPortfolio" name="getPublicProfileInfo">
+			<cfquery  name="getPublicProfileInfo">
 
 				SELECT ap.artist_profile_id,profile_name,facebook_info,twitter_info,linkedIn_url,about_me,
 						pt.painting_name,pt.painting_type_id,c.color_name,users.first_name,users.last_name,users.email_id
@@ -482,7 +482,7 @@
 			destination = "#expandPath("#destination#")#"
 			source = "#expandPath("#source#")#">
 
-			<cfquery datasource="artistPortfolio" name="updateProfilePic" result="updateProfilePicResult">
+			<cfquery  name="updateProfilePic" result="updateProfilePicResult">
 
 				update media set filename_original =
 				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#fileName#"> where media_id =
@@ -507,7 +507,7 @@
 
 		<cfset VAR countOfProfilePic = 0 />
 
-		<cfquery name="getCountOfprofilePic" datasource="artistPortfolio">
+		<cfquery name="getCountOfprofilePic" >
 
 			SELECT COUNT(*) AS countOfProfilePic FROM media
 				 RIGHT JOIN artist_profile ap
@@ -624,7 +624,7 @@
 			<cfif arguments.profileName EQ "">
 				<cfset arrayOfErr.profilenameerror = "Profile name cant be empty!!" />
 			<cfelse>
-				<cfquery name="checkForDuplicateProfileName" datasource="artistPortfolio">
+				<cfquery name="checkForDuplicateProfileName" >
 
 					SELECT profile_name FROM artist_profile WHERE profile_name =
 					<cfqueryparam cfsqltype="cf_sql_VARchar" value="#arguments.profileName#">;

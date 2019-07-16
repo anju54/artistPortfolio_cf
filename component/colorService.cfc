@@ -14,7 +14,7 @@
 			<cfset VAR getAllColors = "" />
 			<cfset VAR getAllColors = QueryNew("")/>
 
-			<cfquery name="getAllColors" datasource="artistPortfolio">
+			<cfquery name="getAllColors" >
 				SELECT * FROM color;
 			</cfquery>
 		<cfcatch type="any" >

@@ -35,7 +35,7 @@
 			<!--- To rename the file name --->
 			<cffile action = "rename" destination = "#expandPath("#paintingDestination#")#" source = "#expandPath("#source#")#">
 
-			<cfquery datasource="artistPortfolio" result="uploadPainting">
+			<cfquery  result="uploadPainting">
 
 				INSERT INTO media( filename_original, path ) VALUES (
 
@@ -45,7 +45,7 @@
 			</cfquery>
 
 			<!--- update media information in the bridge table --->
-			<cfquery datasource="artistPortfolio" result="updatePainitngBridge">
+			<cfquery  result="updatePainitngBridge">
 
 				INSERT artist_media_bridge ( artist_id , media_id ) VALUES (
 					<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">,
@@ -88,7 +88,7 @@
 			<cfset VAR paintingDestination = destination & newFileName />
 			<cfset VAR source = destination & cffile.ATTEMPTEDSERVERFILE />
 
-			<cfquery datasource="artistPortfolio" result="uploadPainting">
+			<cfquery  result="uploadPainting">
 
 				UPDATE media SET filename =
 				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#newFileName#">,
@@ -111,7 +111,7 @@
 		<cftry>
 			<cfset VAR showAllPaintingByartistId = QueryNew("") />
 
-			<cfquery datasource="artistPortfolio" name="showAllPaintingByartistId">
+			<cfquery  name="showAllPaintingByartistId">
 
 				SELECT filename_original , path, media.media_id FROM media INNER JOIN artist_media_bridge as amb on
 				media.media_id = amb.media_id
@@ -134,7 +134,7 @@
 		<cfset VAR paginationForAllPaintings = QueryNew("")/>
 
 		<cftry>
-			<cfquery datasource="artistPortfolio" name="paginationForAllPaintings">
+			<cfquery  name="paginationForAllPaintings">
 
 				SELECT filename , path_thumb,path,filename_original, media.media_id, is_public
 				FROM media INNER JOIN artist_media_bridge as amb on
@@ -157,7 +157,7 @@
 	<cffunction name="displayLastUploadedImage" access="public" returntype="query">
 
 		<cfset VAR selectLastImage = QueryNew("")/>
-		<cfquery datasource="artistPortfolio" name="selectLastImage" result="resultOfLastImage">
+		<cfquery  name="selectLastImage" result="resultOfLastImage">
 
 			SELECT filename , path_thumb,path,filename_original, media.media_id, is_public
 				FROM media INNER JOIN
@@ -175,7 +175,7 @@
 		<cfargument name="mediaId" type="numeric" required="true" >
 		<cfargument name="publicOrPrivate" type="string" required="true" >
 		<cftry>
-			<cfquery datasource="artistportfolio" name="setPublicOrPrivate">
+			<cfquery  name="setPublicOrPrivate">
 
 				UPDATE artist_media_bridge SET is_public =
 				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#arguments.publicOrPrivate#">
@@ -197,7 +197,7 @@
 
 		<cfif StructKeyExists(session,"artistProfile")>
 
-			<cfquery datasource="artistPortfolio" name="countPainting" result="countPaintingResult">
+			<cfquery  name="countPainting" result="countPaintingResult">
 
 			SELECT COUNT(media.media_id) as countOfPainting
 				FROM media INNER JOIN
@@ -217,7 +217,7 @@
 
 		<cfargument name="artistId" required="true" type="numeric">
 
-		<cfquery datasource="artistPortfolio" name="countPublicPainting" result="countPaintingResult">
+		<cfquery  name="countPublicPainting" result="countPaintingResult">
 
 			SELECT COUNT(media.media_id) AS countOfPainting
 				FROM media INNER JOIN
@@ -238,7 +238,7 @@
 		<cftry>
 			<cfset VAR flag = false />
 
-			<cfquery name="deletePainting" datasource="artistPortfolio">
+			<cfquery name="deletePainting" >
 
 				DELETE FROM media WHERE media_id =
 						<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.mediaId#">
@@ -270,23 +270,31 @@
 		<cfreturn VARIABLES.arrayOfFileErr/>
 	</cffunction>
 
+	<!--- This is used for file size validation --->
 	<cffunction access="public" name="fileSizeValidation" returntype="void">
 
 		<cfargument name="form" type="any" required="true"/>
+		<cftry>
+			<cfif len(trim(form.fileUpload))>
+					<cffile action="upload"
+					fileField="fileUpload"
+					destination="#expandPath("../media/")#"
+					nameconflict="MAKEUNIQUE">
+			</cfif>
+			<cfif cffile.filesize GT (800 * 1024)>
+	             <cfset arrayOfFileErr.fileSize = "You picture cannot be more then 800k!!" />
+			 </cfif>
+			 <cffile
+	                 action="DELETE"
+	                 file="#ExpandPath("../media/#cffile.ATTEMPTEDSERVERFILE#")#"
+	          />
+	     <cfcatch type="any" >
+			<cflog application="true" file="artistPortfolioError"
+			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:paintingService ,
+					function:getPublicPainting, Line:#cfcatch.TagContext[1].Line#">
 
-		<cfif len(trim(form.fileUpload))>
-				<cffile action="upload"
-				fileField="fileUpload"
-				destination="#expandPath("../media/")#"
-				nameconflict="MAKEUNIQUE">
-		</cfif>
-		<cfif cffile.filesize GT (800 * 1024)>
-             <cfset arrayOfFileErr.fileSize = "You picture cannot be more then 800k!!" />
-		 </cfif>
-		 <cffile
-                 action="DELETE"
-                 file="#ExpandPath("../media/#cffile.ATTEMPTEDSERVERFILE#")#"
-          />
+		</cfcatch>
+		</cftry>
 	</cffunction>
 
 

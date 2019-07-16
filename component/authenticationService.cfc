@@ -101,7 +101,7 @@
 				<cfset VAR email = '#session.stLoggedInuser.userEmail#' />
 
 				<!--- This is used to get current user id --->
-				<cfquery datasource="artistPortfolio" name="getUserIdQuery">
+				<cfquery  name="getUserIdQuery">
 						SELECT user_id FROM users WHERE email_id = <cfqueryparam value="#email#" cfsqltype="cf_sql_VARchar" > ;
 				</cfquery>
 

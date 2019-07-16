@@ -13,7 +13,7 @@
 		<cftry>
 			<cfset VAR getAllPaintings = QueryNew("")/>
 
-			<cfquery datasource="artistPortfolio" name="getAllPaintings">
+			<cfquery  name="getAllPaintings">
 				SELECT * FROM painting_type;
 			</cfquery>
 
