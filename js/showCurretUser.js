@@ -31,6 +31,8 @@ function setName(response){
     var fullNameSplit = response.fullName.split(" ");
     $("#firstName").val(fullNameSplit[0]) ;
     $("#lastName").val(fullNameSplit[1]) ;
+    $('#firstName').attr("disabled","disabled");
+    $('#lastName').attr("disabled","disabled");
     
     $("#email").text(response.userEmail) ;
 }

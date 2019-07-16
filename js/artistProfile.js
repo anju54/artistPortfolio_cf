@@ -2,12 +2,8 @@ var artistId = 0;
 var arrayOfErr = new Object();
 var typeOfProfilePic = "";
 var actionInProfileData = "save";
-$(document).ready(function() {
 
-    
-    
-    //$("#saveImage").hide();
-    //$('#updateImage').hide();
+$(document).ready(function() {
 
     getArtistProfileId();
     getAllPaintingType(); 
@@ -26,6 +22,12 @@ $(document).ready(function() {
         event.preventDefault();
         var form = $('#uploadimage')[0];
         var data = new FormData(form);
+
+        if(!artistId>0){
+            $('#profilePicShowError').text("First create artist account!!");
+            $('#profilePicModal').remove();
+            return false;
+        }
 
         if(typeOfProfilePic == "save"){
             uploadProfilePic(data,type);
@@ -104,7 +106,9 @@ function setProfileData(response){
     }
     $('#name').val(response[0].fname+" "+response.lname);
     $('#firstName').val(response[0].fname);
+    $('#firstName').attr("disabled","disabled");
     $('#lastName').val(response[0].lname);
+    $('#lastName').attr("disabled","disabled");
     $('#fbUrl').val(response[0].FACEBOOK_INFO);
     $('#twitterUrl').val(response[0].TWITTER_INFO);
     $('#linkedInUrl').val(response[0].LINKEDIN_URL);
@@ -170,7 +174,7 @@ function saveProfileData(type){
             "colorName": color,
             "paintingTypeList" : newList }
     validate();
-    var size = Object.keys(arrayOfErr).length;
+    // var size = Object.keys(arrayOfErr).length;
     if( Object.keys(arrayOfErr).length > 0){
         return false;
     }else{
@@ -373,9 +377,13 @@ function isURLvalid(field,data){
 function uploadProfilePic(file){
     
     $('#profilePicShowError').text('');
+    
+    
    // hideLoader();
     showLoader();
     if(file!=null){
+
+       
 
         $.ajax({
 

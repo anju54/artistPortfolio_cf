@@ -100,13 +100,11 @@
                                         <button type="submit" class="commentButton" id="myBtn" >
                                             <i class="fa fa-edit" style="font-size:24px;color:green"></i>
                                         <br>
-                                            <button type="submit" class="likeButton" id="deleteImage">
-                                                <i class="fa fa-remove" style="font-size:24px;color:red"></i></i></button>
+                                        <button type="submit" class="likeButton" id="deleteImage">
+                                            <i class="fa fa-remove" style="font-size:24px;color:red"></i></i></button>
                                     </div>
                                 </div>
                             </div>
-
-
                             <h4 class="card-title m-t-10" id="name"></h4>
                             <div id="paintingType">
                                 <!-- <h6 class="card-subtitle" >Oil painting</h6> -->
@@ -141,7 +139,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <p id="profilePicShowError"></p>
                             </div>
                         </center>
@@ -165,7 +163,7 @@
                                     <p name="profileName" id="profileN" style="color:blue"></p>
                                 </div>
                           </div>
-
+                          
                           <br>
                             <label class="col-md-12">First Name*</label>
                             <div class="col-md-12">
