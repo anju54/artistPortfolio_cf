@@ -17,7 +17,7 @@ function validatePassword(Password) {
     if(!isEmpty("Password", Password)){
         return false;
     }
-    var passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    var passw = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
     if(Password.match(passw)) { 
         $('#passwordError').hide();
         return true;

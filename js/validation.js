@@ -24,7 +24,8 @@ function validatePassword(password) {
 
         return false;
     }
-    var passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    var passw =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
+    
     if(password.match(passw)) { 
         
         return true;
