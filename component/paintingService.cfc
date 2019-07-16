@@ -8,7 +8,9 @@
 <cfcomponent>
 
 	<!--- Fetch profile name from session object --->
-	<cfset VARIABLES.profileName = session.artistProfile.profileName />
+	<cfif StructKeyExists(session,"artistProfile")>
+		<cfset VARIABLES.profileName = session.artistProfile.profileName />
+	</cfif>
 
 	<!--- used for storing the error msg related to artist add and update --->
 	<cfset VARIABLES.arrayOfFileErr = StructNew()/>
@@ -191,7 +193,9 @@
 	<!--- This is used for counting the number of media stored in table by artist id --->
 	<cffunction name="countPainting" access="public" returntype="numeric">
 
-		<cfif not session.artistProfile.artistProfileId Eq 0>
+		<cfset VAR countOfPainting = queryNew("")/>
+		<cfset VAR count = 0/>
+		<cfif StructKeyExists(session,"artistProfile")>
 
 			<cfquery datasource="artistPortfolio" name="countPainting" result="countPaintingResult">
 
@@ -199,12 +203,13 @@
 				FROM media INNER JOIN
 				artist_media_bridge AS amb ON media.media_id = amb.media_id
 	            WHERE artist_id =
-	            <cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">
+	            <cfqueryparam cfsqltype="cf_sql_integser" value="#session.artistProfile.artistProfileId#">
 
 			</cfquery>
+			<cfset count = countPainting.countOfPainting/>
 		</cfif>
 
-		<cfreturn countPainting.countOfPainting />
+		<cfreturn count />
 	</cffunction>
 
 	<!--- This is used for counting the number of public media stored in table by artist id --->

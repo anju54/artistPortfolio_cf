@@ -232,7 +232,6 @@
 
 		<cfset VAR paginationForPublicPaintings = QueryNew("")/>
 		<cftry>
-			<cfset VAR limitValue = 4 />
 
 			<cfquery datasource="artistPortfolio" name="paginationForPublicPaintings">
 
@@ -241,8 +240,7 @@
 				artist_media_bridge AS amb ON media.media_id = amb.media_id
 	            WHERE artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.artistId#">
 				AND amb.is_public = "true"
-				LIMIT <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,
-					  <cfqueryparam cfsqltype="cf_sql_integer" value="#limitValue#">
+				LIMIT <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,8
 			</cfquery>
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"

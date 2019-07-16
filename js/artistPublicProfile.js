@@ -34,7 +34,7 @@ $(document).ready(function() {
 function showPublicPaintings(pageNo){
 
     var id = getUrlParameter('id');
-    var limit = 4;
+    var limit = 8;
     counter = pageNo *  limit - limit  ;
     $.ajax({
         url:  `${baseUrl}/controller/artistProfileController.cfm?action=paginationForPublicPainting&counter=${counter}&id=${id}` ,
@@ -235,12 +235,13 @@ function getCountOfPublicPaintings(){
 //This is used to get the total page number to show the paintings
 function calculateTotalPageNo(countOfPainting){
 
-    var remainder = countOfPainting % 4;
-    if( remainder==1 || remainder == 2 || remainder == 3){
-        totalPageNo = Math.floor( countOfPainting / 4 + 1 );
+    var remainder = countOfPainting % 8;
+    if( remainder <= 7 && remainder != 0){
+        totalPageNo = Math.floor(countOfPainting/8)+1 ;
     }else{
-        totalPageNo = countOfPainting / 4;
+        totalPageNo = countOfPainting / 8;
     }
+    console.log(totalPageNo);
 }
 
 
