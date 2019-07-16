@@ -193,8 +193,8 @@
 	<!--- This is used for counting the number of media stored in table by artist id --->
 	<cffunction name="countPainting" access="public" returntype="numeric">
 
-		<cfset VAR countOfPainting = queryNew("")/>
-		<cfset VAR count = 0/>
+		<cfset VAR countPainting = queryNew("")/>
+
 		<cfif StructKeyExists(session,"artistProfile")>
 
 			<cfquery datasource="artistPortfolio" name="countPainting" result="countPaintingResult">
@@ -206,10 +206,10 @@
 	            <cfqueryparam cfsqltype="cf_sql_integser" value="#session.artistProfile.artistProfileId#">
 
 			</cfquery>
-			<cfset count = countPainting.countOfPainting/>
+			<cfset countPainting = countPainting.countOfPainting/>
 		</cfif>
 
-		<cfreturn count />
+		<cfreturn countPainting />
 	</cffunction>
 
 	<!--- This is used for counting the number of public media stored in table by artist id --->
