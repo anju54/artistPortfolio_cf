@@ -10,6 +10,9 @@
 	<!--- Fetch profile name from session object --->
 	<cfset VARIABLES.profileName = session.artistProfile.profileName />
 
+	<!--- used for storing the error msg related to artist add and update --->
+	<cfset VARIABLES.arrayOfFileErr = StructNew()/>
+
 	<!--- This is used to upload painting by artist_id --->
 	<cffunction name="uploadPainting" access="public" output="false" returntype="Any">
 
@@ -22,9 +25,6 @@
 			<cfif len(trim(form.fileUpload))>
 				<cffile action="upload" fileField="fileUpload" destination="#expandPath("#destination#")#">
 			</cfif>
-
-			<!--- Fetch user_id from session object --->
-			<!--- <cfset VAR userId = "#session.user.userId#"> --->
 
 			<cfset VAR newFileName = GetTickCount() & cffile.ATTEMPTEDSERVERFILE />
 			<cfset VAR paintingDestination = destination & newFileName />
@@ -252,16 +252,36 @@
 	</cffunction>
 
 	<!--- This is used for validating the input image --->
-	<cffunction access="public" name="validateImage" returntype="Array">
+	<cffunction access="public" name="validateImage" returntype="Struct">
 
 		<cfargument name="form" type="any" required="true"/>
-		<cfset VAR aErrorMsg = ArrayNew(1) />
 
 		<cfif not isImageFile(form.fileUpload)>
-			<cfset arrayAppend(aErrorMsg, 'This file type is not allowed!')>
-		</cfif>
 
-		<cfreturn aErrorMsg/>
+			<cfset arrayOfFileErr.fileType = "This file type is not allowed!"/>
+		</cfif>
+		<cfset VAR fileSizeValue = fileSizeValidation(form)/>
+
+		<cfreturn VARIABLES.arrayOfFileErr/>
+	</cffunction>
+
+	<cffunction access="public" name="fileSizeValidation" returntype="void">
+
+		<cfargument name="form" type="any" required="true"/>
+
+		<cfif len(trim(form.fileUpload))>
+				<cffile action="upload"
+				fileField="fileUpload"
+				destination="#expandPath("../media/")#"
+				nameconflict="MAKEUNIQUE">
+		</cfif>
+		<cfif cffile.filesize GT (800 * 1024)>
+             <cfset arrayOfFileErr.fileSize = "You picture cannot be more then 800k!!" />
+		 </cfif>
+		 <cffile
+                 action="DELETE"
+                 file="#ExpandPath("../media/#cffile.ATTEMPTEDSERVERFILE#")#"
+          />
 	</cffunction>
 
 

@@ -31,14 +31,16 @@ $(document).ready(function() {
     }); 
 
     //binds to onchange event of your input field
-    $('#file').bind('change', function() {
+     $('#file').bind('change', function() {
+
+        ValidateSingleInput(this);
 
         //this.files[0].size gets the size of your file.
        var size = this.files[0].size ;
-       if( size>10485760 ){
-           //swal("please upload image lesser then 10mb");
+       if( size> 800 * 1024 ){
+           //swal("please upload image lesser then 800kb");
            $('#imageUploadError').show();
-           $('#imageUploadError').text("please upload image lesser then 10mb");
+           $('#imageUploadError').text("please upload image lesser then 800kb");
        }
     
     });
@@ -249,8 +251,7 @@ function deletePainting(id){
                 }
             }
         },
-        error: function( ) {
-        },
+        error: function( ) {},
         complete: function () {
         }         
     });
@@ -272,10 +273,18 @@ function deletePainting(id){
         data: file,
         async:false,
         success: function (response) {
-           swal("painting uploaded successfully");
-           var type = "upload";
-           getCountOfPaintings();
-           hideLoader();
+            if(response == "true "){
+                swal("painting uploaded successfully");
+                var type = "upload";
+                getCountOfPaintings();
+                hideLoader();
+            }else{
+                response = JSON.parse(response);
+                console.log(response.FILESIZE);
+                $('#imageUploadError').show();
+                $('#imageUploadError').text(response.FILESIZE);
+                $('#imageUploadError').text(response.FILETYPE);  
+            }
         },
         error: function(error) {    
             $('#imageUploadError').text(error.responseJSON.message)
@@ -345,4 +354,8 @@ function ValidateSingleInput(oInput) {
         }
     }
     return true;
+}
+
+function hideErr(){
+    $('#imageUploadError').hide();
 }

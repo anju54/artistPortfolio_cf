@@ -13,12 +13,12 @@
 	<cfcase value = "uploadpainting">
 		<cfset aErrMsg = VARIABLES.paintingService.validateImage(form) />
 
-		<cfif ArrayIsEmpty(aErrMsg)>
-			<cfset returnData = SerializeJSON ( VARIABLES.paintingService.uploadPainting(form) ) />
-			<cfoutput>#returnData#</cfoutput>
-		<cfelse>
+		<cfif StructCount(aErrMsg) gt 0>
 			<cfset aErrMsg =  SerializeJSON(aErrMsg)/>
 			<cfoutput>#aErrMsg#</cfoutput>
+		<cfelse>
+			<cfset returnData = ( VARIABLES.paintingService.uploadPainting(form) ) />
+			<cfoutput>#returnData#</cfoutput>
 		</cfif>
 	</cfcase>
 

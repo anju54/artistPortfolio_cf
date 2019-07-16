@@ -78,7 +78,7 @@
                 </div>
                 <form enctype="multipart/form-data" id="uploadimage" >
                     <div class="col-md-10">
-                        <input type="file" name="fileUpload" id="file" onchange="ValidateSingleInput(this);" />
+                        <input type="file" name="fileUpload" id="file" onchange="hideErr();" />
                         <p class="help-block">
                             Allowed formats: jpeg, jpg, png
                         </p>
