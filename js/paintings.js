@@ -112,7 +112,6 @@ function showPaintings(type,pageNo){
     if(type=="upload"){
         counter = 0;
         urlVar = `${baseUrl}/controller/paintingcontroller.cfm?action=paginationForAllPainting&counter=${counter}`;
-        //`${baseUrl}/controller/paintingcontroller.cfm?action=displayLastUploadedImage`;
     }
     $.ajax({
         url:  urlVar,
@@ -241,15 +240,17 @@ function deletePainting(id){
         async: false,
        
         success: function (response) {
-            $('#imgDiv').empty();
-            var type = "loadMore";
-            var pageNo = 1;
-            showPaintings(type,pageNo);
-            for(var i=0; i<paintingList.length; i++){
-                if(paintingList[i].MEDIA_ID == id){
-                    paintingList.splice(i,1);
+            if(response=="true "){
+                $('#imgDiv').empty();
+                var type = "loadMore";
+                var pageNo = 1;
+                showPaintings(type,pageNo);
+                for(var i=0; i<paintingList.length; i++){
+                    if(paintingList[i].MEDIA_ID == id){
+                        paintingList.splice(i,1);
+                    }
                 }
-            }
+            } 
         },
         error: function( ) {},
         complete: function () {

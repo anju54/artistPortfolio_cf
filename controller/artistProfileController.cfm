@@ -61,7 +61,7 @@
 	</cfcase>
 
 	<cfcase value = "deleteProfilePic">
-		<cfset returnData = VARIABLES.artistprofileService.deleteprofilePic() />
+		<cfset returnData = VARIABLES.artistprofileService.deleteProfilePic() />
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 

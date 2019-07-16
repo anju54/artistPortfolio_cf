@@ -11,7 +11,7 @@ $(document).ready(function() {
     getArtistProfileData();
 
     $("#update").click(function() {
-
+        
         saveProfileData(actionInProfileData);
     });
 
@@ -143,7 +143,7 @@ function setProfileData(response){
 function saveProfileData(type){
 
    $('#msg').text('');
-
+    arrayOfErr = {};
     var fbUrl = $("#fbUrl").val();
     var twitterUrl = $('#twitterUrl').val();
     var linkedInUrl = $('#linkedInUrl').val();
@@ -173,12 +173,14 @@ function saveProfileData(type){
             "aboutMe": aboutMe,
             "colorName": color,
             "paintingTypeList" : newList }
+    
     validate();
-    // var size = Object.keys(arrayOfErr).length;
+    console.log(arrayOfErr);
+    
     if( Object.keys(arrayOfErr).length > 0){
         return false;
     }else{
-
+        
         data = JSON.stringify(data);
         showLoader();
        
@@ -196,12 +198,13 @@ function saveProfileData(type){
             },
             'async': false,
             success: function (response) {
-               
+               console.log(response);
                 if(response ==="true "){
                     swal("data saved successfully!!");     
                     showProfilePic() ;
                     $("#saveImage").show();
                     getArtistProfileData();
+                    getArtistProfileId();
                 }else if(response === "false "){
                     $('#msg').show();
                     $('#msg').text("Some error occured while creating artist account!");
@@ -235,7 +238,7 @@ function deleteProfile(){
         data: {},
         'async': false,
         success: function (response) {
-            
+            console.log(response);
             if(response){  
             $('#profileImage').attr("src","../assets/images/default-profile-pic.png");
             $('#deleteImage').hide();
@@ -259,16 +262,28 @@ function validate(){
     var twitterUrl = $('#twitterUrl').val();
     var linkedInUrl = $('#linkedInUrl').val();
     var aboutMe = $('#aboutMe').val();
- 
-    isEmpty("Profile Name", profileNameVal);
-    isEmpty("color", colorVal);
-    isURLvalid("Facebook",fbUrl);
-    isURLvalid("LinkedIn",linkedInUrl);
-    isURLvalid("twitter",twitterUrl) ;
-    checkForlength("Facebook",fbUrl);
-    checkForlength("LinkedIn",linkedInUrl)
-    checkForlength("twitter",twitterUrl);
-    checkForAboutMe("aboutMe",aboutMe)
+    
+    if(actionInProfileData=="update"){
+        isURLvalid("Facebook",fbUrl);
+        isURLvalid("LinkedIn",linkedInUrl);
+        isURLvalid("twitter",twitterUrl) ;
+        checkForlength("Facebook",fbUrl);
+        checkForlength("LinkedIn",linkedInUrl)
+        checkForlength("twitter",twitterUrl);
+        checkForAboutMe("aboutMe",aboutMe)
+    }else{
+        isEmpty("Profile Name", profileNameVal);
+        isEmpty("color", colorVal);
+        isURLvalid("Facebook",fbUrl);
+        isURLvalid("LinkedIn",linkedInUrl);
+        isURLvalid("twitter",twitterUrl) ;
+        checkForlength("Facebook",fbUrl);
+        checkForlength("LinkedIn",linkedInUrl)
+        checkForlength("twitter",twitterUrl);
+        checkForAboutMe("aboutMe",aboutMe)
+    }
+   
+    
 }
 
 function checkForAboutMe(field, data){
@@ -337,56 +352,53 @@ function isURLvalid(field,data){
     // /^(https?:\/\/)?((w{3}\.)?)linkedin.com\/.*/i;
     
     var error = "";
-    if(field=="LinkedIn"){
+    if(data!=""){
+        if(field=="LinkedIn"){
        
-        if (data === ''|| data === null || data === undefined)return true;
-        if(data.match(linkedinUrlPattern)){
-            //return true;
-        }else{
-            error = "you entered wrong "+field+" URL!!";
-            arrayOfErr["linkedInUrl"] = error;
-            $('#lerror').show;
-            $('#lerror').text(error);
-        }  
-    }else if(field=="Facebook"){
-        if (data === ''|| data === null || data === undefined)return true;
-
-        if(data.match(facebookUrlPattern)){
-            //return  true;
-        }else{
-            error = "You entered wrong "+field+" URL!!";
-            arrayOfErr["facebookUrl"] = error;
-            $('#fberror').show;
-            $('#fberror').text(error);
-        }
-    }else if(field=="twitter"){
-        if (data === ''|| data === null || data === undefined)return true;
-
-        if(data.match(twitterUrlPattern)){
-           //return true;
-        }else{
-            error = "You entered wrong "+field+" URL!! ";
-            arrayOfErr["twitterUrl"] = error;
-            $('#terror').show;
-            $('#terror').text(error);
+            if (data === ''|| data === null || data === undefined)return true;
+            if(data.match(linkedinUrlPattern)){
+                //return true;
+            }else{
+                error = "you entered wrong "+field+" URL!!";
+                arrayOfErr["linkedInUrl"] = error;
+                $('#lerror').show;
+                $('#lerror').text(error);
+            }  
+        }else if(field=="Facebook"){
+            if (data === ''|| data === null || data === undefined)return true;
+    
+            if(data.match(facebookUrlPattern)){
+                //return  true;
+            }else{
+                error = "You entered wrong "+field+" URL!!";
+                arrayOfErr["facebookUrl"] = error;
+                $('#fberror').show;
+                $('#fberror').text(error);
+            }
+        }else if(field=="twitter"){
+            if (data === ''|| data === null || data === undefined)return true;
+    
+            if(data.match(twitterUrlPattern)){
+               //return true;
+            }else{
+                error = "You entered wrong "+field+" URL!! ";
+                arrayOfErr["twitterUrl"] = error;
+                $('#terror').show;
+                $('#terror').text(error);
+            }
         }
     }
+    
 }
 
 //This is used for uplaoding the profile pic
 function uploadProfilePic(file){
     
     $('#profilePicShowError').text('');
-    
-    
-   // hideLoader();
     showLoader();
     if(file!=null){
 
-       
-
         $.ajax({
-
             url:  `${baseUrl}/controller/artistProfileController.cfm?action=uploadProfilePic` ,
             type: "POST",
             enctype: "multipart/form-data",
@@ -394,26 +406,21 @@ function uploadProfilePic(file){
             processData: false,  // it prevent jQuery form transforming the data into a query string
             contentType: false,
             data: file,
-           
             success: function (response) {
-                hideLoader();
-                
+               hideLoader();
                if(response=="true "){
                    
                     swal("profile pic  uploaded!!"); 
                     showProfilePic();
                     $('#deleteImage').show();
-                    $('#profilePicModal').remove();
-               }   else{
+                    $('#profilePicModal').hide();
+               }else{
                    swal("Error uploading profile pic");
                }
             },
-            error: function(error) {
-                $('#profilePicShowError').text(error.responseJSON.message);
-                
+            error: function(error) {   
             },
             complete: function(){
-        
                 $('#file').val('');
                 $('#profilePicShowError').text('');
                 hideLoader();
@@ -484,6 +491,7 @@ function updateProfilePic(file){
             success: function (response) {
                 if(response!=null){
                     swal("Profile pic updated");
+                    $('#profilePicModal').hide();
                 }
             },
             error: function (error) {
@@ -519,8 +527,7 @@ function getArtistProfileId(){
                 //$("#saveImage").show();
             } 
         },
-        error: function( ) {
-           
+        error: function( ) {     
         }         
     });
     

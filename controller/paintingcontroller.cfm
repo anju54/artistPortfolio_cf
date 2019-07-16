@@ -8,6 +8,7 @@
 
 	<cfcase value = "deletePainting">
 		<cfset returnData = VARIABLES.paintingService.deletePainting(mediaId=#URL.id#) />  <!--- painting id --->
+		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "uploadpainting">
@@ -45,13 +46,6 @@
 
 	<cfcase value = "paginationForAllPainting">
 		<cfset returnData = VARIABLES.paintingService.paginationForAllPainting(offset=#URL.counter#) />
-		<cfset returnData =  SerializeJSON(returnData,'struct')/>
-		<cfoutput>#returnData#</cfoutput>
-	</cfcase>
-
-	<cfcase value = "displayLastUploadedImage">
-
-		<cfset returnData = VARIABLES.paintingService.displayLastUploadedImage() />
 		<cfset returnData =  SerializeJSON(returnData,'struct')/>
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>

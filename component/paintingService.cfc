@@ -39,8 +39,8 @@
 
 				INSERT INTO media( filename_original, path ) VALUES (
 
-				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#newFileName#">,
-				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#storedDestinationAdress#">
+				<cfqueryparam cfsqltype="cf_sql_varchar" value="#newFileName#">,
+				<cfqueryparam cfsqltype="cf_sql_varchar" value="#storedDestinationAdress#">
 				)
 			</cfquery>
 
@@ -49,7 +49,7 @@
 
 				INSERT artist_media_bridge ( artist_id , media_id ) VALUES (
 					<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">,
-					<cfqueryparam cfsqltype="cf_sql_VARchar" value="#uploadPainting["GENERATEDKEY"]#">
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#uploadPainting["GENERATEDKEY"]#">
 				)
 			</cfquery>
 
@@ -91,9 +91,9 @@
 			<cfquery  result="uploadPainting">
 
 				UPDATE media SET filename =
-				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#newFileName#">,
+				<cfqueryparam cfsqltype="cf_sql_varchar" value="#newFileName#">,
 				path_thumb =
-				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#storedThumbDestination#">
+				<cfqueryparam cfsqltype="cf_sql_varchar" value="#storedThumbDestination#">
 				WHERE media_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#mediaId#">
 			</cfquery>
 			<cfcatch type="any" >
@@ -153,22 +153,6 @@
 		<cfreturn paginationForAllPaintings>
 	</cffunction>
 
-	<!--- This is used to display last uploaded image --->
-	<cffunction name="displayLastUploadedImage" access="public" returntype="query">
-
-		<cfset VAR selectLastImage = QueryNew("")/>
-		<cfquery  name="selectLastImage" result="resultOfLastImage">
-
-			SELECT filename , path_thumb,path,filename_original, media.media_id, is_public
-				FROM media INNER JOIN
-				artist_media_bridge AS amb ON media.media_id = amb.media_id
-	            WHERE artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">
-				ORDER BY media.media_id DESC LIMIT 1;
-		</cfquery>
-
-		<cfreturn selectLastImage />
-	</cffunction>
-
 	<!--- This is used to mark painting as public or private --->
 	<cffunction name="setIspublicOrprivate" access="public" returntype="void">
 
@@ -178,7 +162,7 @@
 			<cfquery  name="setPublicOrPrivate">
 
 				UPDATE artist_media_bridge SET is_public =
-				<cfqueryparam cfsqltype="cf_sql_VARchar" value="#arguments.publicOrPrivate#">
+				<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.publicOrPrivate#">
 				 WHERE media_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#mediaId#">
 
 			</cfquery>
@@ -243,7 +227,7 @@
 				DELETE FROM media WHERE media_id =
 						<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.mediaId#">
 			</cfquery>
-			<cfif #deletePainting.recordCount# gt 0>
+			<cfif deletePainting.recordCount gt 0>
 				<cfset flag = true />
 			</cfif>
 

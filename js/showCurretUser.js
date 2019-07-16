@@ -10,21 +10,17 @@ function getUserDetail(){
         url:  `${baseUrl}/controller/currentUserController.cfm` ,
         type: "GET",
         crossDomain: true,
-        data: {},
-       
-        success: function (response) {
-			console.log(response);
+        data: {}, 
+        success: function (response) {	
 			response = JSON.parse(response);
             setName(response);    
         },
-        error: function( ) {
-        }         
+        error: function( ) {}         
     });
 }
 
 // This method is used to set user data to the text field
 function setName(response){
-    
     
     $("#fullName").text(response.fullName) ;
     $("#name").text(response.fullName) ;
