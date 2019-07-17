@@ -15,4 +15,8 @@
 	<cffunction name="OnRequestStart">
 	</cffunction>
 
+	<cffunction name="onMissingTemplate">
+		<cflocation url="404.cfm" />
+	</cffunction>
+
 </cfcomponent>
