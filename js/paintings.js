@@ -2,6 +2,7 @@ var c = 0;
 var paintingList = [];
 var counter = 0;
 var totalPageNo = 0;
+var imageName = "";
 $(document).ready(function() {
 
     //showPaintings("loadMore",0);  
@@ -335,6 +336,8 @@ var _validFileExtensions = [".jpg", ".jpeg", ".png"];
 function ValidateSingleInput(oInput) {
     if (oInput.type == "file") {
         var sFileName = oInput.value;
+        imageName = sFileName;
+        extractImageName(imageName);
          if (sFileName.length > 0) {
             var blnValid = false;
             for (var j = 0; j < _validFileExtensions.length; j++) {
@@ -359,4 +362,13 @@ function ValidateSingleInput(oInput) {
 
 function hideErr(){
     $('#imageUploadError').hide();
+}
+
+// This is used to extarct image name from complete fath
+function extractImageName(fullPath){
+
+    var index = imageName.lastIndexOf("\\");
+    console.log(index);
+    imageName = fullPath.substr(index+1,fullPath.length);
+    $("#imageName").val(imageName);
 }

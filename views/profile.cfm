@@ -121,9 +121,10 @@
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-md-5">
-                                                <form enctype="multipart/form-data" id="uploadimage" >
+                                                <form enctype="multipart/form-data" id="uploadimage" name="profilePicForm">
                                                     <div class="col-md-10">
-                                                        <input type="file" name="fileUpload" id="file"  onchange="ValidateSingleInput(this);"/>
+                                                        <input type="file" name="fileUpload" id="file"  onchange="hideProfileErr()"/>
+                                                        <input type="hidden" name="imageName" id="imageName" />
                                                         <p class="help-block">
                                                             Allowed formats: jpeg, jpg, png
                                                         </p>
@@ -135,13 +136,14 @@
                                                     Upload Image
                                                 </button>
                                             </div>
+                                             <div class="col-sm-12">
+                                                <p id="profilePicShowError"></p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
-                                <p id="profilePicShowError"></p>
-                            </div>
+                            
                         </center>
                     </div>
                 </div>

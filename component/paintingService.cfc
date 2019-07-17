@@ -243,15 +243,22 @@
 	<!--- This is used for validating the input image --->
 	<cffunction access="public" name="validateImage" returntype="Struct">
 
-		<cfargument name="form" type="any" required="true"/>
+		<cfargument name="data" type="any" required="true"/>
+		<cfset VAR extension = data.imageName.lastIndexOf(".")/>
+		<cfset extension = mid(data.imageName,extension+2,len(data.imageName))/>
 
-		<cfif not isImageFile(form.fileUpload)>
+		<cfset VAR jpgType = compareNoCase(extension,"jpg")  />
+		<cfset VAR pngType = compareNoCase(extension,"jpeg") />
+		<cfset VAR jpegType = compareNoCase(extension,"png") />
 
-			<cfset arrayOfFileErr.fileType = "This file type is not allowed!"/>
+		 <cfif  not ( ( jpgType eq 0 ) or ( pngType eq 0 ) or ( jpegType eq 0) )>
+
+			<cfset arrayOfFileErr.fileType = "This file type is not allowed, allowed extensions are jpg,png and jpeg!"/>
 		</cfif>
 		<cfset VAR fileSizeValue = fileSizeValidation(form)/>
 
 		<cfreturn VARIABLES.arrayOfFileErr/>
+
 	</cffunction>
 
 	<!--- This is used for file size validation --->
