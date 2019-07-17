@@ -1,6 +1,7 @@
 var artistId = 0;
 var arrayOfErr = new Object();
 var typeOfProfilePic = "";
+var imageName = "";
 var actionInProfileData = "save";
 
 $(document).ready(function() {
@@ -28,14 +29,29 @@ $(document).ready(function() {
             $('#profilePicModal').remove();
             return false;
         }
-
+        
         if(typeOfProfilePic == "save"){
-            uploadProfilePic(data,type);
+            uploadProfilePic(data,type,imageName);
         }else if(typeOfProfilePic=="update"){
-            updateProfilePic(data,type);
+            updateProfilePic(data);
         }
         
     }); 
+
+    //binds to onchange event of your input field
+    $('#file').bind('change', function() {
+
+        ValidateSingleInput(this);
+
+        //this.files[0].size gets the size of your file.
+       var size = this.files[0].size ;
+       if( size> 800 * 1024 ){
+           //swal("please upload image lesser then 800kb");
+           $('#profilePicShowError').show();
+           $('#profilePicShowError').text("please upload image lesser then 800kb");
+       }
+    
+    });
     
     showProfilePic();
     
@@ -291,8 +307,8 @@ function checkForAboutMe(field, data){
     if(data.length > 255){
         
         var error = "Enter the About me below 255";
-        arrayOfErr["Facebook"] = error;
-        $('#aboutmeerr').show;
+        arrayOfErr["aboutmeerr"] = error;
+        $('#aboutmeerr').show();
         $('#aboutmeerr').text(error);
     }
 }
@@ -415,14 +431,18 @@ function uploadProfilePic(file){
                     $('#deleteImage').show();
                     $('#profilePicModal').hide();
                }else{
-                   swal("Error uploading profile pic");
+                response = JSON.parse(response);
+                console.log(response.FILESIZE);
+                $('#profilePicShowError').show();
+                $('#profilePicShowError').text(response.FILESIZE);
+                $('#profilePicShowError').text(response.FILETYPE);
                }
             },
             error: function(error) {   
             },
             complete: function(){
                 $('#file').val('');
-                $('#profilePicShowError').text('');
+                //$('#profilePicShowError').text('');
                 hideLoader();
             }         
         });
@@ -474,24 +494,30 @@ function setProfilePic(response){
 }
 
 //This is used for making ajax call for updating the profile pic
-function updateProfilePic(file){
-    
+function updateProfilePic(data){ 
+
     if(file!=null){
 
         $.ajax({
-
             url:  `${baseUrl}/controller/artistProfileController.cfm?action=updateProfilePic` ,
             type: "Post",
             enctype: "multipart/form-data",
             crossDomain: true,
             processData: false,  // it prevent jQuery form transforming the data into a query string
             contentType: false,
-            data: file,
-           
+            data: data,
+            async:false,
             success: function (response) {
-                if(response!=null){
+                console.log(response);
+                if(response=="true "){
                     swal("Profile pic updated");
                     $('#profilePicModal').hide();
+                }else{
+                    response = JSON.parse(response);
+                    console.log(response.FILESIZE);
+                    $('#profilePicShowError').show();
+                    $('#profilePicShowError').text(response.FILESIZE);
+                    $('#profilePicShowError').text(response.FILETYPE);
                 }
             },
             error: function (error) {
@@ -539,6 +565,9 @@ var _validFileExtensions = [".jpg", ".jpeg", ".png"];
 function ValidateSingleInput(oInput) {
     if (oInput.type == "file") {
         var sFileName = oInput.value;
+        imageName = sFileName;
+        extractImageName(imageName);
+        
          if (sFileName.length > 0) {
             var blnValid = false;
             for (var j = 0; j < _validFileExtensions.length; j++) {
@@ -550,13 +579,23 @@ function ValidateSingleInput(oInput) {
             }
              
             if (!blnValid) {
-                swal("Sorry, thil file is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                //swal("Sorry, this file is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                $('#profilePicShowError').text("Sorry, this file is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
                 oInput.value = "";
                 return false;
             }
         }
     }
     return true;
+}
+
+// This is used to extarct image name from complete fath
+function extractImageName(fullPath){
+
+    var index = imageName.lastIndexOf("\\");
+    console.log(index);
+    imageName = fullPath.substr(index+1,fullPath.length);
+    $("#imageName").val(imageName);
 }
 
 function hideError(){
@@ -584,4 +623,8 @@ function hideMainError(){
 
 function hidecolorerror(){
     $('#colorerror').hide();
+}
+
+function hideProfileErr(){
+    $('#profilePicShowError').hide();
 }

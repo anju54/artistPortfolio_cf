@@ -10,12 +10,29 @@
 <cfswitch expression = "#method#">
 
 	<cfcase value = "uploadProfilePic">
+		<cfset aErrMsg = VARIABLES.artistprofileService.validateImage(form) />
+
+		<cfif StructCount(aErrMsg) gt 0>
+			<cfset aErrMsg =  SerializeJSON(aErrMsg)/>
+			<cfoutput>#aErrMsg#</cfoutput>
+		<cfelse>
 		<cfset returnData = VARIABLES.artistprofileService.uploadProfilePic(form) />
 		<cfoutput>#returnData#</cfoutput>
+		</cfif>
 	</cfcase>
 
 	<cfcase value = "updateProfilePic">
+
+		<cfset aErrMsg = VARIABLES.artistprofileService.validateImage(form) />
+
+		<cfif StructCount(aErrMsg) gt 0>
+			<cfset aErrMsg =  SerializeJSON(aErrMsg)/>
+			<cfoutput>#aErrMsg#</cfoutput>
+
+		<cfelse>
 		<cfset returnData = VARIABLES.artistprofileService.updateProfilePic(form) />
+		<cfoutput>#returnData#</cfoutput>
+		</cfif>
 	</cfcase>
 
 	<cfcase value = "getProfilePic">

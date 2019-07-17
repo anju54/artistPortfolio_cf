@@ -46,7 +46,7 @@
 					<cfquery name="addPaintingTypeForArtist" >
 
 						insert into artist_painting_list_bridge(artist_profile_id, painting_id) values
-						<cfloop from = "1" to = "#size#" index = "i">
+						<cfloop from = "1" to = "#ArrayLen(paintingTypeList)#" index = "i">
 							 <cfif i NEQ 1>,</cfif>
 							(
 							<cfqueryparam cfsqltype="cf_sql_integer" value="#result["GENERATEDKEY"]#">,
@@ -633,6 +633,53 @@
 			</cfif>
 		</cfif>
 
+	</cffunction>
+
+	<!--- This is used for validating the input image --->
+	<cffunction access="public" name="validateImage" returntype="Struct">
+
+		<cfargument name="data" type="any" required="true"/>
+		<cfset VAR extension = data.imageName.lastIndexOf(".")/>
+		<cfset extension = mid(data.imageName,extension+2,len(data.imageName))/>
+
+		<cfset VAR jpgType = compareNoCase(extension,"jpg")  />
+		<cfset VAR pngType = compareNoCase(extension,"jpeg") />
+		<cfset VAR jpegType = compareNoCase(extension,"png") />
+
+		 <cfif  not ( ( jpgType eq 0 ) or ( pngType eq 0 ) or ( jpegType eq 0) )>
+
+			<cfset arrayOfErr.fileType = "This file type is not allowed, allowed extensions are jpg,png and jpeg!"/>
+		</cfif>
+		<cfset VAR fileSizeValue = fileSizeValidation(form)/>
+
+		<cfreturn VARIABLES.arrayOfErr/>
+	</cffunction>
+
+	<!--- This is used for file size validation --->
+	<cffunction access="public" name="fileSizeValidation" returntype="void">
+
+		<cfargument name="form" type="any" required="true"/>
+		<cftry>
+			<cfif len(trim(form.fileUpload))>
+					<cffile action="upload"
+					fileField="fileUpload"
+					destination="#expandPath("../media/")#"
+					nameconflict="MAKEUNIQUE">
+			</cfif>
+			<cfif cffile.filesize GT (800 * 1024)>
+	             <cfset arrayOfErr.fileSize = "You picture cannot be more then 800k!!" />
+			 </cfif>
+			 <cffile
+	                 action="DELETE"
+	                 file="#ExpandPath("../media/#cffile.ATTEMPTEDSERVERFILE#")#"
+	          />
+	     <cfcatch type="any" >
+			<cflog application="true" file="artistPortfolioError"
+			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:paintingService ,
+					function:getPublicPainting, Line:#cfcatch.TagContext[1].Line#">
+
+		</cfcatch>
+		</cftry>
 	</cffunction>
 
 </cfcomponent>
