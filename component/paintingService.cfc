@@ -222,12 +222,12 @@
 		<cftry>
 			<cfset VAR flag = false />
 
-			<cfquery name="deletePainting" >
+			<cfquery name="deletePainting" result="deletePaintingResult">
 
 				DELETE FROM media WHERE media_id =
 						<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.mediaId#">
 			</cfquery>
-			<cfif deletePainting.recordCount gt 0>
+			<cfif deletePaintingResult.recordCount gt 0>
 				<cfset flag = true />
 			</cfif>
 

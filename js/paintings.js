@@ -242,6 +242,9 @@ function deletePainting(id){
        
         success: function (response) {
             if(response=="true "){
+                swal("Poof! Your painting pic has been deleted!", {
+                    icon: "success",
+                });
                 $('#imgDiv').empty();
                 var type = "loadMore";
                 var pageNo = 1;
@@ -251,7 +254,9 @@ function deletePainting(id){
                         paintingList.splice(i,1);
                     }
                 }
-            } 
+            } else{
+                swal("Error deleting profile pic");
+            }
         },
         error: function( ) {},
         complete: function () {

@@ -66,9 +66,9 @@ $(document).ready(function() {
         .then((willDelete) => {
             if (willDelete) {
                 deleteProfile();
-                swal("Poof! Your profile pic has been deleted!", {
-                    icon: "success",
-                });
+                // swal("Poof! Your profile pic has been deleted!", {
+                //     icon: "success",
+                // });
             } else {
                 swal("Your imaginary file is safe!");
             }
@@ -256,8 +256,13 @@ function deleteProfile(){
         success: function (response) {
             console.log(response);
             if(response){  
-            $('#profileImage').attr("src","../assets/images/default-profile-pic.png");
-            $('#deleteImage').hide();
+                swal("Poof! Your profile pic has been deleted!", {
+                    icon: "success",
+                });
+                $('#profileImage').attr("src","../assets/images/default-profile-pic.png");
+                $('#deleteImage').hide();
+            }else{
+                swal("error deleting profile pic");
             }
         },
         error: function( ) {}         
