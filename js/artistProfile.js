@@ -11,6 +11,11 @@ $(document).ready(function() {
     getAllColors();
     getArtistProfileData();
 
+    if(!artistId>0){
+        $('#myPaintingNav').hide();
+        $('#previewProfile').hide();
+    }
+
     $("#update").click(function() {
         
         saveProfileData(actionInProfileData);
@@ -554,6 +559,8 @@ function getArtistProfileId(){
        
         success: function (response) {
             if(response>0){
+                $('#myPaintingNav').show();
+                $('#previewProfile').show();
                 artistId = response; 
                 //$("#saveImage").show();
             } 

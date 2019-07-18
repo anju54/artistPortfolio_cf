@@ -42,7 +42,7 @@
                 <ul class="nav navbar-nav side-nav">
                     <li><a href="index.cfm"><i class="fa fa-bullseye"></i> Dashboard</a></li>
                     <!-- <li><a href="portfolio.cfm"><i class="fa fa-tasks"></i> Portfolio</a></li> -->
-                    <li><a href="paintings.cfm" id="paintingHref"><i class="fa fa-list-ol"></i>My Paintings</a></li>
+                    <li id="myPaintingNav"><a href="paintings.cfm" id="paintingHref"><i class="fa fa-list-ol"></i>My Paintings</a></li>
                     <!-- <li><a href="register.cfm"><i class="fa fa-font"></i> Register</a></li> -->
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
