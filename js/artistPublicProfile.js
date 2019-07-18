@@ -75,14 +75,7 @@ function setAllPaintings(response){
                         '<img class="work" alt="img not loaded" class="image" id="'+paintingList[i].MEDIA_ID+
                         '"'+
                         'src="'+ baseUrl + paintingList[i].PATH_THUMB + paintingList[i].FILENAME +'" ></img>'+
-                        '<div class="middle">'+
-                            '<button type="submit" class="likeButton"  id="'+paintingList[i].MEDIA_ID+
-                            '"'+
-                            '><i class="fa fa-thumbs-up topright"></i></button>'+
-                            '<button type="submit" class="commentButton" id="'+paintingList[i].MEDIA_ID+
-                            'comment"'+
-                            '><i class="fa fa-comments-o" style="font-size:48px;color:red"></i></button>'+
-                        '</div></div>'
+                        '</div>'
                     '</div>';
 
         $('#publicImgDiv').append(col);          
