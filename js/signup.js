@@ -21,7 +21,12 @@ function registration(){
     		 password : passwordVal
      }
    
-     if(validate()){
+    validate();
+    console.log(arrayOfErr);
+    
+    if( Object.keys(arrayOfErr).length > 0){
+        return false;
+    }else{
     	 
     	 showLoader();
     	 $.ajax({
@@ -33,8 +38,7 @@ function registration(){
     	        contentType: "application/json",
     	        
     	        success: function (response) {
-    	            
-    	            
+    	             
     	            if(!response){
     	            	$('#mainErrMsg').show();
     	            	$('#mainErrMsg').text("This user is already registered with us!");
@@ -51,7 +55,7 @@ function registration(){
     	            hideLoader();               
     	        }
     	    });
-     }
+		}
 }
 
 // This is used for hiding the error tag after giving the input
