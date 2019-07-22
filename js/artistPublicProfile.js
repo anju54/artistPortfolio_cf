@@ -11,7 +11,6 @@ $(document).ready(function() {
     }
 
     var id = getUrlParameter('id');
-    getPublicProfilePic(id);
     getArtistProfileInfo(id); 
 
     if(totalPageNo > 0){
@@ -130,10 +129,13 @@ function getArtistProfileInfo(id){
         success: function (response) {
             response = JSON.parse(response);
             if(response.length>0){
+                getPublicProfilePic(id);
                 setData(response); 
                 // $('#save').hide();
                 // $('#update').show();
-            }             
+            } else{
+                window.location.href = "../views/userNotFound.cfm";
+            }            
         },
         error: function(error) {
         }             

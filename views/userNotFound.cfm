@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-	<title>404</title>
+	<title>User Not Exists!</title>
 
 	<!-- Google font -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:500" rel="stylesheet">
@@ -32,8 +32,8 @@
 			<div class="notfound-404">
 				<h1>404</h1>
 			</div>
-			<h2>Oops! This Page Could Not Be Found</h2>
-			<p>Sorry but the page you are looking for does not exist, have been removed. name changed or is temporarily unavailable</p>
+			<h2>Oops! This User Could Not Be Found</h2>
+			<p>Sorry but the User you are looking for does not exist.</p>
 			<a href="index.cfm">Go To Homepage</a>
 		</div>
 	</div>
