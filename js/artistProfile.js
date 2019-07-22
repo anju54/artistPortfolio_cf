@@ -372,6 +372,7 @@ function isEmpty(field, data){
 function isURLvalid(field,data){
     
     var facebookUrlPattern ="(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?";
+    var fburLForMobile = "(?:(?:http|https):\/\/)?(?:m.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?";
     var twitterUrlPattern = /^(https?:\/\/)?((w{3}\.)?)twitter\.com\/(#!\/)?[a-z0-9_]+$/i;
     var linkedinUrlPattern = /(ftp|http|https):\/\/?(?:www\.)?linkedin.com(\w+:{0,1}\w*@)?(\S+)(:([0-9])+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     
@@ -392,8 +393,8 @@ function isURLvalid(field,data){
             }  
         }else if(field=="Facebook"){
             if (data === ''|| data === null || data === undefined)return true;
-    
-            if(data.match(facebookUrlPattern)){
+            // var flag = data.includes("https:/m.facebook.com")
+            if(data.match(facebookUrlPattern) || data.match(fburLForMobile) ){
                 //return  true;
             }else{
                 error = "You entered wrong "+field+" url!!";
