@@ -272,7 +272,7 @@
 					destination="#expandPath("../media/")#"
 					nameconflict="MAKEUNIQUE">
 			</cfif>
-			<cfif cffile.filesize GT (800 * 1024)>
+			<cfif cffile.filesize gt (800 * 1024)>
 	             <cfset arrayOfFileErr.fileSize = "You picture cannot be more then 800k!!" />
 			 </cfif>
 			 <cffile

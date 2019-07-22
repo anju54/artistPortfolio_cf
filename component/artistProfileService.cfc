@@ -32,8 +32,8 @@
 						<cfqueryparam value="#arguments.form.linkedInUrl#"  cfsqltype="CF_SQL_varchar">,
 						<cfqueryparam value="#arguments.form.aboutMe#"      cfsqltype="CF_SQL_varchar">,
 						<cfqueryparam value="#session.user.userId#"      	  cfsqltype="cf_sql_integer"> ,
-						( select color_id from color where color_name =
-							<cfqueryparam value="#arguments.form.colorName#"   cfsqltype="CF_SQL_varchar">
+						( SELECT color_id FROM color WHERE color_name =
+							<cfqueryparam value="#arguments.form.colorName#"   cfsqltype="cf_sql_varchar">
 						)
 					)
 				</cfquery>
@@ -41,6 +41,8 @@
 				<cfset VAR paintingTypeList = "#arguments.form.paintingTypeList#" />
 
 				<cfif not ArrayIsEmpty(arguments.form.paintingTypeList)>
+
+					<cfset VAR addPaintingTypeForArtist = QueryNew("")/>
 
 					<!--- This is used to add list of painting type to database --->
 					<cfquery name="addPaintingTypeForArtist" >
@@ -60,7 +62,7 @@
 
 					<cfif result.recordCount GT 0>
 
-						<cfset VAR isInserted = true>
+						<cfset isInserted = true/>
 						<cfset VAR fullPath = "../media/artist/" & arguments.form.profileName & "/" />
 
 						<!--- Check whether the directory exists. --->
@@ -132,7 +134,7 @@
 			</cfif>
 
 			<cfif #updateResult.recordCount# GT 0>
-				<cfset VAR isInserted = true>
+				<cfset isInserted = true>
 			</cfif>
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
@@ -200,6 +202,7 @@
 
 		<cfset VAR artist_profile_id = 0/>
 		<cfset VAR profileName = ""/>
+		<cfset VAR getArtistProfileIdByUserId = QueryNew("") />
 		<cftry>
 			<cfquery  name="getArtistProfileIdByUserId">
 
@@ -554,7 +557,7 @@
 
 		<cfif compareNoCase(field,"facebookUrl") eq 0>
 
-				<cfset VAR result = REMatchNoCase("(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*##!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?",#arguments.data#)>
+			<cfset VAR result = REMatchNoCase("(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*##!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?",#arguments.data#)>
 			<cfif arrayIsEmpty(result) AND arguments.data Neq "">
 				<cfset arrayOfErr.fberror = "facebook url is not valid" />
 			</cfif>
@@ -614,8 +617,8 @@
 	<!--- This is used to check for duplicate profile name. --->
 	<cffunction access="public" name="checkForDuplicateProfileName" returntype="void">
 
-		<cfargument name="profileName" type="string" required="true">
-		<cfset errorMsg = ""/>
+		<cfargument name="profileName" type="string" required="true"/>
+		<cfset VAR errorMsg = ""/>
 
 		<cfif not StructKeyExists(session,"artistProfile")>
 			<cfif arguments.profileName EQ "">

@@ -1,13 +1,13 @@
 <cfset VARIABLES.paintingService = CreateObject('component', 'component.paintingService') />
 
-<cfset method = #URL.action# />
+<cfset VARIABLES.method = URL.action />
 <cfset VARIABLES.returnData = ""/>
 <cfset VARIABLES.aErrMsg = ""/>
 
 <cfswitch expression = "#method#">
 
 	<cfcase value = "deletePainting">
-		<cfset returnData = VARIABLES.paintingService.deletePainting(mediaId=#URL.id#) />  <!--- painting id --->
+		<cfset returnData = VARIABLES.paintingService.deletePainting(mediaId=URL.id) />  <!--- painting id --->
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
@@ -30,7 +30,7 @@
 
 	<cfcase value = "countPublicPainting">
 
-		<cfset returnData = VARIABLES.paintingService.countPublicPainting(artistId=#URL.id#) />
+		<cfset returnData = VARIABLES.paintingService.countPublicPainting(artistId=URL.id) />
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
@@ -41,11 +41,11 @@
 	</cfcase>
 
 	<cfcase value = "setIspublicOrprivate">
-		<cfset returnData = VARIABLES.paintingService.setIspublicOrprivate(mediaId=#URL.mediaId#,publicOrPrivate=#URL.isPublic#) />
+		<cfset returnData = VARIABLES.paintingService.setIspublicOrprivate(mediaId=#URL.mediaId#,publicOrPrivate=URL.isPublic)/>
 	</cfcase>
 
 	<cfcase value = "paginationForAllPainting">
-		<cfset returnData = VARIABLES.paintingService.paginationForAllPainting(offset=#URL.counter#) />
+		<cfset returnData = VARIABLES.paintingService.paginationForAllPainting(offset=URL.counter)/>
 		<cfset returnData =  SerializeJSON(returnData,'struct')/>
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>

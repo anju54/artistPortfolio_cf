@@ -3,7 +3,7 @@
 <!---This is used for calling the method for artistProfileService component--->
 <cfset VARIABLES.artistprofileService = CreateObject('component', 'component.artistProfileService') />
 
-<cfset method = #URL.action# />
+<cfset VARIABLES.method = URL.action />
 <cfset VARIABLES.returnData = ""/>
 <cfset VARIABLES.aErrMsg = ""/>
 
@@ -43,7 +43,7 @@
 
 	<cfcase value = "getPublicProfilePicById">
 
-		<cfset returnData = VARIABLES.artistprofileService.getPublicProfilePicById(artistId=#URL.artistId#) />
+		<cfset returnData = VARIABLES.artistprofileService.getPublicProfilePicById(artistId=URL.artistId) />
 		<cfset returnData =  SerializeJSON(returnData,'struct')/>
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
@@ -56,7 +56,7 @@
 
 	<cfcase value = "getPublicProfile">
 
-		<cfset  returnData = VARIABLES.artistprofileService.getPublicprofileInfo(artistId=#URL.id#) />
+		<cfset  returnData = VARIABLES.artistprofileService.getPublicprofileInfo(artistId=URL.id) />
 		<cfset returnData =  SerializeJSON(returnData,'struct')/>
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
@@ -83,7 +83,7 @@
 	</cfcase>
 
 	<cfcase value = "paginationForPublicPainting">
-		<cfset returnData = VARIABLES.artistprofileService.getPublicPainting(offset=#URL.counter#,artistId=#URL.id#) />
+		<cfset returnData = VARIABLES.artistprofileService.getPublicPainting(offset=URL.counter,artistId=URL.id) />
 		<cfset returnData =  SerializeJSON(returnData,'struct')/>
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
@@ -110,7 +110,7 @@
 	</cfcase>
 
 	<cfcase value = "getAllProfilePic">
-		<cfset VARIABLES.profilePicData = VARIABLES.artistprofileService.getAllprofilePicInformation(offset=#URL.offset#) />
+		<cfset VARIABLES.profilePicData = VARIABLES.artistprofileService.getAllprofilePicInformation(offset=URL.offset) />
 		<cfset profilePicData =  SerializeJSON(profilePicData,'struct')/>
 		<cfoutput>#profilePicData#</cfoutput>
 	</cfcase>
