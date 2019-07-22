@@ -20,47 +20,48 @@
 			<!--- Fetch email from session object --->
 			<cfif StructKeyExists(session.stLoggedInuser,"fullName")>
 
-				<!--- insert artist profile record in artist_profile table --->
-				<cfquery name = "addArtistProfiledata" result="result">
+				<cftransaction>
+					<!--- insert artist profile record in artist_profile table --->
+					<cfquery name = "addArtistProfiledata" result="result">
 
-					INSERT INTO artist_profile ( profile_name, facebook_info, twitter_info, linkedIn_url, about_me,
-				 	user_id, color_id) VALUES (
+						INSERT INTO artist_profile ( profile_name, facebook_info, twitter_info, linkedIn_url, about_me,
+					 	user_id, color_id) VALUES (
 
-						<cfqueryparam value="#arguments.form.profileName#"  cfsqltype="CF_SQL_varchar">,
-						<cfqueryparam value="#arguments.form.facebookUrl#"  cfsqltype="CF_SQL_varchar">,
-						<cfqueryparam value="#arguments.form.twitterUrl#"   cfsqltype="CF_SQL_varchar">,
-						<cfqueryparam value="#arguments.form.linkedInUrl#"  cfsqltype="CF_SQL_varchar">,
-						<cfqueryparam value="#arguments.form.aboutMe#"      cfsqltype="CF_SQL_varchar">,
-						<cfqueryparam value="#session.user.userId#"      	  cfsqltype="cf_sql_integer"> ,
-						( SELECT color_id FROM color WHERE color_name =
-							<cfqueryparam value="#arguments.form.colorName#"   cfsqltype="cf_sql_varchar">
-						)
-					)
-				</cfquery>
-
-				<cfset VAR paintingTypeList = "#arguments.form.paintingTypeList#" />
-
-				<cfif not ArrayIsEmpty(arguments.form.paintingTypeList)>
-
-					<cfset VAR addPaintingTypeForArtist = QueryNew("")/>
-
-					<!--- This is used to add list of painting type to database --->
-					<cfquery name="addPaintingTypeForArtist" >
-
-						insert into artist_painting_list_bridge(artist_profile_id, painting_id) values
-						<cfloop from = "1" to = "#ArrayLen(paintingTypeList)#" index = "i">
-							 <cfif i NEQ 1>,</cfif>
-							(
-							<cfqueryparam cfsqltype="cf_sql_integer" value="#result["GENERATEDKEY"]#">,
-							<cfqueryparam cfsqltype="cf_sql_integer" value="#paintingTypeList[i]#">
+							<cfqueryparam value="#arguments.form.profileName#"  cfsqltype="CF_SQL_varchar">,
+							<cfqueryparam value="#arguments.form.facebookUrl#"  cfsqltype="CF_SQL_varchar">,
+							<cfqueryparam value="#arguments.form.twitterUrl#"   cfsqltype="CF_SQL_varchar">,
+							<cfqueryparam value="#arguments.form.linkedInUrl#"  cfsqltype="CF_SQL_varchar">,
+							<cfqueryparam value="#arguments.form.aboutMe#"      cfsqltype="CF_SQL_varchar">,
+							<cfqueryparam value="#session.user.userId#"      	  cfsqltype="cf_sql_integer"> ,
+							( SELECT color_id FROM color WHERE color_name =
+								<cfqueryparam value="#arguments.form.colorName#"   cfsqltype="cf_sql_varchar">
 							)
-
-						</cfloop>
-
+						)
 					</cfquery>
-				</cfif>
 
-					<cfif result.recordCount GT 0>
+					<cfset VAR paintingTypeList = "#arguments.form.paintingTypeList#" />
+
+					<cfif not ArrayIsEmpty(arguments.form.paintingTypeList)>
+
+						<cfset VAR addPaintingTypeForArtist = QueryNew("")/>
+
+						<!--- This is used to add list of painting type to database --->
+						<cfquery name="addPaintingTypeForArtist" result="addPaintingTypeForArtistRes">
+
+							insert into artist_painting_list_bridge(artist_profile_id, painting_id) values
+							<cfloop from = "1" to = "#ArrayLen(paintingTypeList)#" index = "i">
+								 <cfif i NEQ 1>,</cfif>
+								(
+								<cfqueryparam cfsqltype="cf_sql_integer" value="#result["GENERATEDKEY"]#">,
+								<cfqueryparam cfsqltype="cf_sql_integer" value="#paintingTypeList[i]#">
+								)
+
+							</cfloop>
+
+						</cfquery>
+					</cfif>
+				</cftransaction>
+					<cfif result.recordCount>
 
 						<cfset isInserted = true/>
 						<cfset VAR fullPath = "../media/artist/" & arguments.form.profileName & "/" />
@@ -94,7 +95,7 @@
 		<cfargument name="form" type="any" required="true"/>
 		<cftry>
 			<cfset VAR isInserted = false />
-
+			<cftransaction>
 			<cfquery name="updateArtist"  result="updateResult">
 
 				UPDATE artist_profile SET
@@ -131,10 +132,11 @@
 					</cfloop>
 
 				</cfquery>
-			</cfif>
 
-			<cfif #updateResult.recordCount# GT 0>
-				<cfset isInserted = true>
+			</cfif>
+			</cftransaction>
+			<cfif updateResult.recordCount>
+				<cfset isInserted = true/>
 			</cfif>
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
@@ -173,30 +175,29 @@
 	</cffunction>
 
 	<!--- This is used to delete artist profile by artist_profile_id --->
-	<cffunction name="deleteArtistProfileByid" access="public" output="false" returntype="boolean">
+	<!--- <cffunction name="deleteArtistProfileByid" access="public" output="false" returntype="boolean"> --->
 
-		<cftry>
-			<!--- Fetch user_id from session object --->
-			<cfset VARIABLES.artistId = "#session.artistProfile.artistProfileId#">
-			<cfset VAR flag = false>
-			<cfquery name="deleteArtist" >
+<!--- 		<cftry> --->
 
-				DELETE FROM artist_profile WHERE artsit_profile_id =
-							<cfqueryparam cfsqltype="cf_sql_integer" value="#artistId#">
-			</cfquery>
+<!--- 			<cfset VAR flag = false> --->
+<!--- 			<cfquery name="deleteArtist" > --->
 
-			<cfif deleteArtist.recordCount GT 0>
-				<cfset VAR flag = true />
-			</cfif>
-		<cfcatch type="any" >
-			<cflog application="true" file="artistPortfolioError"
-			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:artistProfileService ,
-					function:deleteArtistProfileByid, Line:#cfcatch.TagContext[1].Line#">
+<!--- 				DELETE FROM artist_profile WHERE artsit_profile_id = --->
+<!--- 							<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#"> --->
+<!--- 			</cfquery> --->
 
-		</cfcatch>
-		</cftry>
-		<cfreturn flag/>
-	</cffunction>
+<!--- 			<cfif deleteArtist.recordCount GT 0> --->
+<!--- 				<cfset VAR flag = true /> --->
+<!--- 			</cfif> --->
+<!--- 		<cfcatch type="any" > --->
+<!--- 			<cflog application="true" file="artistPortfolioError" --->
+<!--- 			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:artistProfileService , --->
+<!--- 					function:deleteArtistProfileByid, Line:#cfcatch.TagContext[1].Line#"> --->
+
+<!--- 		</cfcatch> --->
+<!--- 		</cftry> --->
+<!--- 		<cfreturn flag/> --->
+<!--- 	</cffunction> --->
 
 	<cffunction name="getArtistProfileIdByUserId" access="public" output="true" returntype="numeric">
 
@@ -351,6 +352,7 @@
 			destination = "#expandPath("#destination#")#"
 			source = "#expandPath("#source#")#">
 
+			<cftransaction>
 			<cfquery name="uploadImage"  result="profilePicUpload">
 
 				insert into media( filename_original, path ) values (
@@ -361,9 +363,8 @@
 
 			<cfset getArtistProfileIdByUserId() />
 
-			<cfif profilePicUpload.recordCount gt 0>
+			<cfif profilePicUpload.recordCount>
 
-				<cfset VAR flag = true />
 				<cfquery result="updateProfilePicId" >
 
 					UPDATE artist_profile SET profile_pic_id =
@@ -371,13 +372,14 @@
 					WHERE artist_profile_id =
 					<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">
 				</cfquery>
-
-				<cfif updateProfilePicId.recordCount gt 0>
+			</cfif>
+			</cftransaction>
+				<cfif updateProfilePicId.recordCount>
 					<cfset VAR flag = true />
 					<cfelse>
 						<cfset VAR flag = false />
 				</cfif>
-			</cfif>
+
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
 			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:artistProfileService ,
@@ -393,7 +395,7 @@
 
 		<cftry>
 			<cfset VAR flag = true />
-
+			<cftransaction>
 			<cfquery  name="getProfilePicId">
 
 				SELECT profile_pic_id FROM artist_profile WHERE artist_profile_id =
@@ -416,7 +418,7 @@
 						<cfqueryparam cfsqltype="cf_sql_integer" value="#getProfilePicId.profile_pic_id#"> ;
 				</cfquery>
 			</cfif>
-
+		</cftransaction>
 			<cfif deleteFromArtist.recordCount gt 0>
 				<cfset VAR flag = true />
 			</cfif>
@@ -558,7 +560,8 @@
 		<cfif compareNoCase(field,"facebookUrl") eq 0>
 
 			<cfset VAR result = REMatchNoCase("(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*##!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?",#arguments.data#)>
-			<cfif arrayIsEmpty(result) AND arguments.data Neq "">
+			<cfset VAR fbPatternForMobileRes = REMatchNoCase("(?:(?:http|https):\/\/)?(?:m.)?facebook.com\/(?:(?:\w)*##!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?",#arguments.data#)>
+			<cfif arrayIsEmpty(result) and arrayIsEmpty(fbPatternForMobileRes)>
 				<cfset arrayOfErr.fberror = "facebook url is not valid" />
 			</cfif>
 		</cfif>

@@ -34,7 +34,7 @@
 
 			<!--- To rename the file name --->
 			<cffile action = "rename" destination = "#expandPath("#paintingDestination#")#" source = "#expandPath("#source#")#">
-
+			<cftransaction>
 			<cfquery  result="uploadPainting">
 
 				INSERT INTO media( filename_original, path ) VALUES (
@@ -52,6 +52,7 @@
 					<cfqueryparam cfsqltype="cf_sql_varchar" value="#uploadPainting["GENERATEDKEY"]#">
 				)
 			</cfquery>
+			</cftransaction>
 
 			<cfif uploadPainting.recordCount gt 0 and updatePainitngBridge.recordCount gt 0>
 				<cfset createThumbnailofImages(form=form,fileName=newFileName,mediaId=uploadPainting["GENERATEDKEY"]) />
