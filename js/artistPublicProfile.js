@@ -67,7 +67,6 @@ function showPublicPaintings(pageNo){
 function setAllPaintings(response){
 
     var paintingList = response;
-    console.log(response);
     for(var i=0; i<paintingList.length;i++){
 
         var col =   '<div class="mainContainer">'+
@@ -145,8 +144,6 @@ function getArtistProfileInfo(id){
 //This is used to set the artist basic information to artist profile page
 function setData(response){
 
-    console.log(response);
-
     $("#fullName").text(response[0].FIRST_NAME+" "+response[0].LAST_NAME) ;
     $("#name").text(response[0].FIRST_NAME+" "+response[0].LAST_NAME) ;
     $("#email").text(response[0].EMAIL_ID) ;
@@ -183,8 +180,6 @@ function getPublicProfilePic(id){
         },
         success: function (response) {
             response = JSON.parse(response);
-            console.log(response.length);
-
             if(response.length>0){
                 
                 var path = baseUrl + response[0].PATH + response[0].FILENAME_ORIGINAL ;
@@ -216,9 +211,7 @@ function getCountOfPublicPaintings(){
             "Content-Type": "application/json",
         },
         success: function (response) {
-            console.log(response);
             calculateTotalPageNo(response);
-            
         },
         error: function( ) {
         }         
@@ -234,7 +227,6 @@ function calculateTotalPageNo(countOfPainting){
     }else{
         totalPageNo = countOfPainting / 8;
     }
-    console.log(totalPageNo);
 }
 
 

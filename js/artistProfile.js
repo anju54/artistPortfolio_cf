@@ -173,6 +173,7 @@ function saveProfileData(type){
     
     var paintingList = [];
     var newList = [];
+
     $.each($("input[name='paintingList']:checked"), function(){            
         paintingList.push($(this).attr('id'));
     });
@@ -219,7 +220,6 @@ function saveProfileData(type){
             },
             'async': false,
             success: function (response) {
-               console.log(response);
                 if(response ==="true "){
                     swal("data saved successfully!!");     
                     showProfilePic() ;
@@ -259,7 +259,7 @@ function deleteProfile(){
         data: {},
         'async': false,
         success: function (response) {
-            console.log(response);
+            
             if(response){  
                 swal("Poof! Your profile pic has been deleted!", {
                     icon: "success",
@@ -385,7 +385,7 @@ function isURLvalid(field,data){
             if(data.match(linkedinUrlPattern)){
                 //return true;
             }else{
-                error = "you entered wrong "+field+" URL!!";
+                error = "you entered wrong "+field+" url!!";
                 arrayOfErr["linkedInUrl"] = error;
                 $('#lerror').show;
                 $('#lerror').text(error);
@@ -396,7 +396,7 @@ function isURLvalid(field,data){
             if(data.match(facebookUrlPattern)){
                 //return  true;
             }else{
-                error = "You entered wrong "+field+" URL!!";
+                error = "You entered wrong "+field+" url!!";
                 arrayOfErr["facebookUrl"] = error;
                 $('#fberror').show;
                 $('#fberror').text(error);
@@ -407,7 +407,7 @@ function isURLvalid(field,data){
             if(data.match(twitterUrlPattern)){
                //return true;
             }else{
-                error = "You entered wrong "+field+" URL!! ";
+                error = "You entered wrong "+field+" url!! ";
                 arrayOfErr["twitterUrl"] = error;
                 $('#terror').show;
                 $('#terror').text(error);
@@ -442,7 +442,6 @@ function uploadProfilePic(file){
                     $('#profilePicModal').hide();
                }else{
                 response = JSON.parse(response);
-                console.log(response.FILESIZE);
                 $('#profilePicShowError').show();
                 $('#profilePicShowError').text(response.FILESIZE);
                 $('#profilePicShowError').text(response.FILETYPE);
@@ -518,13 +517,12 @@ function updateProfilePic(data){
             data: data,
             async:false,
             success: function (response) {
-                console.log(response);
+                
                 if(response=="true "){
                     swal("Profile pic updated");
                     $('#profilePicModal').hide();
                 }else{
                     response = JSON.parse(response);
-                    console.log(response.FILESIZE);
                     $('#profilePicShowError').show();
                     $('#profilePicShowError').text(response.FILESIZE);
                     $('#profilePicShowError').text(response.FILETYPE);
@@ -605,7 +603,6 @@ function ValidateSingleInput(oInput) {
 function extractImageName(fullPath){
 
     var index = imageName.lastIndexOf("\\");
-    console.log(index);
     imageName = fullPath.substr(index+1,fullPath.length);
     $("#imageName").val(imageName);
 }

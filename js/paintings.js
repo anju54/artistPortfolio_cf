@@ -11,6 +11,8 @@ $(document).ready(function() {
     if(totalPageNo <= 0){
         totalPageNo = 1;
         $('#pagination-demo').hide();
+    }else{
+        $('#pagination-demo').show();
     }
 
     bindPagination();
@@ -287,7 +289,6 @@ function deletePainting(id){
                 hideLoader();
             }else{
                 response = JSON.parse(response);
-                console.log(response.FILESIZE);
                 $('#imageUploadError').show();
                 $('#imageUploadError').text(response.FILESIZE);
                 $('#imageUploadError').text(response.FILETYPE);  
@@ -318,6 +319,9 @@ function getCountOfPaintings(){
             "Content-Type": "application/json",
         },
         success: function (response) {
+            if(response>4){
+                $('#pagination-demo').show();
+            }
             calculateTotalPageNo(response);
         },
         error: function( ) {
@@ -373,7 +377,6 @@ function hideErr(){
 function extractImageName(fullPath){
 
     var index = imageName.lastIndexOf("\\");
-    console.log(index);
     imageName = fullPath.substr(index+1,fullPath.length);
     $("#imageName").val(imageName);
 }

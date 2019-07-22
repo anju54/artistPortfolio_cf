@@ -49,8 +49,6 @@ function getUserDetail(){
         data: {},
         success: function (response) {
             response = JSON.parse(response);
-			console.log(response.userEmail);
-			console.log("1....");
 			if(response.userEmail){
 				
                 $('#sidebar').show();
@@ -67,7 +65,7 @@ function getUserDetail(){
 }
 
 function showAllProfilePics(pageNo){
-console.log(pageNo);
+
     var limit = 8;
     counter = pageNo *  limit - limit  ;
     if(!pageNo){
@@ -155,9 +153,7 @@ function getCountOfProfilePic(){
             "Content-Type": "application/json",
         },
         success: function (response) {
-            console.log(response);
             calculateTotalPageNo(response);
-            
         },
         error: function( ) {
         }         
@@ -170,10 +166,8 @@ function calculateTotalPageNo(countOfPainting){
     var remainder = countOfPainting % 8;
     
     if( remainder <= 7 && remainder != 0){
-        console.log("1..");
         totalPageNo = Math.floor(countOfPainting/8)+1 ;
     }else{
         totalPageNo = countOfPainting / 8;
     }
-    console.log(totalPageNo);
 }
