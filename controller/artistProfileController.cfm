@@ -10,113 +10,160 @@
 <cfswitch expression = "#method#">
 
 	<cfcase value = "uploadProfilePic">
-		<cfset aErrMsg = VARIABLES.artistprofileService.validateImage(form) />
 
-		<cfif StructCount(aErrMsg) gt 0>
-			<cfset aErrMsg =  SerializeJSON(aErrMsg)/>
-			<cfoutput>#aErrMsg#</cfoutput>
+		<cfif StructKeyExists(session,"stLoggedInuser")>
+
+			<cfset VARIABLES.aErrMsg = VARIABLES.artistprofileService.validateImage(form) />
+
+			<cfif StructCount(aErrMsg) gt 0>
+				<cfset VARIABLES.aErrMsg =  SerializeJSON(aErrMsg)/>
+				<cfoutput>#aErrMsg#</cfoutput>
+			<cfelse>
+			<cfset VARIABLES.returnData = VARIABLES.artistprofileService.uploadProfilePic(form) />
+			<cfoutput>#returnData#</cfoutput>
+			</cfif>
 		<cfelse>
-		<cfset returnData = VARIABLES.artistprofileService.uploadProfilePic(form) />
-		<cfoutput>#returnData#</cfoutput>
+			<cfset VARIABLES.returnData = "session expired"/>
+			<cfoutput>#returnData#</cfoutput>
 		</cfif>
 	</cfcase>
 
 	<cfcase value = "updateProfilePic">
 
-		<cfset aErrMsg = VARIABLES.artistprofileService.validateImage(form) />
+		<cfif StructKeyExists(session,"stLoggedInuser")>
 
-		<cfif StructCount(aErrMsg) gt 0>
-			<cfset aErrMsg =  SerializeJSON(aErrMsg)/>
-			<cfoutput>#aErrMsg#</cfoutput>
+			<cfset aErrMsg = VARIABLES.artistprofileService.validateImage(form) />
 
+			<cfif StructCount(aErrMsg) gt 0>
+				<cfset VARIABLES.aErrMsg =  SerializeJSON(aErrMsg)/>
+				<cfoutput>#aErrMsg#</cfoutput>
+
+			<cfelse>
+			<cfset VARIABLES.returnData = VARIABLES.artistprofileService.updateProfilePic(form) />
+			<cfoutput>#returnData#</cfoutput>
+			</cfif>
 		<cfelse>
-		<cfset returnData = VARIABLES.artistprofileService.updateProfilePic(form) />
-		<cfoutput>#returnData#</cfoutput>
+			<cfset VARIABLES.returnData = "session expired"/>
+			<cfoutput>#returnData#</cfoutput>
 		</cfif>
 	</cfcase>
 
 	<cfcase value = "getProfilePic">
-		<cfset returnData = VARIABLES.artistprofileService.getProfilePic() />
-		<cfset returnData =  SerializeJSON(returnData,'struct')/>
-		<cfoutput>#returnData#</cfoutput>
+
+		<cfif StructKeyExists(session,"stLoggedInuser")>
+
+			<cfset VARIABLES.returnData = VARIABLES.artistprofileService.getProfilePic() />
+			<cfset VARIABLES.returnData =  SerializeJSON(returnData,'struct')/>
+			<cfoutput>#returnData#</cfoutput>
+		<cfelse>
+			<cfset VARIABLES.returnData = "session expired"/>
+			<cfoutput>#returnData#</cfoutput>
+		</cfif>
 	</cfcase>
 
 	<cfcase value = "getPublicProfilePicById">
 
-		<cfset returnData = VARIABLES.artistprofileService.getPublicProfilePicById(artistId=URL.artistId) />
-		<cfset returnData =  SerializeJSON(returnData,'struct')/>
+		<cfset VARIABLES.returnData = VARIABLES.artistprofileService.getPublicProfilePicById(artistId=URL.artistId) />
+		<cfset VARIABLES.returnData =  SerializeJSON(returnData,'struct')/>
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "getArtistProfile">
-		<cfset  returnData = VARIABLES.artistprofileService.getArtistProfileByUserId() />
-		<cfset returnData =  SerializeJSON(returnData,'struct')/>
-		<cfoutput>#returnData#</cfoutput>
+		<cfif StructKeyExists(session,"stLoggedInuser")>
+
+			<cfset VARIABLES.returnData = VARIABLES.artistprofileService.getArtistProfileByUserId() />
+			<cfset VARIABLES.returnData =  SerializeJSON(returnData,'struct')/>
+			<cfoutput>#returnData#</cfoutput>
+		<cfelse>
+			<cfset VARIABLES.returnData = "session expired"/>
+			<cfoutput>#returnData#</cfoutput>
+		</cfif>
 	</cfcase>
 
 	<cfcase value = "getPublicProfile">
 
-		<cfset  returnData = VARIABLES.artistprofileService.getPublicprofileInfo(artistId=URL.id) />
-		<cfset returnData =  SerializeJSON(returnData,'struct')/>
+		<cfset VARIABLES.returnData = VARIABLES.artistprofileService.getPublicprofileInfo(artistId=URL.id) />
+		<cfset VARIABLES.returnData =  SerializeJSON(returnData,'struct')/>
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "saveArtistProfile">
-		<cfset data = toString( getHttpRequestData().content ) />
-		<cfset data = deserializeJSON( data ) />
+		<cfif StructKeyExists(session,"stLoggedInuser")>
 
-		<cfset aErrMsg = VARIABLES.artistprofileService.validationOfArtistdata(data) />
+			<cfset VARIABLES.data = toString( getHttpRequestData().content ) />
+			<cfset VARIABLES.data = deserializeJSON( data ) />
 
-		<cfif StructCount(aErrMsg) gt 0>
-			<cfset aErrMsg =  SerializeJSON(aErrmsg)/>
-			<cfoutput>#aErrMsg#</cfoutput>
+			<cfset VARIABLES.aErrMsg = VARIABLES.artistprofileService.validationOfArtistdata(data) />
+
+			<cfif StructCount(aErrMsg) gt 0>
+				<cfset VARIABLES.aErrMsg =  SerializeJSON(aErrmsg)/>
+				<cfoutput>#aErrMsg#</cfoutput>
 			<cfelse>
-			<cfset returnData = VARIABLES.artistprofileService.createArtistProfile(data) />
-			<cfoutput>#returnData#</cfoutput>
+				<cfset VARIABLES.returnData = VARIABLES.artistprofileService.createArtistProfile(data) />
+				<cfoutput>#returnData#</cfoutput>
+			</cfif>
 
+		<cfelse>
+			<cfset VARIABLES.returnData = "session expired"/>
+			<cfoutput>#returnData#</cfoutput>
 		</cfif>
 	</cfcase>
 
 	<cfcase value = "deleteProfilePic">
-		<cfset returnData = VARIABLES.artistprofileService.deleteProfilePic() />
-		<cfoutput>#returnData#</cfoutput>
+		<cfif StructKeyExists(session,"stLoggedInuser")>
+			<cfset VARIABLES.returnData = VARIABLES.artistprofileService.deleteProfilePic() />
+			<cfoutput>#returnData#</cfoutput>
+		<cfelse>
+			<cfset VARIABLES.returnData = "session expired"/>
+			<cfoutput>#returnData#</cfoutput>
+		</cfif>
 	</cfcase>
 
 	<cfcase value = "paginationForPublicPainting">
-		<cfset returnData = VARIABLES.artistprofileService.getPublicPainting(offset=URL.counter,artistId=URL.id) />
-		<cfset returnData =  SerializeJSON(returnData,'struct')/>
+		<cfset VARIABLES.returnData = VARIABLES.artistprofileService.getPublicPainting(offset=URL.counter,artistId=URL.id) />
+		<cfset VARIABLES.returnData =  SerializeJSON(returnData,'struct')/>
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "updateArtistProfile">
-		<cfset requestBody = toString( getHttpRequestData().content ) />
-		<cfset data = deserializeJSON( requestBody )>
 
-		<cfset aErrMsg = VARIABLES.artistprofileService.validationOfArtistdata(data) />
+		<cfif StructKeyExists(session,"stLoggedInuser")>
+			<cfset VARIABLES.requestBody = toString( getHttpRequestData().content ) />
+			<cfset VARIABLES.data = deserializeJSON( requestBody )>
 
-		<cfif StructCount(aErrmsg) GT 0>
-			<cfset aErrMsg =  SerializeJSON(aErrmsg)/>
-			<cfoutput>#aErrMsg#</cfoutput>
+			<cfset VARIABLES.aErrMsg = VARIABLES.artistprofileService.validationOfArtistdata(data) />
+
+			<cfif StructCount(aErrmsg) GT 0>
+				<cfset VARIABLES.aErrMsg =  SerializeJSON(aErrmsg)/>
+				<cfoutput>#aErrMsg#</cfoutput>
+			<cfelse>
+				<cfset VARIABLES.returnData = VARIABLES.artistprofileService.updateArtistProfile(data) />
+				<cfoutput>#returnData#</cfoutput>
+			</cfif>
 		<cfelse>
-			<cfset returnData = VARIABLES.artistprofileService.updateArtistProfile(data) />
+			<cfset VARIABLES.returnData = "session expired"/>
 			<cfoutput>#returnData#</cfoutput>
 		</cfif>
-
 	</cfcase>
 
 	<cfcase value = "getArtistId">
-		<cfset returnData = VARIABLES.artistprofileService.getArtistProfileIdByUserId() />
-		<cfoutput>#returnData#</cfoutput>
+		<cfif StructKeyExists(session,"stLoggedInuser")>
+			<cfset VARIABLES.returnData = VARIABLES.artistprofileService.getArtistProfileIdByUserId() />
+			<cfoutput>#returnData#</cfoutput>
+		<cfelse>
+			<cfset VARIABLES.returnData = "session expired"/>
+			<cfoutput>#returnData#</cfoutput>
+		</cfif>
 	</cfcase>
 
 	<cfcase value = "getAllProfilePic">
 		<cfset VARIABLES.profilePicData = VARIABLES.artistprofileService.getAllprofilePicInformation(offset=URL.offset) />
-		<cfset profilePicData =  SerializeJSON(profilePicData,'struct')/>
+		<cfset VARIABLES.profilePicData =  SerializeJSON(profilePicData,'struct')/>
 		<cfoutput>#profilePicData#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "countOfProfilePic">
-		<cfset returnData = VARIABLES.artistprofileService.countOfProfilePic() />
+		<cfset VARIABLES.returnData = VARIABLES.artistprofileService.countOfProfilePic() />
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 

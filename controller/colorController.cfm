@@ -3,5 +3,10 @@
 
 <cfset VARIABLES.colorArray = VARIABLES.colorService.getAllColors() />
 
-<cfset colorArray =  SerializeJSON(colorArray,'struct')/>
-<cfoutput>#colorArray#</cfoutput>
+<cfif StructKeyExists(session,"stLoggedInuser")>
+	<cfset colorArray =  SerializeJSON(colorArray,'struct')/>
+	<cfoutput>#colorArray#</cfoutput>
+<cfelse>
+		<cfset VARIABLES.returnData = "session expired"/>
+		<cfoutput>#returnData#</cfoutput>
+</cfif>

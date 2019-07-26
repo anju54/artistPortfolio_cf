@@ -7,46 +7,63 @@
 <cfswitch expression = "#method#">
 
 	<cfcase value = "deletePainting">
-		<cfset returnData = VARIABLES.paintingService.deletePainting(mediaId=URL.id) />  <!--- painting id --->
-		<cfoutput>#returnData#</cfoutput>
+
+		<cfif StructKeyExists(session,"stLoggedInuser")>
+			<cfset returnData = VARIABLES.paintingService.deletePainting(mediaId=URL.id) />  <!--- painting id --->
+			<cfoutput>#returnData#</cfoutput>
+		<cfelse>
+			<cfset VARIABLES.returnData = "session expired"/>
+			<cfoutput>#returnData#</cfoutput>
+		</cfif>
 	</cfcase>
 
 	<cfcase value = "uploadpainting">
-		<cfset aErrMsg = VARIABLES.paintingService.validateImage(form) />
 
-		<cfif StructCount(aErrMsg) gt 0>
-			<cfset aErrMsg =  SerializeJSON(aErrMsg)/>
-			<cfoutput>#aErrMsg#</cfoutput>
+		<cfif StructKeyExists(session,"stLoggedInuser")>
+			<cfset aErrMsg = VARIABLES.paintingService.validateImage(form) />
+
+			<cfif StructCount(aErrMsg) gt 0>
+				<cfset VARIABLES.aErrMsg =  SerializeJSON(aErrMsg)/>
+				<cfoutput>#aErrMsg#</cfoutput>
+			<cfelse>
+				<cfset VARIABLES.returnData = ( VARIABLES.paintingService.uploadPainting(form) ) />
+				<cfoutput>#returnData#</cfoutput>
+			</cfif>
 		<cfelse>
-			<cfset returnData = ( VARIABLES.paintingService.uploadPainting(form) ) />
+			<cfset VARIABLES.returnData = "session expired"/>
 			<cfoutput>#returnData#</cfoutput>
 		</cfif>
 	</cfcase>
 
 	<cfcase value = "countPainting">
-		<cfset returnData = VARIABLES.paintingService.countPainting() />
-		<cfoutput>#returnData#</cfoutput>
+		<cfif StructKeyExists(session,"stLoggedInuser")>
+			<cfset VARIABLES.returnData = VARIABLES.paintingService.countPainting() />
+			<cfoutput>#returnData#</cfoutput>
+		<cfelse>
+			<cfset VARIABLES.returnData = "session expired"/>
+			<cfoutput>#returnData#</cfoutput>
+		</cfif>
 	</cfcase>
 
 	<cfcase value = "countPublicPainting">
 
-		<cfset returnData = VARIABLES.paintingService.countPublicPainting(artistId=URL.id) />
+		<cfset VARIABLES.returnData = VARIABLES.paintingService.countPublicPainting(artistId=URL.id) />
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "showPaintingByArtistId">
-		<cfset returnData = VARIABLES.paintingService.showAllPaintingByArtistId() />
-		<cfset returnData =  SerializeJSON(returnData,'struct')/>
+		<cfset VARIABLES.returnData = VARIABLES.paintingService.showAllPaintingByArtistId() />
+		<cfset VARIABLES.returnData =  SerializeJSON(returnData,'struct')/>
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
 	<cfcase value = "setIspublicOrprivate">
-		<cfset returnData = VARIABLES.paintingService.setIspublicOrprivate(mediaId=#URL.mediaId#,publicOrPrivate=URL.isPublic)/>
+		<cfset VARIABLES.returnData = VARIABLES.paintingService.setIspublicOrprivate(mediaId=#URL.mediaId#,publicOrPrivate=URL.isPublic)/>
 	</cfcase>
 
 	<cfcase value = "paginationForAllPainting">
-		<cfset returnData = VARIABLES.paintingService.paginationForAllPainting(offset=URL.counter)/>
-		<cfset returnData =  SerializeJSON(returnData,'struct')/>
+		<cfset VARIABLES.returnData = VARIABLES.paintingService.paginationForAllPainting(offset=URL.counter)/>
+		<cfset VARIABLES.returnData =  SerializeJSON(returnData,'struct')/>
 		<cfoutput>#returnData#</cfoutput>
 	</cfcase>
 
