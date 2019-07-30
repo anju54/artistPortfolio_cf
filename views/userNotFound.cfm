@@ -27,7 +27,7 @@
 
 <body>
 
-	<div id="notfound">
+	<div id="notfound" style="height:600px">
 		<div class="notfound">
 			<div class="notfound-404">
 				<h1>404</h1>
@@ -37,7 +37,14 @@
 			<a href="index.cfm">Go To Homepage</a>
 		</div>
 	</div>
-
+<footer class="footer">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <span class="copyright">Copyright &copy; Artist portfolio 2019</span>
+        </div>
+	  </div>
+	</div>
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 
 </html>
