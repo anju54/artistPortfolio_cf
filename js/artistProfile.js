@@ -118,6 +118,7 @@ function getArtistProfileData(){
 
 // This is used to set artist profile data 
 function setProfileData(response){
+console.log(response);
 
     if(response[0].PROFILE_NAME){
         $('#profileName').parent().remove();
@@ -139,6 +140,10 @@ function setProfileData(response){
     var paintingTypeList = response.paintingType;
 
     var list = "" ;
+    if(response.length == 1 && response[0].PAINTING_NAME == null ){
+    	$('#optionPaintingType').text("Select Painting type");
+    	return false;
+    }
     for(var i=0; i<response.length;i++){
 
         var res = response[i].PAINTING_TYPE_ID+"_paintingType";        
