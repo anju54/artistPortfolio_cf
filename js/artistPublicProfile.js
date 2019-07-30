@@ -134,7 +134,7 @@ function getArtistProfileInfo(id){
                 // $('#save').hide();
                 // $('#update').show();
             } else{
-                window.location.href = "../views/userNotFound.cfm";
+               // window.location.href = "../views/userNotFound.cfm";
             }            
         },
         error: function(error) {

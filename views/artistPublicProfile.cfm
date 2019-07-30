@@ -1,3 +1,14 @@
+
+<cfset VARIABLES.artistprofileService = CreateObject('component', 'component.artistProfileService') />
+
+<!--- <cfset VARIABLES.returnData = QueryNew("")/> --->
+
+<cfset VARIABLES.returnData = VARIABLES.artistprofileService.getPublicprofileInfo(artistId=URL.id) />
+
+<cfif VARIABLES.returnData.recordCount eq 0>
+
+	<cflocation url="userNotFound.cfm">
+<cfelse>
 <!DOCTYPE HTML>
 <html>
 
@@ -6,7 +17,6 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Artist Profile</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
 
 	<!-- Facebook and Twitter integration -->
 	<meta property="og:title" content="" />
@@ -196,5 +206,5 @@
 			<script src="../js/artistPublicProfile.js"></script>
 
 </body>
-
 </html>
+</cfif>

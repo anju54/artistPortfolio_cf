@@ -14,24 +14,25 @@
 	<cffunction name="createArtistProfile" displayname="createArtistProfile" access="public" output="false" returntype="boolean">
 
 		<cfargument name="form" type="struct" required="true"/>
-		<!--- <cftry> --->
+		<cftry>
 			<cfset VAR isInserted = false />
 
 			<!--- Fetch email from session object --->
-			<cfif StructKeyExists(session.stLoggedInuser,"fullName")>
+			<cfif StructKeyExists(session,"stLoggedInuser")>
 
 				<cftransaction>
+					<cfset VAR addArtistProfiledata = QueryNew("")/>
 					<!--- insert artist profile record in artist_profile table --->
 					<cfquery name = "addArtistProfiledata" result="result">
 
 						INSERT INTO artist_profile ( profile_name, facebook_info, twitter_info, linkedIn_url, about_me,
 					 	user_id, color_id) VALUES (
 
-							<cfqueryparam value="#arguments.form.profileName#"  cfsqltype="CF_SQL_varchar">,
-							<cfqueryparam value="#arguments.form.facebookUrl#"  cfsqltype="CF_SQL_varchar">,
-							<cfqueryparam value="#arguments.form.twitterUrl#"   cfsqltype="CF_SQL_varchar">,
-							<cfqueryparam value="#arguments.form.linkedInUrl#"  cfsqltype="CF_SQL_varchar">,
-							<cfqueryparam value="#arguments.form.aboutMe#"      cfsqltype="CF_SQL_varchar">,
+							<cfqueryparam value="#arguments.form.profileName#"  cfsqltype="cf_sql_varchar">,
+							<cfqueryparam value="#arguments.form.facebookUrl#"  cfsqltype="cf_sql_varchar">,
+							<cfqueryparam value="#arguments.form.twitterUrl#"   cfsqltype="cf_sql_varchar">,
+							<cfqueryparam value="#arguments.form.linkedInUrl#"  cfsqltype="cf_sql_varchar">,
+							<cfqueryparam value="#arguments.form.aboutMe#"      cfsqltype="cf_sql_varchar">,
 							<cfqueryparam value="#session.user.userId#"      	  cfsqltype="cf_sql_integer"> ,
 							( SELECT color_id FROM color WHERE color_name =
 								<cfqueryparam value="#arguments.form.colorName#"   cfsqltype="cf_sql_varchar">
@@ -79,13 +80,13 @@
 					</cfif>
 				</cfif>
 
-		<!--- <cfcatch type="any" > --->
-<!--- 			<cflog application="true" file="artistPortfolioError" --->
-<!--- 			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:artistProfileService , --->
-<!--- 					function:createArtistProfile, Line:#cfcatch.TagContext[1].Line#"> --->
+		<cfcatch type="any" >
+			<cflog application="true" file="artistPortfolioError"
+			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:artistProfileService ,
+					function:createArtistProfile, Line:#cfcatch.TagContext[1].Line#">
 
-<!--- 		</cfcatch> --->
-<!--- 		</cftry> --->
+		</cfcatch>
+		</cftry>
 		<cfreturn isInserted/>
 	</cffunction>
 
@@ -174,31 +175,6 @@
 		<cfreturn getArtistProfileByUserId/>
 	</cffunction>
 
-	<!--- This is used to delete artist profile by artist_profile_id --->
-	<!--- <cffunction name="deleteArtistProfileByid" access="public" output="false" returntype="boolean"> --->
-
-<!--- 		<cftry> --->
-
-<!--- 			<cfset VAR flag = false> --->
-<!--- 			<cfquery name="deleteArtist" > --->
-
-<!--- 				DELETE FROM artist_profile WHERE artsit_profile_id = --->
-<!--- 							<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#"> --->
-<!--- 			</cfquery> --->
-
-<!--- 			<cfif deleteArtist.recordCount GT 0> --->
-<!--- 				<cfset VAR flag = true /> --->
-<!--- 			</cfif> --->
-<!--- 		<cfcatch type="any" > --->
-<!--- 			<cflog application="true" file="artistPortfolioError" --->
-<!--- 			text = "Exception error -- Exception type: #cfcatch.Type#,Diagnostics: #cfcatch.Message# , Component:artistProfileService , --->
-<!--- 					function:deleteArtistProfileByid, Line:#cfcatch.TagContext[1].Line#"> --->
-
-<!--- 		</cfcatch> --->
-<!--- 		</cftry> --->
-<!--- 		<cfreturn flag/> --->
-<!--- 	</cffunction> --->
-
 	<cffunction name="getArtistProfileIdByUserId" access="public" output="true" returntype="numeric">
 
 		<cfset VAR artist_profile_id = 0/>
@@ -211,7 +187,7 @@
 				WHERE u.user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#session.user.userId#">
 			</cfquery>
 
-			<cfif getArtistProfileIdByUserId.RecordCount GT 0>
+			<cfif getArtistProfileIdByUserId.RecordCount>
 
 				<cfset session.artistProfile = {'artistProfileId' = getArtistProfileIdByUserId.artist_profile_id,
 												'profileName' = getArtistProfileIdByUserId.profile_name } />
@@ -239,7 +215,7 @@
 
 		<cfset VAR paginationForPublicPaintings = QueryNew("")/>
 		<cftry>
-
+			<cfset VAR pageLimit = 8/>
 			<cfquery  name="paginationForPublicPaintings">
 
 				SELECT filename , path_thumb,path,filename_original, media.media_id, is_public
@@ -247,7 +223,8 @@
 				artist_media_bridge AS amb ON media.media_id = amb.media_id
 	            WHERE artist_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.artistId#">
 				AND amb.is_public = "true"
-				LIMIT <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,8
+				LIMIT <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,
+				<cfqueryparam cfsqltype="cf_sql_integer" value="#pageLimit#">;
 			</cfquery>
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
@@ -266,12 +243,14 @@
 		<cfargument name="offset" type="numeric" required="true" >
 		<cfset VAR getAllProfilePic = QueryNew("")/>
 		<cftry>
+		<cfset VAR pageLimit = 8/>
 			<cfquery name="getAllProfilePic" >
 
 				SELECT filename_original, path,ap.artist_profile_id, users.first_name, users.last_name FROM media
 				 RIGHT JOIN artist_profile ap
 				ON media.media_id = ap.profile_pic_id INNER JOIN users ON users.user_id = ap.user_id
-				LIMIT <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,8;
+				LIMIT <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,
+				<cfqueryparam cfsqltype="cf_sql_integer" value="#pageLimit#">;
 			</cfquery>
 		<cfcatch type="any" >
 			<cflog application="true" file="artistPortfolioError"
@@ -411,7 +390,7 @@
 				</cfquery>
 			</cfif>
 
-			<cfif deleteProfilePic.recordCount gt 0>
+			<cfif deleteProfilePic.recordCount>
 
 				<cfquery  result="deleteFromArtist">
 					delete from media where media_id =
@@ -419,7 +398,7 @@
 				</cfquery>
 			</cfif>
 		</cftransaction>
-			<cfif deleteFromArtist.recordCount gt 0>
+			<cfif deleteFromArtist.recordCount>
 				<cfset VAR flag = true />
 			</cfif>
 		<cfcatch type="any" >
@@ -436,7 +415,7 @@
 	<cffunction name="getPublicprofileInfo" access="public" output="true" returntype="Query">
 
 		<cfargument name="artistId" required="true">
-		<cfset VAR getPublicProfileInfo = QueryNew("")/>
+		<cfset VARIABLES.returnData = QueryNew("")/>
 		<cftry>
 			<cfquery  name="getPublicProfileInfo">
 
@@ -457,6 +436,7 @@
 
 		</cfcatch>
 		</cftry>
+
 		<cfreturn getPublicprofileInfo />
 	</cffunction>
 
@@ -491,7 +471,7 @@
 				<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">  )
 			</cfquery>
 
-			<cfif updateProfilePicResult.recordCount Gt 0>
+			<cfif updateProfilePicResult.recordCount>
 				<cfset VAR isUpdated = true />
 			</cfif>
 		<cfcatch type="any" >
@@ -557,7 +537,7 @@
 		<cfargument name="field" type="string" required="true"/>
 		<cfargument name="data" type="string" required="true"/>
 
-		<cfif compareNoCase(field,"facebookUrl") eq 0>
+		<cfif compareNoCase(field,"facebookUrl") eq 0 and arguments.data Neq "">
 
 			<cfset VAR result = REMatchNoCase("(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*##!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?",#arguments.data#)>
 			<cfset VAR fbPatternForMobileRes = REMatchNoCase("(?:(?:http|https):\/\/)?(?:m.)?facebook.com\/(?:(?:\w)*##!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?",#arguments.data#)>

@@ -34,24 +34,25 @@
 
 			<!--- To rename the file name --->
 			<cffile action = "rename" destination = "#expandPath("#paintingDestination#")#" source = "#expandPath("#source#")#">
+
 			<cftransaction>
-			<cfquery  result="uploadPainting">
+				<cfquery  result="uploadPainting">
 
-				INSERT INTO media( filename_original, path ) VALUES (
+					INSERT INTO media( filename_original, path ) VALUES (
 
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#newFileName#">,
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#storedDestinationAdress#">
-				)
-			</cfquery>
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#newFileName#">,
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#storedDestinationAdress#">
+					)
+				</cfquery>
 
-			<!--- update media information in the bridge table --->
-			<cfquery  result="updatePainitngBridge">
+				<!--- update media information in the bridge table --->
+				<cfquery  result="updatePainitngBridge">
 
-				INSERT artist_media_bridge ( artist_id , media_id ) VALUES (
-					<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">,
-					<cfqueryparam cfsqltype="cf_sql_varchar" value="#uploadPainting["GENERATEDKEY"]#">
-				)
-			</cfquery>
+					INSERT artist_media_bridge ( artist_id , media_id ) VALUES (
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#uploadPainting["GENERATEDKEY"]#">
+					)
+				</cfquery>
 			</cftransaction>
 
 			<cfif uploadPainting.recordCount gt 0 and updatePainitngBridge.recordCount gt 0>
@@ -134,6 +135,8 @@
 		<cfargument name="offset" type="numeric" required="true" >
 		<cfset VAR paginationForAllPaintings = QueryNew("")/>
 
+		<cfset VAR pageLimit = 4/>
+
 		<cftry>
 			<cfquery  name="paginationForAllPaintings">
 
@@ -142,7 +145,8 @@
 				media.media_id = amb.media_id WHERE artist_id =
 	            <cfqueryparam cfsqltype="cf_sql_integer" value="#session.artistProfile.artistProfileId#">
 	            ORDER BY media_id DESC LIMIT
-	            <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,4;
+	            <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.offset#">,
+	            <cfqueryparam cfsqltype="cf_sql_integer" value="#pageLimit#">;
 			</cfquery>
 
 			<cfcatch type="any" >
