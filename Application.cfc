@@ -19,4 +19,8 @@
 		<cflocation url="404.cfm" />
 	</cffunction>
 
+	<cffunction name="onError" returnType="void" output="true">
+		<cflocation url="error.cfm">
+	</cffunction>
+
 </cfcomponent>
